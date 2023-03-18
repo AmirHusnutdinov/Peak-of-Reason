@@ -19,6 +19,7 @@ ad = Admin()
 ab_us = About()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '__secret_key'
 
 
 @app.route('/')
