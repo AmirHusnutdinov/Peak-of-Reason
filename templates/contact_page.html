@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/style2.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script|Montserrat:400,700&amp;subset=cyrillic-ext" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>Mindease</title>
+</head>
+<body>
+
+
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <div class="header__logo">Mindease</div>
+
+            <nav class="nav">
+                <a class="nav__link" href="{{general}}">General</a>
+                <a class="nav__link" href="{{authorization}}">LOG IN</a>
+                <a class="nav__link" href="{{events}}">Events</a>
+                <a class="nav__link" href="{{blog}}">Blog</a>
+                <a class="nav__link" href="{{answers}}">Answers</a>
+                <a class="nav__link" href="{{reviews}}">Reviews</a>
+                <a class="nav__link active" href="{{about_us}}">About us</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<footer class="footer">
+        <div class="container">
+
+            <div class="footer__inner">
+                <div class="footer__col  footer__col--first">
+                    <div class="footer__logo">Mindease</div>
+                    <div class="footer__text">Мой сайт предлагает профессиональную психологическую помощь подросткам, которые сталкиваются с проблемами в жизни. Я предлагаю конфиденциальные онлайн-консультации, а также групповые занятия и семинары, направленные на улучшение самосознания и управления своими эмоциями. Моя задача - помочь вам найти способы справляться с трудностями и достичь лучшего качества жизни.</div>
+
+                    <div class="footer__social">
+                        <div class="footer__social-content">
+                            Follow me:
+                            <br>
+                            <br>
+                            <a href="https://vk.com/id184296740" target="_blank">
+                                <img src="{{ url_for('static',filename='assets/images/social/vk.png') }}" width="39.8">
+                            </a>
+                            <a href="https://ru.wikipedia.org/wiki/Facebook" target="_blank">
+                                <img src="{{ url_for('static',filename='assets/images/social/fb.png') }}" width="39">
+                            </a>
+                        </div>
+                    </div>
+
+                </div><!-- /.footer__col -->
+
+                <div class="footer__col  footer__col--second">
+                    <div class="footer__title">Blogs</div>
+
+                    <div class="blogs">
+                        <div class="blogs__item">
+                            <img class="blogs__img" src="{{ url_for('static',filename='assets/images/blog/1.jpg') }}" alt="">
+                            <div class="blogs__content">
+                                <a class="blogs__title" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing</a>
+                                <div class="blogs__date">Jan 9, 2016</div>
+                            </div>
+                        </div>
+
+                        <div class="blogs__item">
+                            <img class="blogs__img" src="{{ url_for('static',filename='assets/images/blog/2.jpg') }}" alt="">
+                            <div class="blogs__content">
+                                <a class="blogs__title" href="#">Lorem ipsum dolor</a>
+                                <div class="blogs__date">Jan 9, 2016</div>
+                            </div>
+                        </div>
+
+                        <div class="blogs__item">
+                            <img class="blogs__img" src="{{ url_for('static',filename='assets/images/blog/3.jpg') }}" alt="">
+                            <div class="blogs__content">
+                                <a class="blogs__title" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing</a>
+                                <div class="blogs__date">Jan 9, 2016</div>
+                            </div>
+                        </div>
+                    </div><!-- /.blogs -->
+                </div>
+
+                <div class="footer__col  footer__col--third">
+                    <div class="footer__title">Вконтакте</div>
+
+                    <div class="instagram">
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/1.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/2.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/3.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/4.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/5.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/6.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/7.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/8.jpg') }}" alt="">
+                        </a>
+                        <a class="instagram__item" href="#" target="_blank">
+                            <img src="{{ url_for('static',filename='assets/images/instagram/9.jpg') }}" alt="">
+                        </a>
+                    </div>
+                </div>
+
+            </div><!-- /.footer__inner -->
+
+            <div class="copyright">
+                © 2023 The source code of this <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">site</a>
+            </div>
+
+        </div><!-- /.container -->
+    </footer>
+
+</body>
+</html>
