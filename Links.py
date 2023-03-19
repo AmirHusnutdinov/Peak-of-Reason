@@ -1,0 +1,7 @@
+reviews = 'http://127.0.0.1:8080/reviews'
+events = 'http://127.0.0.1:8080/events'
+blog = 'http://127.0.0.1:8080/blog'
+authorization = 'http://127.0.0.1:8080/authorization'
+answers = 'http://127.0.0.1:8080/answers'
+about_us = 'http://127.0.0.1:8080/about_us'
+admin = 'http://127.0.0.1:8080/admin'
