@@ -1,3 +1,4 @@
 class Admin:
-    def admin(self):
+    @staticmethod
+    def admin():
         return "Собственно admin"

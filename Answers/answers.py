@@ -3,8 +3,9 @@ from Links import about_us, blog, reviews, answers, events, authorization, gener
 
 
 class Answers:
-    def answers(self):
-        return render_template('answers.html',
+    @staticmethod
+    def answers():
+        return render_template('answers_page.html',
                                general=general,
                                about_us=about_us,
                                blog=blog,

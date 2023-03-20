@@ -9,57 +9,48 @@ from Answers.answers import Answers
 from Admin.admin import Admin
 from About_us.about_us import About
 
-sp = StartPage()
-rev = Reviews()
-ev = Events()
-bl = Blog()
-au = Account()
-an = Answers()
-ad = Admin()
-ab_us = About()
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '__secret_key'
 
 
 @app.route('/')
 def open_main():
-    return sp.main()
+    return StartPage.main()
 
 
 @app.route('/reviews')
 def open_reviews():
-    return rev.reviews()
+    return Reviews.reviews()
 
 
 @app.route('/events')
 def open_event():
-    return ev.event()
+    return Events.event()
 
 
 @app.route('/blog')
 def open_blog():
-    return bl.blog()
+    return Blog.blog()
 
 
 @app.route('/authorization')
 def open_authorization():
-    return au.account()
+    return Account.account()
 
 
 @app.route('/answers')
 def open_answers():
-    return an.answers()
+    return Answers.answers()
 
 
 @app.route('/admin')
 def open_admin():
-    return ad.admin()
+    return Admin.admin()
 
 
 @app.route('/about_us')
 def open_about_us():
-    return ab_us.about()
+    return About.about()
 
 
 app.run(port=8080, host='127.0.0.1')

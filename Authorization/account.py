@@ -1,3 +1,4 @@
 class Account:
-    def account(self):
+    @staticmethod
+    def account():
         return "Собственно account"

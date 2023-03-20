@@ -3,7 +3,8 @@ from Links import about_us, blog, reviews, answers, events, authorization, gener
 
 
 class Blog:
-    def blog(self):
+    @staticmethod
+    def blog():
         return render_template('blog_page.html',
                                general=general,
                                about_us=about_us,

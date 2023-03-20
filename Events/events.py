@@ -1,4 +1,5 @@
 class Events:
-    def event(self):
+    @staticmethod
+    def event():
         return "Собственно events"
 
