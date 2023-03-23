@@ -23,9 +23,24 @@ def open_reviews():
     return Reviews.reviews()
 
 
-@app.route('/events')
-def open_event():
-    return Events.event()
+@app.route('/event1')
+def open_event1():
+    return Events.event1()
+
+
+@app.route('/event2')
+def open_event2():
+    return Events.event2()
+
+
+@app.route('/event3')
+def open_event3():
+    return Events.event3()
+
+
+@app.route('/event4')
+def open_event4():
+    return Events.event4()
 
 
 @app.route('/blog')
