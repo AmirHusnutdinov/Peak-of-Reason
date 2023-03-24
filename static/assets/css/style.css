@@ -98,7 +98,7 @@ hr {
 .header {
     width: 100%;
     padding-top: 30px;
-    background-color: #000000;
+
     position: absolute;
     top: 0;
     left: 0;
@@ -107,6 +107,8 @@ hr {
 }
 
 .header.fixed {
+    padding: 10px 0;
+
     background-color: #eb8b8d;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 
@@ -203,6 +205,10 @@ hr {
     z-index: 1;
 }
 
+.nav-toggle:focus {
+    outline: 0;
+}
+
 .nav-toggle__item {
     display: block;
     width: 100%;
@@ -244,7 +250,7 @@ hr {
 }
 
 .nav-toggle__item:after {
-    bottom: -8px;
+    top: 8px;
 }
 
 .nav-toggle.active .nav-toggle__item:before {
@@ -677,11 +683,15 @@ hr {
 
 /* Reviews */
 .reviews {
-    padding: 0 110px;
     position: relative;
 }
 
+.reviews .slick-slider {
+    padding: 0 110px;
+}
+
 .reviews__item {
+    min-height: 210px;
     padding-left: 255px;
     position: relative;
 }
@@ -726,9 +736,14 @@ hr {
     background-color: #f38181;
 }
 
-.reviews__btn {
+.slick-arrow {
+    display: block;
     font-size: 0;
     color: transparent;
+
+    border: 0;
+    background: none;
+    cursor: pointer;
 
     position: absolute;
     top: 50%;
@@ -736,7 +751,11 @@ hr {
     transform: translateY(-50%);
 }
 
-.reviews__btn:after {
+.slick-arrow:focus {
+    outline: 0;
+}
+
+.slick-arrow:after {
     content: "";
     display: block;
     width: 16px;
@@ -746,12 +765,13 @@ hr {
     border-left: 2px solid #ccc;
 }
 
-.reviews__btn--prev {
+.slick-prev {
     left: 0;
     transform: rotate(-45deg);
 }
 
-.reviews__btn--next {
+.reviews__btn--next,
+.slick-next {
     right: 0;
     transform: rotate(135deg);
 }
@@ -1092,7 +1112,7 @@ hr {
 
     font-size: 46px;
     font-weight: 700;
-    color: #696969;
+    color: #ccc;
 }
 
 .footer__text {
@@ -1123,7 +1143,7 @@ hr {
     padding-top: 15px;
 
     font-size: 15px;
-    color: #000000;
+    color: #999;
     font-style: italic;
     font-weight: 300;
 }
@@ -1131,9 +1151,10 @@ hr {
 .footer__social-content a {
     display: inline-block;
     vertical-align: middle;
+    margin-left: 10px;
 
     font-size: 18px;
-    color: #000000;
+    color: #95e1d3;
 }
 
 .footer__title {
@@ -1206,14 +1227,10 @@ hr {
 
 /* Subscribe */
 .subscribe {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1000px;
-    background-color: #f8f8f800;
-    border-radius: 5px;
-    padding: 10px;
+    width: 100%;
+    max-width: 380px;
+    display: flex;
 }
-
 
 .subscribe__input {
     width: 60%;
@@ -1268,11 +1285,6 @@ hr {
     outline: 0;
 }
 
-.text_about {
-    margin-left: auto;
-    margin-right: auto;
-}
-
 
 /* Copyright */
 .copyright {
@@ -1292,7 +1304,7 @@ hr {
 
 
 
-@media (max-width: 1230px) {
+@media (max-width: 1919px) {
 
     /* Intro */
     .intro__suptitle {
@@ -1349,7 +1361,7 @@ hr {
     }
 
     /* Reviews */
-    .reviews {
+    .reviews .slick-slider {
         padding: 0 60px;
     }
 
@@ -1421,7 +1433,11 @@ hr {
         top: 100%;
         left: 0;
 
-        background-color: #000000;
+        background: linear-gradient(#718bb0, #085893);
+    }
+
+    .nav1.active {
+        display: block;
     }
 
     .nav__link {
@@ -1434,9 +1450,7 @@ hr {
         display: block;
     }
 
-    .nav1.active {
-    display: block;
-    }
+
     /* Section */
     .section {
         padding: 40px 0;
@@ -1608,11 +1622,11 @@ hr {
 
 
     /* Reviews */
-    .reviews {
+    .reviews .slick-slider {
         padding: 0;
     }
 
-    .reviews__btn {
+    .slick-arrow {
         top: 18%;
     }
 
@@ -1678,33 +1692,4 @@ hr {
         width: 100%;
     }
 
-}
-
-body{background: #edf2f7;}
-details{
-  display:block;
-  margin-bottom: .5rem;
-}
-summary::-webkit-details-marker{display:none;}
-summary::-moz-list-bullet{list-style-type:none;}
-summary::marker{display:none;}
-summary {
-   padding: .3em .5em .3em .4em;
-   display:inline-block;
-   font-size:1.4em;
-   cursor: pointer;
-}
-summary:before {
-  content: "+";
-  margin-right: .3em;
-}
-details[open] > summary:before {
-  content: "–";
-}
-summary ~ * {
-   padding:0 1em 0 1em;
-}
-summary:focus {
-  outline:0;
-  box-shadow: inset 0 0 1px rgba(0,0,0,0.3), inset 0 0 2px rgba(0,0,0,0.3);
 }
