@@ -4,10 +4,13 @@ from Start_page.start_page import StartPage
 from Reviews.reviews import Reviews
 from Events.events import Events
 from Blog.blog import Blog
+from Blog.data import db_session
+from Blog.data.Post import Post
 from Authorization.account import Account
 from Answers.answers import Answers
 from Admin.admin import Admin
 from About_us.about_us import About
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '__secret_key'
@@ -68,4 +71,10 @@ def open_about_us():
     return About.about()
 
 
-app.run(port=8080, host='127.0.0.1')
+post = Post()
+db_sess = db_session.create_session()
+
+db_session.global_init("Blog/db/resources.db")
+user = db_sess.query(Post).first()
+print(user.name)
+# app.run(port=8080, host='127.0.0.1')
