@@ -36,193 +36,38 @@
 <br>
 <br>
 <br>
+
+
     <div class="container">
 
         <div class="section__header">
             <h3 class="section__suptitle">Our stories</h3>
             <h2 class="section__title">Latest blog</h2>
         </div>
-
+        {% for items in posts %}
         <div class="blog">
-            <div class="blog__item">
+            {% for item in items %}
+        <div class="blog__item">
                 <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/1.jpg" alt="">
+                    <a href="{{item[4]}}">
+                        <img class="blog__photo" src="../static/assets/images/blog/{{item[1]}}" alt="">
                     </a>
                     <div class="blog__date">
-                        <div class="blog__date-day">15</div>
-                        Jan
+                        <div class="blog__date-day">{{item[5].split()[0]}}</div>
+                        {{item[5].split()[1]}}
                     </div>
                 </div>
                 <div class="blog__content">
                     <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
+                        <a href="{{item[4]}}">{{item[2]}}</a>
                     </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-                    </div>
+                    <div class="blog__text">{{item[3]}}</div>
                 </div>
             </div>
-
-            <div class="blog__item">
-                <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/2.jpg" alt="">
-                    </a>
-                    <div class="blog__date">
-                        <div class="blog__date-day">15</div>
-                        Jan
-                    </div>
-                </div>
-                <div class="blog__content">
-                    <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                    </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-                    </div>
-                </div>
+    {% endfor %}
             </div>
 
-            <div class="blog__item">
-                <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/3.jpg" alt="">
-                    </a>
-                    <div class="blog__date">
-                        <div class="blog__date-day">43</div>
-                        Jan
-                    </div>
-                </div>
-                <div class="blog__content">
-                    <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                    </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div><!-- /.blog -->
-
-        <br>
-
-        <div class="blog">
-            <div class="blog__item">
-                <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/2.jpg" alt="">
-                    </a>
-                    <div class="blog__date">
-                        <div class="blog__date-day">15</div>
-                        Jan
-                    </div>
-                </div>
-                <div class="blog__content">
-                    <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                    </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="blog__item">
-                <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/2.jpg" alt="">
-                    </a>
-                    <div class="blog__date">
-                        <div class="blog__date-day">15</div>
-                        Jan
-                    </div>
-                </div>
-                <div class="blog__content">
-                    <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                    </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="blog__item">
-                <div class="blog__header">
-                    <a href="#">
-                        <img class="blog__photo" src="../static/assets/images/blog/2.jpg" alt="">
-                    </a>
-                    <div class="blog__date">
-                        <div class="blog__date-day">15</div>
-                        Jan
-                    </div>
-                </div>
-                <div class="blog__content">
-                    <div class="blog__title">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                    </div>
-                    <div class="blog__text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-                <div class="blog__footer">
-                    <div class="blog-stat">
-                        <span class="blog-stat__item">
-                            <i class="far fa-eye"></i> 542
-                        </span>
-                        <span class="blog-stat__item">
-                            <i class="far fa-comment-dots"></i> 17
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    {% endfor %}
 
     </div><!-- /.container -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
