@@ -141,6 +141,16 @@ hr {
     text-transform: uppercase;
 }
 
+.blog {
+    display: flex;
+    justify-content: left;
+}
+
+.blog__item {
+    width: 31%;
+    padding-right:20px;
+}
+
 .nav__link {
     display: inline-block;
     vertical-align: top;
@@ -1523,6 +1533,7 @@ hr {
 
     /* Blog */
     .blog {
+        display: block;
         max-width: 380px;
         margin: 0 auto;
     }
