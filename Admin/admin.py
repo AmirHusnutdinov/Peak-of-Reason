@@ -5,7 +5,6 @@ from Links import about_us, blog, reviews, answers, event1, authorization, gener
 class Admin:
     @staticmethod
     def admin(method):
-        print(method)
         if method == 'GET':
             return render_template('admin_page.html',
                                    general=general,
