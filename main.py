@@ -1,4 +1,5 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
+from flask_login import login_user
 
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
@@ -16,7 +17,7 @@ from Blog.data.Post import Post
 
 from Answers.answers import Answers
 from Answers.data import db_session_answers
-from Answers.data.answer_db import Answers
+from Answers.data.answer_db import Answer_db
 
 from Admin.admin import Admin
 
@@ -76,7 +77,12 @@ def open_authorization():
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
-        return info[0]
+        db_sess = db_session_accaunt.create_session()
+        user_sess = db_sess.query(Users).filter(Users.email == info[1][0]).first()
+        if user_sess and user_sess.check_password(info[1][1]):
+            login_user(user_sess, remember=info[1][2])
+            return info[0]
+        return "Неправильный логин или пароль"
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -85,26 +91,33 @@ def open_register():
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
-        user = Users()
-        user.email = info[1][0]
-        user.password = info[1][1]
-        user.name = info[1][2]
-        user.surname = info[1][3]
+        if info[1][1] != info[1][2]:
+            return 'Пароли не совпадают'
         db_sess = db_session_accaunt.create_session()
-        db_sess.add(user)
+        if db_sess.query(Users).filter(Users.email == info[1][0]).first():
+            return "Такой пользователь уже есть"
+        one_user = Users()
+        one_user.email = info[1][0]
+        one_user.password = one_user.set_password(info[1][1])
+        one_user.name = info[1][3]
+        one_user.surname = info[1][4]
+        one_user.photo = info[1][5]
+
+        db_sess.add(one_user)
         db_sess.commit()
 
-        return info[0]
+        return redirect('/authorization')
 
 
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
     info = Answers.answers(request.method)
+    print(info)
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
         db_session_answers.global_init("Answers/db/asks.db")
-        answers = Answers()
+        answers = Answer_db()
         answers.email = info[1][0]
         answers.name = info[1][1]
         answers.answer = info[1][2]
