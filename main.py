@@ -49,6 +49,15 @@ def open_event4():
 
 @app.route('/blog')
 def open_blog():
+    db_session.global_init("Blog/db/resources.db")
+    db_sess = db_session.create_session()
+    posts = db_sess.query(Post)
+    post_info = []
+    for posts in posts:
+        post_info.append([posts.id, posts.photo_name,
+                          posts.name, posts.signature,
+                          posts.link, posts.created_date])
+    Blog.blogs_info(post_info)
     return Blog.blog()
 
 
@@ -79,30 +88,29 @@ def open_register():
         return info[0]
 
 
-@app.route('/answers')
+@app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
+    info = Account.account_login(request.method)
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return info[0]
     return Answers.answers()
 
 
 @app.route('/admin')
 def open_admin():
-    return Admin.admin()
+    info = Admin.admin(request.method)
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return info[0]
 
 
 @app.route('/about_us')
 def open_about_us():
     return About.about()
 
-
-db_session.global_init("Blog/db/resources.db")
-db_sess = db_session.create_session()
-first_post = db_sess.query(Post)
-post_info = []
-for i in first_post:
-    post_info.append([i.id, i.photo_name,
-                      i.name, i.signature,
-                      i.link, i.created_date])
-Blog.blogs_info(post_info)
 
 db_session1.global_init1("Authorization/db/users.db")
 db_sess1 = db_session1.create_session1()
