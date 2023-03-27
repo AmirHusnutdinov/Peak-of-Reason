@@ -51,12 +51,12 @@ def open_event4():
 def open_blog():
     db_session.global_init("Blog/db/resources.db")
     db_sess = db_session.create_session()
-    posts = db_sess.query(Post)
+    all_posts = db_sess.query(Post)
     post_info = []
-    for posts in posts:
-        post_info.append([posts.id, posts.photo_name,
-                          posts.name, posts.signature,
-                          posts.link, posts.created_date])
+    for i in all_posts:
+        post_info.append([i.id, i.photo_name,
+                          i.name, i.signature,
+                          i.link, i.created_date])
     Blog.blogs_info(post_info)
     return Blog.blog()
 
@@ -88,7 +88,7 @@ def open_register():
         return info[0]
 
 
-@app.route('/answers', methods=['GET', 'POST'])
+@app.route('/answers')
 def open_answers():
     info = Account.account_login(request.method)
     if request.method == 'GET':
@@ -98,12 +98,21 @@ def open_answers():
     return Answers.answers()
 
 
-@app.route('/admin')
+@app.route('/admin',  methods=['POST', 'GET'])
 def open_admin():
     info = Admin.admin(request.method)
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
+        post = Post()
+        post.photo_name = info[1][0]
+        post.name = info[1][1]
+        post.signature = info[1][2]
+        post.link = info[1][3]
+        post.created_date = info[1][4]
+        db_sess2 = db_session.create_session()
+        db_sess2.add(post)
+        db_sess2.commit()
         return info[0]
 
 
