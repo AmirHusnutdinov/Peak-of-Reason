@@ -2,7 +2,7 @@ import sqlalchemy
 from .db_session_answers import SqlAlchemyBase
 
 
-class Answers(SqlAlchemyBase):
+class Answer_db(SqlAlchemyBase):
     __tablename__ = 'answers'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
