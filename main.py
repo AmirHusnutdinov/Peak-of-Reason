@@ -1,16 +1,25 @@
 from flask import Flask, request
 
-from Authorization.data import db_session1
+from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Start_page.start_page import StartPage
-from Reviews.reviews import Reviews
-from Events.events import Events
-from Blog.blog import Blog
-from Blog.data import db_session
-from Blog.data.Post import Post
 from Authorization.account import Account
+
+from Start_page.start_page import StartPage
+
+from Reviews.reviews import Reviews
+
+from Events.events import Events
+
+from Blog.blog import Blog
+from Blog.data import db_session_blog
+from Blog.data.Post import Post
+
 from Answers.answers import Answers
+from Answers.data import db_session_answers
+from Answers.data.answer_db import Answers
+
 from Admin.admin import Admin
+
 from About_us.about_us import About
 
 app = Flask(__name__)
@@ -49,15 +58,15 @@ def open_event4():
 
 @app.route('/blog')
 def open_blog():
-    db_session.global_init("Blog/db/resources.db")
-    db_sess = db_session.create_session()
+    db_session_blog.global_init("Blog/db/resources.db")
+    db_sess = db_session_blog.create_session()
     all_posts = db_sess.query(Post)
-    post_info = []
-    for i in all_posts:
-        post_info.append([i.id, i.photo_name,
-                          i.name, i.signature,
-                          i.link, i.created_date])
-    Blog.blogs_info(post_info)
+    posts_info = []
+    for posts in all_posts:
+        posts_info.append([posts.id, posts.photo_name,
+                          posts.name, posts.signature,
+                          posts.link, posts.created_date])
+    Blog.blogs_info(posts_info)
     return Blog.blog()
 
 
@@ -81,21 +90,30 @@ def open_register():
         user.password = info[1][1]
         user.name = info[1][2]
         user.surname = info[1][3]
-        db_sess3 = db_session1.create_session1()
-        db_sess3.add(user)
-        db_sess3.commit()
+        db_sess = db_session_accaunt.create_session()
+        db_sess.add(user)
+        db_sess.commit()
 
         return info[0]
 
 
-@app.route('/answers')
+@app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
-    info = Account.account_login(request.method)
+    info = Answers.answers(request.method)
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
+        db_session_answers.global_init("Answers/db/asks.db")
+        answers = Answers()
+        answers.email = info[1][0]
+        answers.name = info[1][1]
+        answers.answer = info[1][2]
+
+        db_sess = db_session_answers.create_session()
+        db_sess.add(answers)
+        db_sess.commit()
+
         return info[0]
-    return Answers.answers()
 
 
 @app.route('/admin',  methods=['POST', 'GET'])
@@ -105,14 +123,17 @@ def open_admin():
         return info
     elif request.method == 'POST':
         post = Post()
+        
         post.photo_name = info[1][0]
         post.name = info[1][1]
         post.signature = info[1][2]
         post.link = info[1][3]
         post.created_date = info[1][4]
-        db_sess2 = db_session.create_session()
-        db_sess2.add(post)
-        db_sess2.commit()
+        
+        db_sess = db_session_blog.create_session()
+        db_sess.add(post)
+        db_sess.commit()
+        
         return info[0]
 
 
@@ -121,14 +142,14 @@ def open_about_us():
     return About.about()
 
 
-db_session1.global_init1("Authorization/db/users.db")
-db_sess1 = db_session1.create_session1()
-second_post = db_sess1.query(Users)
+db_session_accaunt.global_init("Authorization/db/users.db")
+db_sess = db_session_accaunt.create_session()
+users = db_sess.query(Users)
 users_info = []
-for i in second_post:
-    users_info.append([i.id, i.name,
-                      i.surname, i.email,
-                      i.password, i.is_admin,
-                       i.photo])
+for user in users:
+    users_info.append([user.id, user.name,
+                      user.surname, user.email,
+                      user.password, user.is_admin,
+                       user.photo])
 Account.users_info(users_info)
 app.run(port=8080, host='127.0.0.1')
