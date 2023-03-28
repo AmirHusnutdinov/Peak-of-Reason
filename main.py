@@ -112,7 +112,7 @@ def open_register():
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
     info = Answers.answers(request.method)
-    print(info)
+
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
@@ -129,7 +129,7 @@ def open_answers():
         return info[0]
 
 
-@app.route('/admin',  methods=['POST', 'GET'])
+@app.route('/blog_admin',  methods=['POST', 'GET'])
 def open_admin():
     info = Admin.admin(request.method)
     if request.method == 'GET':
@@ -153,6 +153,30 @@ def open_admin():
 @app.route('/about_us')
 def open_about_us():
     return About.about()
+
+
+@app.route('/answers_admin', methods=['GET', 'POST'])
+def open_admin_answers():
+    db_session_answers.global_init("Answers/db/asks.db")
+    db_sess = db_session_answers.create_session()
+    all_answers = db_sess.query(Answer_db)
+    answers_info = []
+    for answers in all_answers:
+        answers_info.append([answers.id,
+                             answers.email,
+                             answers.name,
+                             answers.answer])
+    info = Admin.admin_answers(request.method, answers_info)
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        delete_id = list(map(int, ''.join(info[1]).split()))
+        for id_ in delete_id:
+            deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
+            db_sess.delete(deleted_answer)
+            db_sess.commit()
+
+        return redirect('/')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")

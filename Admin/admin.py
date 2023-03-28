@@ -1,5 +1,5 @@
 from flask import render_template, request
-from Links import about_us, blog, reviews, answers, event1, authorization, general
+from Links import blog_Admin, event_Admin, answers_Admin, reviews_Admin, general
 
 
 class Admin:
@@ -8,22 +8,39 @@ class Admin:
         if method == 'GET':
             return render_template('admin_page.html',
                                    general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   event1=event1,
-                                   authorization=authorization
+                                   blog_Admin=blog_Admin,
+                                   event_Admin=event_Admin,
+                                   answers_Admin=answers_Admin,
+                                   reviews_Admin=reviews_Admin
                                    )
         elif method == 'POST':
             return [render_template('admin_page.html',
                                     general=general,
-                                    about_us=about_us,
-                                    blog=blog,
-                                    reviews=reviews,
-                                    answers=answers,
-                                    event1=event1,
-                                    authorization=authorization
-                                    ), [request.form['inp1'], request.form['inp2'],
-                                        request.form['inp3'], request.form['inp4'],
-                                        request.form['inp5']]]
+                                    blog_Admin=blog_Admin,
+                                    event_Admin=event_Admin,
+                                    answers_Admin=answers_Admin,
+                                    reviews_Admin=reviews_Admin
+                                    ), [request.form['inp1']]]
+
+    @staticmethod
+    def admin_answers(method, answers):
+        len_ans = len(answers)
+        if method == 'GET':
+            return render_template('admin_answers_page.html',
+                                   general=general,
+                                   blog_Admin=blog_Admin,
+                                   event_Admin=event_Admin,
+                                   answers_Admin=answers_Admin,
+                                   reviews_Admin=reviews_Admin,
+                                   answers=answers,
+                                   remained=len_ans
+                                   )
+        elif method == 'POST':
+            return [render_template('admin_answers_page.html',
+                                    general=general,
+                                    blog_Admin=blog_Admin,
+                                    event_Admin=event_Admin,
+                                    answers_Admin=answers_Admin,
+                                    reviews_Admin=reviews_Admin,
+                                    answers=answers
+                                    ), [request.form['inp1']]]

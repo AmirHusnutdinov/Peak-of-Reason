@@ -16,7 +16,7 @@ class Answers:
                                    authorization=authorization
                                    )
         elif method == 'POST':
-            return [render_template('answer_page.html', general=general,
+            return [render_template('answers_page.html', general=general,
                                     about_us=about_us,
                                     blog=blog,
                                     reviews=reviews,
