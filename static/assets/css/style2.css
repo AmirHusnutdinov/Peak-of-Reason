@@ -194,6 +194,8 @@ hr {
 }
 
 
+
+
 /* Nav toggle */
 .nav-toggle {
     width: 30px;
@@ -1313,97 +1315,7 @@ hr {
     }
 }
 
-@media (max-width: 990px) {
-
-    /* Intro */
-    .intro__suptitle {
-        font-size: 32px;
-    }
-
-    .intro__title {
-        font-size: 80px;
-    }
-
-    /* Stat */
-    .stat {
-       justify-content: center;
-    }
-
-    .stat__item {
-        flex: none;
-        width: 33.33333%;
-        padding-top: 30px;
-        padding-bottom: 30px;
-
-        border: 0;
-    }
-
-    .stat__item:last-child {
-        border-right: 0;
-    }
-
-    /* Services */
-    .services__item {
-        width: 50%;
-        padding-bottom: 0;
-    }
-
-    .services__item--border {
-        border-bottom: 0;
-    }
-
-    /* Reviews */
-    .reviews {
-        padding: 0 60px;
-    }
-
-    .reviews__photo {
-        width: 150px;
-        height: 150px;
-    }
-
-    .reviews__item {
-        padding-left: 175px;
-    }
-
-    /* Clients */
-    .clients {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .clients__item {
-        width: 100%;
-        padding-right: 0;
-    }
-
-    .clients__item:last-child {
-        margin-bottom: 0;
-    }
-
-
-    /* Footer */
-    .footer__col--first {
-        width: 100%;
-    }
-
-    .footer__col--second,
-    .footer__col--third {
-        width: 50%;
-    }
-
-    /* Instagram */
-    .instagram {
-        justify-content: flex-start;
-    }
-
-    .instagram__item {
-        width: auto;
-        border-right: 1px solid white;
-    }
-}
-
-@media (max-width: 770px) {
+@media (max-width: 992px) {
 
     /* Intro */
     .intro {

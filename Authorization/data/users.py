@@ -13,5 +13,4 @@ class Users(SqlAlchemyBase):
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    is_admin = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
-    photo = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    is_admin = sqlalchemy.Column(sqlalchemy.Boolean)

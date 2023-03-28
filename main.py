@@ -1,6 +1,9 @@
-from flask import Flask, request, redirect
-from flask_login import login_user
+import datetime
 
+from flask import Flask, request, redirect, session
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from Authorization.cabinet import CabinetPage
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
 from Authorization.account import Account
@@ -25,6 +28,7 @@ from About_us.about_us import About
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '__secret_key'
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 
 @app.route('/')
@@ -34,7 +38,10 @@ def open_main():
 
 @app.route('/reviews')
 def open_reviews():
-    return Reviews.reviews()
+    if session.get('authorization'):
+        return Reviews.reviews()
+    else:
+        return redirect('/authorization')
 
 
 @app.route('/event1')
@@ -78,10 +85,14 @@ def open_authorization():
         return info
     elif request.method == 'POST':
         db_sess = db_session_accaunt.create_session()
-        user_sess = db_sess.query(Users).filter(Users.email == info[1][0]).first()
-        if user_sess and user_sess.check_password(info[1][1]):
-            login_user(user_sess, remember=info[1][2])
-            return info[0]
+        all_information = db_sess.query(Users)
+        for i in all_information:
+            if str(i.email) == info[1][0] and check_password_hash(i.password, info[1][1]):
+                session['authorization'] = True
+                print(i.is_admin)
+                if i.is_admin:
+                    session['admin'] = True
+                return redirect('/')
         return "Неправильный логин или пароль"
 
 
@@ -98,7 +109,7 @@ def open_register():
             return "Такой пользователь уже есть"
         one_user = Users()
         one_user.email = info[1][0]
-        one_user.password = one_user.set_password(info[1][1])
+        one_user.password = generate_password_hash(info[1][1])
         one_user.name = info[1][3]
         one_user.surname = info[1][4]
         one_user.photo = info[1][5]
@@ -109,45 +120,55 @@ def open_register():
         return redirect('/authorization')
 
 
+@app.route('/cabinet', methods=['GET', 'POST'])
+def open_cabinet():
+    return CabinetPage.account_cabinet()
+
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
-    info = Answers.answers(request.method)
+    if session.get('authorization'):
+        info = Answers.answers(request.method)
 
-    if request.method == 'GET':
-        return info
-    elif request.method == 'POST':
-        db_session_answers.global_init("Answers/db/asks.db")
-        answers = Answer_db()
-        answers.email = info[1][0]
-        answers.name = info[1][1]
-        answers.answer = info[1][2]
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            db_session_answers.global_init("Answers/db/asks.db")
+            answers = Answer_db()
+            answers.email = info[1][0]
+            answers.name = info[1][1]
+            answers.answer = info[1][2]
 
-        db_sess = db_session_answers.create_session()
-        db_sess.add(answers)
-        db_sess.commit()
+            db_sess = db_session_answers.create_session()
+            db_sess.add(answers)
+            db_sess.commit()
 
-        return info[0]
+            return info[0]
+    else:
+        return redirect('/authorization')
 
 
 @app.route('/blog_admin',  methods=['POST', 'GET'])
 def open_admin():
-    info = Admin.admin(request.method)
-    if request.method == 'GET':
-        return info
-    elif request.method == 'POST':
-        post = Post()
-        
-        post.photo_name = info[1][0]
-        post.name = info[1][1]
-        post.signature = info[1][2]
-        post.link = info[1][3]
-        post.created_date = info[1][4]
-        
-        db_sess = db_session_blog.create_session()
-        db_sess.add(post)
-        db_sess.commit()
-        
-        return info[0]
+    if session.get('admin'):
+        info = Admin.admin(request.method)
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            post = Post()
+
+            post.photo_name = info[1][0]
+            post.name = info[1][1]
+            post.signature = info[1][2]
+            post.link = info[1][3]
+            post.created_date = info[1][4]
+
+            db_sess = db_session_blog.create_session()
+            db_sess.add(post)
+            db_sess.commit()
+
+            return info[0]
+    else:
+        return redirect('/authorization')
 
 
 @app.route('/about_us')
@@ -157,36 +178,31 @@ def open_about_us():
 
 @app.route('/answers_admin', methods=['GET', 'POST'])
 def open_admin_answers():
-    db_session_answers.global_init("Answers/db/asks.db")
-    db_sess = db_session_answers.create_session()
-    all_answers = db_sess.query(Answer_db)
-    answers_info = []
-    for answers in all_answers:
-        answers_info.append([answers.id,
-                             answers.email,
-                             answers.name,
-                             answers.answer])
-    info = Admin.admin_answers(request.method, answers_info)
-    if request.method == 'GET':
-        return info
-    elif request.method == 'POST':
-        delete_id = list(map(int, ''.join(info[1]).split()))
-        for id_ in delete_id:
-            deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
-            db_sess.delete(deleted_answer)
-            db_sess.commit()
+    if session.get('admin'):
+        db_session_answers.global_init("Answers/db/asks.db")
+        db_sess = db_session_answers.create_session()
+        all_answers = db_sess.query(Answer_db)
+        answers_info = []
+        for answers in all_answers:
+            answers_info.append([answers.id,
+                                 answers.email,
+                                 answers.name,
+                                 answers.answer])
+        info = Admin.admin_answers(request.method, answers_info)
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            delete_id = list(map(int, ''.join(info[1]).split()))
+            for id_ in delete_id:
+                deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
+                db_sess.delete(deleted_answer)
+                db_sess.commit()
 
-        return redirect('/')
+            return redirect('/')
+    else:
+        return redirect('/authorization')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
-db_sess = db_session_accaunt.create_session()
-users = db_sess.query(Users)
-users_info = []
-for user in users:
-    users_info.append([user.id, user.name,
-                      user.surname, user.email,
-                      user.password, user.is_admin,
-                       user.photo])
-Account.users_info(users_info)
+
 app.run(port=8080, host='127.0.0.1')
