@@ -38,46 +38,23 @@
     <div class="container">
 
         <div class="section__header">
-            <h3 class="section__suptitle">Happy Clients</h3>
-            <h2 class="section__title">What people say</h2>
+            <h3 class="section__suptitle">Наши клиенты</h3>
+            <h2 class="section__title">Что они говорят</h2>
         </div>
 
         <div class="clients">
+            {% for rev in reviews_ %}
             <div class="clients__item">
-                <img class="clients__photo" src="http://placehold.it/110" alt="">
                 <div class="clients__content">
-                    <div class="clients__name">Matthew Dix</div>
-                    <div class="clients__prof">Graphic Design</div>
-                    <div class="clients__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</div>
+                    <div class="clients__name">{{rev[0]}}</div>
+                    <div class="clients__prof">{{rev[1]}}</div>
+                    <div class="clients__text">{{rev[2]}}</div>
+                    <div class="clients__prof">Дата: {{rev[3]}}</div>
                 </div>
             </div>
+            {% endfor %}
 
-            <div class="clients__item">
-                <img class="clients__photo" src="http://placehold.it/110" alt="">
-                <div class="clients__content">
-                    <div class="clients__name">Nick Karvounis</div>
-                    <div class="clients__prof">Graphic Design</div>
-                    <div class="clients__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</div>
-                </div>
-            </div>
 
-            <div class="clients__item">
-                <img class="clients__photo" src="http://placehold.it/110" alt="">
-                <div class="clients__content">
-                    <div class="clients__name">Jaelynn Castillo </div>
-                    <div class="clients__prof">Graphic Design</div>
-                    <div class="clients__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</div>
-                </div>
-            </div>
-
-            <div class="clients__item">
-                <img class="clients__photo" src="http://placehold.it/110" alt="">
-                <div class="clients__content">
-                    <div class="clients__name">Mike Petrucci</div>
-                    <div class="clients__prof">Graphic Design</div>
-                    <div class="clients__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</div>
-                </div>
-            </div>
         </div><!-- /.clients -->
 
     </div><!-- /.container -->
@@ -90,22 +67,22 @@
             </div>
     <div>
         <h3 class="subscribe" style="text-align:center;">Заполни анкету</h3>
-        <form class="subscribe" action="/" method="post">
+        <form class="subscribe" method="post">
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Имя</label>
-                    <input type="text" class="form-control" placeholder="Ваше имя" id="exampleFormControlInput1">
+                    <input type="text" class="form-control" placeholder="Ваше имя" id="exampleFormControlInput1" name="inp1">
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Оценка</label>
-                    <input type="tel" class="form-control" id="exampleFormControlInput2" placeholder="5/5">
+                    <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="5/5" name="inp2">
                 </div>
                 <div id="textarea_ask" class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Напишите свой отзыв</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1"></textarea>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="inp3"></textarea>
                 </div>
                 <br>
                 <div class="d-grid gap-2">
-                    <a type="submit" class="btn btn-dark">PUSH</a>
+                    <button type="submit" class="btn btn-dark">Отправить</button>
                 </div>
                 <br>
         </form>
