@@ -45,17 +45,17 @@
 
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Ваше имя</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="inp1" placeholder="{{name}}">
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="inp_name" placeholder="{{name}}">
                 </div>
 <br>
                 <div class="mb-3">
                     <label for="exampleFormControlInput2" class="form-label">Ваша фамилия</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput2" name="inp2" placeholder="{{surname}}">
+                    <input type="text" class="form-control" id="exampleFormControlInput2" name="inp_surname" placeholder="{{surname}}">
                 </div>
 <br>
                 <div class="mb-3">
                     <label for="exampleFormControlInput3" class="form-label">Ваша почта</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput3" name="inp3" placeholder="{{email}}">
+                    <input type="email" class="form-control" id="exampleFormControlInput3" name="inp_email" placeholder="{{email}}">
                 </div>
 <br>
                 <div class="mb-3">
@@ -72,21 +72,20 @@
 
                 <div class="d-grid gap-2">
                     <button type="submit" name="save" class="btn btn-dark" id="1">SAVE</button>
-
                 </div>
-<br>
-                <div>
-                    <button type="submit" name="change" class="btn btn-primary" id="2">LOG OUT FROM ACCOUNT</button>
-
-                </div>
-<br>
-                <div>
-                    <button type="submit" name="save" class="btn btn-danger" id="3">DELETE ACCOUNT</button>
-
-                </div>
-
         </form>
     </div>
+<br>
+    <div class="subscribe">
+        <a type="submit" name="change" class="btn btn-primary" id="2" href="{{logout}}">LOG OUT FROM ACCOUNT</a>
+    </div>
+<br>
+    <div class="subscribe">
+        <a type="submit" name="save" class="btn btn-danger" href="{{delete}}" id="3">DELETE ACCOUNT</a>
+
+    </div>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{ url_for('static',filename='assets/js/app.js') }}"></script>

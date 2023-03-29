@@ -130,7 +130,7 @@ def open_authorization():
         for i in all_information:
             if str(i.email) == info[1][0] and check_password_hash(i.password, info[1][1]):
                 session['authorization'] = True
-                print(i.is_admin)
+                session['id'] = i.id
                 if i.is_admin:
                     session['admin'] = True
                 return redirect('/')
@@ -150,7 +150,7 @@ def open_register():
             return "Такой пользователь уже есть"
         one_user = Users()
         one_user.email = info[1][0]
-        one_user.password = one_user.set_password(info[1][1])
+        one_user.password = generate_password_hash(info[1][1])
         one_user.name = info[1][3]
         one_user.surname = info[1][4]
         one_user.photo = info[1][5]
@@ -163,8 +163,63 @@ def open_register():
 
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
+    em = ''
+    na = ''
+    sur = ''
     if session.get('authorization'):
-        return CabinetPage.account_cabinet()
+        db_sess_cabinet = db_session_accaunt.create_session()
+        all_information_cabinet = db_sess_cabinet.query(Users)
+        if request.method == 'GET':
+            for i in all_information_cabinet:
+                if i.id == session.get('id'):
+                    em = i.email
+                    na = i.name
+                    sur = i.surname
+            return CabinetPage.account_cabinet('GET', em, na, sur)
+        elif request.method == 'POST':
+            change_data_user = CabinetPage.account_cabinet('POST', '', '', '')
+            for i in all_information_cabinet:
+                if i.id == session.get('id'):
+                    if i.password != change_data_user[3] and change_data_user[3] != '':
+                        return 'Пароли не совпадают'
+                    if i.email != change_data_user[0] and change_data_user[0] != '':
+                        # изменить email в базе данных
+                        pass
+                    elif i.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
+                        # изменить name в базе данных
+                        pass
+                    elif i.surname != change_data_user[2] and change_data_user[2] != '' and change_data_user[2] != ' ':
+                        # изменить surname в базе данных
+                        pass
+                    elif i.password != change_data_user[4] and change_data_user[4] != '' and change_data_user[3] != '':
+                        # изменить password в базе данных
+                        pass
+                    break
+            return redirect('/')
+    else:
+        return redirect('/authorization')
+
+
+@app.route('/cabinet/logout', methods=['GET', 'POST'])
+def open_cabinet_logout():
+    if session.get('authorization'):
+        session.pop('authorization', None)
+        return redirect('/')
+    else:
+        return redirect('/authorization')
+
+
+@app.route('/cabinet/delete', methods=['GET', 'POST'])
+def open_cabinet_logout():
+    if session.get('authorization'):
+        db_sess_cabinet = db_session_accaunt.create_session()
+        all_information_cabinet = db_sess_cabinet.query(Users)
+        for i in all_information_cabinet:
+            if i.id == session.get('id'):
+                id = session.get('id')
+                #  надо здесь удалить аккаунт с этим id
+                pass
+        return redirect('/')
     else:
         return redirect('/authorization')
 
