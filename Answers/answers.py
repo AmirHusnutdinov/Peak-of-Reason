@@ -17,13 +17,4 @@ class Answers:
                                    cabinet=cabinet
                                    )
         elif method == 'POST':
-            return [render_template('answers_page.html', general=general,
-                                    about_us=about_us,
-                                    blog=blog,
-                                    reviews=reviews,
-                                    answers=answers,
-                                    event1=event1,
-                                    authorization=authorization,
-                                    register=register, cabinet=cabinet),
-                    [request.form['inp1'],
-                     request.form['inp2'], request.form['inp3']]]
+            return [request.form['inp1'], request.form['inp2'], request.form['inp3']]

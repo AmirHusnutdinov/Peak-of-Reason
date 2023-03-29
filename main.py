@@ -1,5 +1,5 @@
 import datetime
-from flask import flash, url_for
+from flask import flash
 from random import randrange
 import os
 
@@ -16,9 +16,14 @@ from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
 from Reviews.data.rev import Feedback
-
 from Reviews.data import db_session_rev
+
 from Events.events import Events
+from Events.data.event_file1 import Event1
+from Events.data.event_file2 import Event2
+from Events.data.event_file3 import Event3
+from Events.data.event_file4 import Event4
+from Events.data import db_session_event
 
 from Blog.blog import Blog
 from Blog.data import db_session_blog
@@ -85,22 +90,66 @@ def open_reviews():
 
 @app.route('/event1')
 def open_event1():
-    return Events.event1()
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess = db_session_event.create_session()
+    all_event1 = db_sess.query(Event1)
+    event_info = []
+    for item in all_event1:
+        event_info.append([item.id,
+                           item.photo_name,
+                           item.name,
+                           item.signature,
+                           item.link,
+                           item.created_date])
+    return Events.event1(event_info)
 
 
 @app.route('/event2')
 def open_event2():
-    return Events.event2()
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess = db_session_event.create_session()
+    all_event2 = db_sess.query(Event2)
+    event_info = []
+    for item in all_event2:
+        event_info.append([item.id,
+                           item.photo_name,
+                           item.name,
+                           item.signature,
+                           item.link,
+                           item.created_date])
+    return Events.event2(event_info)
 
 
 @app.route('/event3')
 def open_event3():
-    return Events.event3()
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess = db_session_event.create_session()
+    all_event3 = db_sess.query(Event3)
+    event_info = []
+    for item in all_event3:
+        event_info.append([item.id,
+                           item.photo_name,
+                           item.name,
+                           item.signature,
+                           item.link,
+                           item.created_date])
+    return Events.event3(event_info)
 
 
 @app.route('/event4')
 def open_event4():
-    return Events.event4()
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess = db_session_event.create_session()
+    all_event4 = db_sess.query(Event4)
+    event_info = []
+    for item in all_event4:
+        event_info.append([item.id,
+                           item.photo_name,
+                           item.name,
+                           item.signature,
+                           item.link,
+                           item.created_date])
+    return Events.event4(event_info)
 
 
 @app.route('/blog')
@@ -111,10 +160,9 @@ def open_blog():
     posts_info = []
     for posts in all_posts:
         posts_info.append([posts.id, posts.photo_name,
-                          posts.name, posts.signature,
-                          posts.link, posts.created_date])
-    Blog.blogs_info(posts_info)
-    return Blog.blog()
+                           posts.name, posts.signature,
+                           posts.link, posts.created_date])
+    return Blog.blog(posts_info)
 
 
 @app.route('/authorization', methods=['GET', 'POST'])
@@ -232,15 +280,15 @@ def open_answers():
         elif request.method == 'POST':
             db_session_answers.global_init("Answers/db/asks.db")
             answers = Answer_db()
-            answers.email = info[1][0]
-            answers.name = info[1][1]
-            answers.answer = info[1][2]
+            answers.email = info[0]
+            answers.name = info[1]
+            answers.answer = info[2]
 
             db_sess = db_session_answers.create_session()
             db_sess.add(answers)
             db_sess.commit()
 
-            return info[0]
+            return redirect('/answers')
     else:
         return redirect('/authorization')
 
@@ -254,17 +302,17 @@ def open_admin():
         elif request.method == 'POST':
             post = Post()
 
-            post.photo_name = info[1][0]
-            post.name = info[1][1]
-            post.signature = info[1][2]
-            post.link = info[1][3]
-            post.created_date = info[1][4]
+            post.photo_name = info[0]
+            post.name = info[1]
+            post.signature = info[2]
+            post.link = info[3]
+            post.created_date = info[4]
 
             db_sess = db_session_blog.create_session()
             db_sess.add(post)
             db_sess.commit()
 
-            return info[0]
+            return redirect('/blog_admin')
     else:
         return redirect('/authorization')
 
@@ -373,6 +421,70 @@ def open_add_photo():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect('/add_photo_admin')
+
+
+@app.route('/event_admin', methods=['GET', 'POST'])
+def open_event_admin():
+    if session.get('admin'):
+        info = Admin.event_admin(request.method)
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            db_session_event.global_init("Events/db/activities.db")
+            db_sess = db_session_event.create_session()
+            if int(info[0]) == 1:
+                ev = Event1()
+                ev.photo_name = info[1]
+                ev.name = info[2]
+                ev.signature = info[3]
+                ev.link = info[4]
+                ev.created_date = info[5]
+
+                db_sess.add(ev)
+                db_sess.commit()
+
+                return redirect('/event_admin')
+
+            elif int(info[0]) == 2:
+                ev = Event2()
+                ev.photo_name = info[1]
+                ev.name = info[2]
+                ev.signature = info[3]
+                ev.link = info[4]
+                ev.created_date = info[5]
+
+                db_sess.add(ev)
+                db_sess.commit()
+
+                return redirect('/event_admin')
+
+            elif int(info[0]) == 3:
+                ev = Event3()
+                ev.photo_name = info[1]
+                ev.name = info[2]
+                ev.signature = info[3]
+                ev.link = info[4]
+                ev.created_date = info[5]
+
+                db_sess.add(ev)
+                db_sess.commit()
+
+                return redirect('/event_admin')
+
+            elif int(info[0]) == 4:
+                ev = Event4()
+                ev.photo_name = info[1]
+                ev.name = info[2]
+                ev.signature = info[3]
+                ev.link = info[4]
+                ev.created_date = info[5]
+
+                db_sess.add(ev)
+                db_sess.commit()
+
+                return redirect('/event_admin')
+    else:
+        return redirect('/authorization')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
