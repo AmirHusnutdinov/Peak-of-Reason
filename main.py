@@ -4,7 +4,7 @@ from random import randrange
 import os
 
 from flask import Flask, request, redirect, session
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 from Authorization.cabinet import CabinetPage
@@ -198,7 +198,7 @@ def open_cabinet():
         return redirect('/authorization')
 
 
-@app.route('/cabinet/logout', methods=['GET', 'POST'])
+@app.route('/cabinet/logout')
 def open_cabinet_logout():
     if session.get('authorization'):
         session.pop('authorization', None)
@@ -207,8 +207,8 @@ def open_cabinet_logout():
         return redirect('/authorization')
 
 
-@app.route('/cabinet/delete', methods=['GET', 'POST'])
-def open_cabinet_logout():
+@app.route('/cabinet/delete')
+def open_cabinet_delete():
     if session.get('authorization'):
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
