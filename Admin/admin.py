@@ -15,14 +15,7 @@ class Admin:
                                    photo_add_Admin=photo_add_Admin
                                    )
         elif method == 'POST':
-            return [render_template('admin_page.html',
-                                    general=general,
-                                    blog_Admin=blog_Admin,
-                                    event_Admin=event_Admin,
-                                    answers_Admin=answers_Admin,
-                                    reviews_Admin=reviews_Admin,
-                                    photo_add_Admin=photo_add_Admin
-                                    ), [request.form['inp1']]]
+            return [request.form['inp1']]
 
     @staticmethod
     def admin_answers(method, answers):
@@ -77,3 +70,22 @@ class Admin:
                                    photo_add_Admin=photo_add_Admin)
         elif method == 'POST':
             return request.files
+
+    @staticmethod
+    def event_admin(method):
+        if method == 'GET':
+            return render_template('admin_event.html',
+                                   general=general,
+                                   blog_Admin=blog_Admin,
+                                   event_Admin=event_Admin,
+                                   answers_Admin=answers_Admin,
+                                   reviews_Admin=reviews_Admin,
+                                   photo_add_Admin=photo_add_Admin
+                                   )
+        elif method == 'POST':
+            return [request.form['inp0'],
+                    request.form['inp1'],
+                    request.form['inp2'],
+                    request.form['inp3'],
+                    request.form['inp4'],
+                    request.form['inp5']]

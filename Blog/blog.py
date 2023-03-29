@@ -4,16 +4,8 @@ import math
 
 
 class Blog:
-    blog_inform = []
-
     @staticmethod
-    def blogs_info(blog_info: list):
-        global blog_inform
-        blog_inform = blog_info
-
-    @staticmethod
-    def blog():
-        global blog_inform
+    def blog(blog_inform):
 
         count_of_colums = math.ceil(len(blog_inform) / 3)
         count_of_posts = len(blog_inform)
@@ -47,5 +39,5 @@ class Blog:
                                event1=event1,
                                authorization=authorization,
                                posts=three_posts,
-                                   cabinet=cabinet
+                               cabinet=cabinet
                                )
