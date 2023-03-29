@@ -1,10 +1,11 @@
 import datetime
-from flask import Flask, request, redirect
-from flask_login import login_user
+from flask import flash, url_for
 from random import randrange
+import os
 
 from flask import Flask, request, redirect, session
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 
 from Authorization.cabinet import CabinetPage
 from Authorization.data import db_session_accaunt
@@ -14,9 +15,9 @@ from Authorization.account import Account
 from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
-from Reviews.data import db_session_rev
 from Reviews.data.rev import Feedback
 
+from Reviews.data import db_session_rev
 from Events.events import Events
 
 from Blog.blog import Blog
@@ -59,12 +60,9 @@ def open_reviews():
         rand_list = []
         while len(ind) != 4:
             ind.add(randrange(0, len(rev_info)))
-
         for i in ind:
             rand_list.append(rev_info[i])
-
         info = Reviews.reviews(request.method, rand_list)
-
         if request.method == 'GET':
             return info
 
@@ -291,6 +289,35 @@ def open_reviews_admin():
                     db_sess_admin.commit()
 
         return redirect('/reviews_admin')
+
+
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
+UPLOAD_FOLDER = 'static/assets/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/add_photo_admin', methods=['GET', 'POST'])
+def open_add_photo():
+    info = Admin.add_photo(request.method)
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        if 'file' not in request.files:
+            flash('Не могу прочитать файл')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('Нет выбранного файла')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect('/add_photo_admin')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
