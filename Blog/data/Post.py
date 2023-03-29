@@ -1,4 +1,3 @@
-import datetime
 import sqlalchemy
 from .db_session_blog import SqlAlchemyBase
 

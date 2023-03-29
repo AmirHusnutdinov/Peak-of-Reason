@@ -1,4 +1,7 @@
 import datetime
+from flask import Flask, request, redirect
+from flask_login import login_user
+from random import randrange
 
 from flask import Flask, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -11,6 +14,8 @@ from Authorization.account import Account
 from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
+from Reviews.data import db_session_rev
+from Reviews.data.rev import Feedback
 
 from Events.events import Events
 
@@ -23,6 +28,8 @@ from Answers.data import db_session_answers
 from Answers.data.answer_db import Answer_db
 
 from Admin.admin import Admin
+from Admin.data import db_session_admin
+from Admin.data.admin_rev import Feedback
 
 from About_us.about_us import About
 
@@ -36,10 +43,44 @@ def open_main():
     return StartPage.main()
 
 
-@app.route('/reviews')
+@app.route('/reviews', methods=['GET', 'POST'])
 def open_reviews():
     if session.get('authorization'):
-        return Reviews.reviews()
+        db_session_rev.global_init("Reviews/db/feedback.db")
+        db_sess = db_session_rev.create_session()
+        all_rev = db_sess.query(Feedback)
+        rev_info = []
+        for rev in all_rev:
+            rev_info.append([rev.name,
+                             rev.estimation,
+                             rev.comment,
+                             rev.created_date])
+        ind = set()
+        rand_list = []
+        while len(ind) != 4:
+            ind.add(randrange(0, len(rev_info)))
+
+        for i in ind:
+            rand_list.append(rev_info[i])
+
+        info = Reviews.reviews(request.method, rand_list)
+
+        if request.method == 'GET':
+            return info
+
+        elif request.method == 'POST':
+            db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
+            review = Feedback()
+            review.name = info[0]
+            review.estimation = info[1]
+            review.comment = info[2]
+            review.created_date = info[3]
+
+            db_sess = db_session_admin.create_session()
+            db_sess.add(review)
+            db_sess.commit()
+
+            return redirect('/reviews')
     else:
         return redirect('/authorization')
 
@@ -109,7 +150,7 @@ def open_register():
             return "Такой пользователь уже есть"
         one_user = Users()
         one_user.email = info[1][0]
-        one_user.password = generate_password_hash(info[1][1])
+        one_user.password = one_user.set_password(info[1][1])
         one_user.name = info[1][3]
         one_user.surname = info[1][4]
         one_user.photo = info[1][5]
@@ -151,7 +192,7 @@ def open_answers():
         return redirect('/authorization')
 
 
-@app.route('/blog_admin',  methods=['POST', 'GET'])
+@app.route('/blog_admin', methods=['POST', 'GET'])
 def open_admin():
     if session.get('admin'):
         info = Admin.admin(request.method)
@@ -202,9 +243,54 @@ def open_admin_answers():
                 db_sess.delete(deleted_answer)
                 db_sess.commit()
 
-            return redirect('/')
+            return redirect('/answers_admin')
     else:
         return redirect('/authorization')
+
+
+@app.route('/reviews_admin', methods=['GET', 'POST'])
+def open_reviews_admin():
+    db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
+    db_session_rev.global_init("Reviews/db/feedback.db")
+    db_sess_admin = db_session_admin.create_session()
+    db_sess_rev = db_session_rev.create_session()
+    all_rev = db_sess_admin.query(Feedback)
+    rev_info = []
+    for rev in all_rev:
+        rev_info.append([rev.id,
+                         rev.name,
+                         rev.estimation,
+                         rev.comment,
+                         rev.created_date])
+    info = Admin.admin_rev(request.method, rev_info)
+    if request.method == 'GET':
+        return info
+
+    elif request.method == 'POST':
+        for id2 in info[1]:
+            for item in info[0]:
+                if int(item[0]) == int(id2):
+                    delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id2)).first()
+                    db_sess_admin.delete(delete_id)
+                    db_sess_admin.commit()
+
+        for id1 in info[2]:
+            for item in info[0]:
+                print(int(item[0]), int(id1))
+                if int(item[0]) == int(id1):
+                    rev = Feedback()
+                    rev.name = item[1]
+                    rev.estimation = item[2]
+                    rev.comment = item[3]
+                    rev.created_date = item[4]
+                    db_sess_rev.add(rev)
+                    db_sess_rev.commit()
+
+                    delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id1)).first()
+                    db_sess_admin.delete(delete_id)
+                    db_sess_admin.commit()
+
+        return redirect('/reviews_admin')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
