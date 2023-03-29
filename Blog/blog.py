@@ -1,5 +1,5 @@
 from flask import render_template
-from Links import about_us, blog, reviews, answers, event1, authorization, general
+from Links import about_us, blog, reviews, answers, event1, authorization, general, cabinet
 import math
 
 
@@ -46,5 +46,6 @@ class Blog:
                                answers=answers,
                                event1=event1,
                                authorization=authorization,
-                               posts=three_posts
+                               posts=three_posts,
+                                   cabinet=cabinet
                                )

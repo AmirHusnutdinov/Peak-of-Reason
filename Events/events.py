@@ -1,6 +1,6 @@
 from flask import render_template
-from Links import about_us, blog, reviews, answers, event1,\
-    event2, event3, event4, authorization, general
+from Links import about_us, blog, reviews, answers, event1, \
+    event2, event3, event4, authorization, general, cabinet
 
 
 class Events:
@@ -15,7 +15,8 @@ class Events:
                                event2=event2,
                                event3=event3,
                                event4=event4,
-                               authorization=authorization
+                               authorization=authorization,
+                               cabinet=cabinet
                                )
 
     @staticmethod
@@ -29,7 +30,8 @@ class Events:
                                event1=event1,
                                event3=event3,
                                event4=event4,
-                               authorization=authorization
+                               authorization=authorization,
+                               cabinet=cabinet
                                )
 
     @staticmethod
@@ -43,7 +45,8 @@ class Events:
                                event2=event2,
                                event1=event1,
                                event4=event4,
-                               authorization=authorization
+                               authorization=authorization,
+                               cabinet=cabinet
                                )
 
     @staticmethod
@@ -57,5 +60,6 @@ class Events:
                                event2=event2,
                                event3=event3,
                                event1=event1,
-                               authorization=authorization
+                               authorization=authorization,
+                               cabinet=cabinet
                                )

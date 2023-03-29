@@ -1,5 +1,5 @@
 from flask import render_template, request
-from Links import about_us, blog, reviews, answers, event1, authorization, general, register
+from Links import about_us, blog, reviews, answers, event1, authorization, general, register, cabinet
 
 
 class Answers:
@@ -13,7 +13,8 @@ class Answers:
                                    reviews=reviews,
                                    answers=answers,
                                    event1=event1,
-                                   authorization=authorization
+                                   authorization=authorization,
+                                   cabinet=cabinet
                                    )
         elif method == 'POST':
             return [render_template('answers_page.html', general=general,
@@ -23,6 +24,6 @@ class Answers:
                                     answers=answers,
                                     event1=event1,
                                     authorization=authorization,
-                                    register=register),
+                                    register=register, cabinet=cabinet),
                     [request.form['inp1'],
                      request.form['inp2'], request.form['inp3']]]

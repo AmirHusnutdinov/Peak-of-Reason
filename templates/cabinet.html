@@ -40,39 +40,48 @@
     <br>
 
     <div>
-        <h3 class="subscribe" style="text-align:center;">Здравствуйте уважаемый Admin</h3>
-        <h2 class="subscribe" style="text-align:center;">Давайте добавим новый пост в блог</h2>
+        <h3 class="subscribe" style="text-align:center;">Ваши данные</h3>
         <form class="subscribe" method="post">
 
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">photo_name/ Имя фото</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="inp1" placeholder="1.jpg">
+                    <label for="exampleFormControlInput1" class="form-label">Ваше имя</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="inp1" placeholder="{{name}}">
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput2" class="form-label">name/Имя</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput2" name="inp2" placeholder="Example_name">
-                </div>
-<br>
-                <div id="textarea_ask" class="mb-3">
-                    <label for="exampleFormControlInput3" class="form-label">signature/Описание</label>
-                    <textarea class="form-control" id="exampleFormControlInput3" name="inp3"></textarea>
+                    <label for="exampleFormControlInput2" class="form-label">Ваша фамилия</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput2" name="inp2" placeholder="{{surname}}">
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput4" class="form-label">link/Ссылка</label>
-                    <input type="url" class="form-control" id="exampleFormControlInput4" name="inp4" placeholder="http://127.0.0.1:8080/blog2">
+                    <label for="exampleFormControlInput3" class="form-label">Ваша почта</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput3" name="inp3" placeholder="{{email}}">
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput4" class="form-label">created_date/Дата создания</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput5" name="inp5" placeholder="12 марта">
+                    <label for="exampleFormControlInput3" class="form-label">Старый пароль</label>
+                    <input type="password" name="pass_old" class="form-control" id="exampleFormControlInput4" placeholder="если хотите поменять пароль напишите актуальный пароль">
+                </div>
+<br>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput3" class="form-label">Новый пароль</label>
+                    <input type="password" name="pass_new" class="form-control" id="exampleFormControlInput5" placeholder="а здесь напишите новый пароль">
                 </div>
 <br>
                 <br>
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark" id="1">Фуууух, ну с богом!</button>
+                    <button type="submit" name="save" class="btn btn-dark" id="1">SAVE</button>
+
+                </div>
+<br>
+                <div>
+                    <button type="submit" name="change" class="btn btn-primary" id="2">LOG OUT FROM ACCOUNT</button>
+
+                </div>
+<br>
+                <div>
+                    <button type="submit" name="save" class="btn btn-danger" id="3">DELETE ACCOUNT</button>
 
                 </div>
 

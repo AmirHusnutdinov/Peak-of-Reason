@@ -122,7 +122,11 @@ def open_register():
 
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
-    return CabinetPage.account_cabinet()
+    if session.get('authorization'):
+        return CabinetPage.account_cabinet()
+    else:
+        return redirect('/authorization')
+
 
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():

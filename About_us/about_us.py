@@ -1,5 +1,5 @@
 from flask import render_template
-from Links import about_us, blog, reviews, answers, event1, authorization, general
+from Links import about_us, blog, reviews, answers, event1, authorization, general, cabinet
 
 
 class About:
@@ -12,5 +12,6 @@ class About:
                                reviews=reviews,
                                answers=answers,
                                event1=event1,
-                               authorization=authorization
+                               authorization=authorization,
+                                   cabinet=cabinet
                                )
