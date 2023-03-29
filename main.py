@@ -224,24 +224,21 @@ def open_cabinet():
             return CabinetPage.account_cabinet('GET', em, na, sur)
         elif request.method == 'POST':
             change_data_user = CabinetPage.account_cabinet('POST', '', '', '')
-            for i in all_information_cabinet:
-                if i.id == session.get('id'):
-                    if i.password != change_data_user[3] and change_data_user[3] != '':
-                        return 'Пароли не совпадают'
-                    if i.email != change_data_user[0] and change_data_user[0] != '':
-                        # изменить email в базе данных
-                        pass
-                    elif i.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
-                        # изменить name в базе данных
-                        pass
-                    elif i.surname != change_data_user[2] and change_data_user[2] != '' and change_data_user[2] != ' ':
-                        # изменить surname в базе данных
-                        pass
-                    elif i.password != change_data_user[4] and change_data_user[4] != '' and change_data_user[3] != '':
-                        # изменить password в базе данных
-                        pass
-                    break
-            return redirect('/')
+            users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
+            if not check_password_hash(users.password, change_data_user[3]) and change_data_user[3] != '':
+                return 'Пароли не совпадают'
+            if users.email != change_data_user[0] and change_data_user[0] != '':
+                users.email = change_data_user[0]
+            elif users.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
+                users.name = change_data_user[1]
+            elif users.surname != change_data_user[2] and change_data_user[2] != '' and change_data_user[2] != ' ':
+                users.surname = change_data_user[2]
+            elif change_data_user[4] != '' and change_data_user[3] != '':
+                users.password = generate_password_hash(change_data_user[4])
+            db_sess_cabinet.merge(users)
+            db_sess_cabinet.commit()
+
+        return redirect('/')
     else:
         return redirect('/authorization')
 
@@ -263,8 +260,9 @@ def open_cabinet_delete():
         for i in all_information_cabinet:
             if i.id == session.get('id'):
                 id = session.get('id')
-                #  надо здесь удалить аккаунт с этим id
-                pass
+                delete_id = db_sess_cabinet.query(Users).filter(Users.id == int(id)).first()
+                db_sess_cabinet.delete(delete_id)
+                db_sess_cabinet.commit()
         return redirect('/')
     else:
         return redirect('/authorization')
