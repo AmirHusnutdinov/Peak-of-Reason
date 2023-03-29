@@ -40,10 +40,6 @@ class Account:
                                    event1=event1,
                                    authorization=authorization)
         elif method == 'POST':
-            print([request.form['email'],
-                   request.form['password'],
-                   request.form['name'],
-                   request.form['surname']])
             return [render_template('registration.html', general=general,
                                     about_us=about_us,
                                     blog=blog,
@@ -52,7 +48,8 @@ class Account:
                                     event1=event1,
                                     authorization=authorization),
                     [request.form['email'],
-                     request.form['password'],
+                     request.form['password1'],
+                     request.form['password2'],
                      request.form['name'],
                      request.form['surname'],
                      request.form['photo']]]
