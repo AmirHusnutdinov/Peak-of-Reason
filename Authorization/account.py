@@ -16,7 +16,8 @@ class Account:
                                    answers=answers,
                                    event1=event1,
                                    authorization=authorization,
-                                   register=register)
+                                   register=register,
+                                   cabinet=cabinet)
         elif method == 'POST':
             return [render_template('login.htm', general=general,
                                     about_us=about_us,
@@ -25,7 +26,8 @@ class Account:
                                     answers=answers,
                                     event1=event1,
                                     authorization=authorization,
-                                    register=register),
+                                    register=register,
+                                    cabinet=cabinet),
                     [request.form['email'],
                      request.form['password']]]
 
@@ -48,7 +50,7 @@ class Account:
                                     answers=answers,
                                     event1=event1,
                                     authorization=authorization,
-                                   cabinet=cabinet),
+                                    cabinet=cabinet),
                     [request.form['email'],
                      request.form['password1'],
                      request.form['password2'],
