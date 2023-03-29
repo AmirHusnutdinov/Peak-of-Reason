@@ -1,5 +1,6 @@
-from flask import render_template
+from flask import render_template, request
 from Links import about_us, blog, reviews, answers, event1, authorization, general, cabinet
+from datetime import datetime
 
 
 class Reviews:
@@ -41,8 +42,3 @@ class Reviews:
                     request.form['inp2'],
                     request.form['inp3'],
                     date]
-
-    @staticmethod
-    def random_reviews(random_rev):
-        global random_rev_gl
-        random_rev_gl = random_rev
