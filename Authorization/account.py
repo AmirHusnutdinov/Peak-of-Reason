@@ -19,7 +19,7 @@ class Account:
                                    register=register,
                                    cabinet=cabinet)
         elif method == 'POST':
-            if request.form['check']:
+            if len(request.form) == 3:
                 return [request.form['email'], request.form['password'], request.form['check']]
             return [request.form['email'], request.form['password'], 'off']
 

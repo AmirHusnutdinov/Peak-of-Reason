@@ -1433,7 +1433,7 @@ hr {
         top: 100%;
         left: 0;
 
-        background: linear-gradient(#718bb0, #085893);
+        background: linear-gradient(#5e9af57a, #000000)
     }
 
     .nav1.active {
