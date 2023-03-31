@@ -12,3 +12,4 @@ class Feedback(SqlAlchemyBase):
     estimation = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     comment = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     created_date = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    photo = sqlalchemy.Column(sqlalchemy.String, nullable=False)
