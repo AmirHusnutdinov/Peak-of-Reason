@@ -35,20 +35,12 @@ class Account:
                                    authorization=authorization,
                                    cabinet=cabinet)
         elif method == 'POST':
-            return [render_template('registration.html', general=general,
-                                    about_us=about_us,
-                                    blog=blog,
-                                    reviews=reviews,
-                                    answers=answers,
-                                    event1=event1,
-                                    authorization=authorization,
-                                    cabinet=cabinet),
-                    [request.form['email'],
-                     request.form['password1'],
-                     request.form['password2'],
-                     request.form['name'],
-                     request.form['surname'],
-                     request.form['photo']]]
+            return [request.form['email'],
+                    request.form['password1'],
+                    request.form['password2'],
+                    request.form['name'],
+                    request.form['surname'],
+                    request.form['inlineRadioOptions']]
 
     @staticmethod
     def users_info(blog_info: list):

@@ -181,7 +181,6 @@ def open_authorization():
             if str(i.email) == info[0] and check_password_hash(i.password, info[1]):
                 session['authorization'] = True
                 session['id'] = i.id
-                print(info[2])
                 if info[2] == 'on':
                     session.permanent = True
                 if i.is_admin:
@@ -196,18 +195,17 @@ def open_register():
     if request.method == 'GET':
         return info
     elif request.method == 'POST':
-        if info[1][1] != info[1][2]:
+        if info[1] != info[2]:
             return 'Пароли не совпадают'
         db_sess = db_session_accaunt.create_session()
-        if db_sess.query(Users).filter(Users.email == info[1][0]).first():
+        if db_sess.query(Users).filter(Users.email == info[0]).first():
             return "Такой пользователь уже есть"
         one_user = Users()
-        one_user.email = info[1][0]
-        one_user.password = generate_password_hash(info[1][1])
-        one_user.name = info[1][3]
-        one_user.surname = info[1][4]
-        one_user.photo = info[1][5]
-
+        one_user.email = info[0]
+        one_user.password = generate_password_hash(info[1])
+        one_user.name = info[3]
+        one_user.surname = info[4]
+        one_user.gender = info[5]
         db_sess.add(one_user)
         db_sess.commit()
 
@@ -242,6 +240,8 @@ def open_cabinet():
                 users.surname = change_data_user[2]
             elif change_data_user[4] != '' and change_data_user[3] != '':
                 users.password = generate_password_hash(change_data_user[4])
+            elif users.gender != change_data_user[5]:
+                users.gender = change_data_user[5]
             db_sess_cabinet.merge(users)
             db_sess_cabinet.commit()
 

@@ -20,4 +20,4 @@ class CabinetPage:
                                    email=email, name=name, surname=surname)
         elif method == 'POST':
             return [request.form['inp_email'], request.form['inp_name'], request.form['inp_surname'],
-                    request.form['pass_old'], request.form['pass_new']]
+                    request.form['pass_old'], request.form['pass_new'], request.form['inlineRadioOptions']]

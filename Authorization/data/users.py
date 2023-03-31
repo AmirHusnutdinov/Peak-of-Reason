@@ -13,3 +13,4 @@ class Users(SqlAlchemyBase):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     is_admin = sqlalchemy.Column(sqlalchemy.Boolean)
+    gender = sqlalchemy.Column(sqlalchemy.String, nullable=False)
