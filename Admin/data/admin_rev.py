@@ -8,7 +8,7 @@ class Feedback(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True,
                            autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    estimation = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    comment = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    estimation = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    comment = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    created_date = sqlalchemy.Column(sqlalchemy.String, nullable=False)
