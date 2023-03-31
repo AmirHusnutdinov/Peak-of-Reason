@@ -1,5 +1,5 @@
 import datetime
-from flask import flash, render_template
+from flask import flash
 from random import randrange
 import os
 
@@ -60,7 +60,8 @@ def open_reviews():
             rev_info.append([rev.name,
                              rev.estimation,
                              rev.comment,
-                             rev.created_date])
+                             rev.created_date,
+                             rev.photo])
         ind = set()
         rand_list = []
         while len(ind) != 4:
