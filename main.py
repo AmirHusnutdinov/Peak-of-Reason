@@ -186,7 +186,8 @@ def open_authorization():
                 if i.is_admin:
                     session['admin'] = True
                 return redirect('/')
-        return "Неправильный логин или пароль"
+        flash("Неправильный логин или пароль")
+        return Account.account_login('GET')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -196,10 +197,12 @@ def open_register():
         return info
     elif request.method == 'POST':
         if info[1] != info[2]:
-            return 'Пароли не совпадают'
+            flash('Пароли не совпадают')
+            return Account.account_register('GET')
         db_sess = db_session_accaunt.create_session()
         if db_sess.query(Users).filter(Users.email == info[0]).first():
-            return "Такой пользователь уже есть"
+            flash("Такой пользователь уже есть")
+            return Account.account_register('GET')
         one_user = Users()
         one_user.email = info[0]
         one_user.password = generate_password_hash(info[1])
@@ -231,7 +234,8 @@ def open_cabinet():
             change_data_user = CabinetPage.account_cabinet('POST', '', '', '')
             users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
             if not check_password_hash(users.password, change_data_user[3]) and change_data_user[3] != '':
-                return 'Пароли не совпадают'
+                flash('Пароли не совпадают')
+                return CabinetPage.account_cabinet('GET', em, na, sur)
             if users.email != change_data_user[0] and change_data_user[0] != '':
                 users.email = change_data_user[0]
             elif users.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':

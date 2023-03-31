@@ -42,6 +42,15 @@
     </div>
     </header>
     <form class="form-signin" method="post">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+    {% endwith %}
       <p class="image_p">
           <img class="mb-4" src="../static/assets/images/login/bootstrap-solid.svg" alt="" width="72" height="72">
       </p>
