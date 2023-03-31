@@ -21,7 +21,7 @@ class Account:
         elif method == 'POST':
             if request.form['check']:
                 return [request.form['email'], request.form['password'], request.form['check']]
-            return [request.form['email'], request.form['password'], False]
+            return [request.form['email'], request.form['password'], 'off']
 
     @staticmethod
     def account_register(method):

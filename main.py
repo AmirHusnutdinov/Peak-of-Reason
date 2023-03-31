@@ -177,7 +177,8 @@ def open_authorization():
             if str(i.email) == info[0] and check_password_hash(i.password, info[1]):
                 session['authorization'] = True
                 session['id'] = i.id
-                if info[2]:
+                print(info[2])
+                if info[2] == 'on':
                     session.permanent = True
                 if i.is_admin:
                     session['admin'] = True
@@ -248,7 +249,10 @@ def open_cabinet():
 @app.route('/cabinet/logout')
 def open_cabinet_logout():
     if session.get('authorization'):
+        session.permanent = False
         session.pop('authorization', None)
+        session.pop('id', None)
+        session.pop('admin', None)
         return redirect('/')
     else:
         return redirect('/authorization')
@@ -265,6 +269,11 @@ def open_cabinet_delete():
                 delete_id = db_sess_cabinet.query(Users).filter(Users.id == int(id)).first()
                 db_sess_cabinet.delete(delete_id)
                 db_sess_cabinet.commit()
+        session.permanent = False
+        session.pop('authorization', None)
+        session.pop('id', None)
+        session.pop('admin', None)
+
         return redirect('/')
     else:
         return redirect('/authorization')
