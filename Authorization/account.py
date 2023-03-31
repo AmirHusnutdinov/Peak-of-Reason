@@ -19,17 +19,9 @@ class Account:
                                    register=register,
                                    cabinet=cabinet)
         elif method == 'POST':
-            return [render_template('login.htm', general=general,
-                                    about_us=about_us,
-                                    blog=blog,
-                                    reviews=reviews,
-                                    answers=answers,
-                                    event1=event1,
-                                    authorization=authorization,
-                                    register=register,
-                                    cabinet=cabinet),
-                    [request.form['email'],
-                     request.form['password']]]
+            if request.form['check']:
+                return [request.form['email'], request.form['password'], request.form['check']]
+            return [request.form['email'], request.form['password'], False]
 
     @staticmethod
     def account_register(method):

@@ -174,9 +174,11 @@ def open_authorization():
         db_sess = db_session_accaunt.create_session()
         all_information = db_sess.query(Users)
         for i in all_information:
-            if str(i.email) == info[1][0] and check_password_hash(i.password, info[1][1]):
+            if str(i.email) == info[0] and check_password_hash(i.password, info[1]):
                 session['authorization'] = True
                 session['id'] = i.id
+                if info[2]:
+                    session.permanent = True
                 if i.is_admin:
                     session['admin'] = True
                 return redirect('/')
