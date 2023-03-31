@@ -15,7 +15,12 @@ class Admin:
                                    photo_add_Admin=photo_add_Admin
                                    )
         elif method == 'POST':
-            return [request.form['inp1']]
+            return [
+                    request.form['inp1'],
+                    request.form['inp2'],
+                    request.form['inp3'],
+                    request.form['inp4'],
+                    request.form['inp5']]
 
     @staticmethod
     def admin_answers(method, answers):
@@ -32,16 +37,7 @@ class Admin:
                                    photo_add_Admin=photo_add_Admin
                                    )
         elif method == 'POST':
-            return [render_template('admin_answers_page.html',
-                                    general=general,
-                                    blog_Admin=blog_Admin,
-                                    event_Admin=event_Admin,
-                                    answers_Admin=answers_Admin,
-                                    reviews_Admin=reviews_Admin,
-                                    answers=answers,
-                                    remained=len_ans,
-                                    photo_add_Admin=photo_add_Admin
-                                    ), [request.form['inp1']]]
+            return [request.form['inp1']]
 
     @staticmethod
     def admin_rev(method, rev):

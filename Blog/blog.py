@@ -41,3 +41,20 @@ class Blog:
                                posts=three_posts,
                                cabinet=cabinet
                                )
+
+    @staticmethod
+    def blog_pages(item):
+        return render_template('blog_page_example.html',
+                               general=general,
+                               about_us=about_us,
+                               blog=blog,
+                               reviews=reviews,
+                               answers=answers,
+                               event1=event1,
+                               authorization=authorization,
+                               cabinet=cabinet,
+                               name=item[2],
+                               signature=item[3],
+                               date=item[5],
+                               photo_name=item[1],
+                               text=item[6])

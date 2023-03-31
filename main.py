@@ -1,5 +1,5 @@
 import datetime
-from flask import flash
+from flask import flash, render_template
 from random import randrange
 import os
 
@@ -152,7 +152,7 @@ def open_event4():
     return Events.event4(event_info)
 
 
-@app.route('/blog')
+@app.route('/blog/')
 def open_blog():
     db_session_blog.global_init("Blog/db/resources.db")
     db_sess = db_session_blog.create_session()
@@ -161,7 +161,11 @@ def open_blog():
     for posts in all_posts:
         posts_info.append([posts.id, posts.photo_name,
                            posts.name, posts.signature,
-                           posts.link, posts.created_date])
+                           posts.link, posts.created_date, posts.post_text])
+    query = request.args.get('page')
+    if query and query != '':
+        item = posts_info[int(query) - 1]
+        return Blog.blog_pages(item)
     return Blog.blog(posts_info)
 
 
@@ -298,12 +302,18 @@ def open_admin():
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
+            db_session_blog.global_init("Blog/db/resources.db")
+            db_sess = db_session_blog.create_session()
+            all_posts = db_sess.query(Post)
+            ids = []
+            for id_ in all_posts:
+                ids.append(id_.id)
             post = Post()
-
             post.photo_name = info[0]
             post.name = info[1]
             post.signature = info[2]
-            post.link = info[3]
+            post.link = f'http://127.0.0.1:8080/blog/?page={(ids[-1] + 1)}'
+            post.post_text = info[3]
             post.created_date = info[4]
 
             db_sess = db_session_blog.create_session()
@@ -312,7 +322,7 @@ def open_admin():
 
             return redirect('/blog_admin')
     else:
-        return redirect('/authorization')
+        return redirect('/')
 
 
 @app.route('/about_us')
@@ -344,52 +354,55 @@ def open_admin_answers():
 
             return redirect('/answers_admin')
     else:
-        return redirect('/authorization')
+        return redirect('/')
 
 
 @app.route('/reviews_admin', methods=['GET', 'POST'])
 def open_reviews_admin():
-    db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-    db_session_rev.global_init("Reviews/db/feedback.db")
-    db_sess_admin = db_session_admin.create_session()
-    db_sess_rev = db_session_rev.create_session()
-    all_rev = db_sess_admin.query(Feedback)
-    rev_info = []
-    for rev in all_rev:
-        rev_info.append([rev.id,
-                         rev.name,
-                         rev.estimation,
-                         rev.comment,
-                         rev.created_date])
-    info = Admin.admin_rev(request.method, rev_info)
-    if request.method == 'GET':
-        return info
+    if session.get('admin'):
+        db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
+        db_session_rev.global_init("Reviews/db/feedback.db")
+        db_sess_admin = db_session_admin.create_session()
+        db_sess_rev = db_session_rev.create_session()
+        all_rev = db_sess_admin.query(Feedback)
+        rev_info = []
+        for rev in all_rev:
+            rev_info.append([rev.id,
+                             rev.name,
+                             rev.estimation,
+                             rev.comment,
+                             rev.created_date])
+        info = Admin.admin_rev(request.method, rev_info)
+        if request.method == 'GET':
+            return info
 
-    elif request.method == 'POST':
-        for id2 in info[1]:
-            for item in info[0]:
-                if int(item[0]) == int(id2):
-                    delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id2)).first()
-                    db_sess_admin.delete(delete_id)
-                    db_sess_admin.commit()
+        elif request.method == 'POST':
+            for id2 in info[1]:
+                for item in info[0]:
+                    if int(item[0]) == int(id2):
+                        delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id2)).first()
+                        db_sess_admin.delete(delete_id)
+                        db_sess_admin.commit()
 
-        for id1 in info[2]:
-            for item in info[0]:
-                print(int(item[0]), int(id1))
-                if int(item[0]) == int(id1):
-                    rev = Feedback()
-                    rev.name = item[1]
-                    rev.estimation = item[2]
-                    rev.comment = item[3]
-                    rev.created_date = item[4]
-                    db_sess_rev.add(rev)
-                    db_sess_rev.commit()
+            for id1 in info[2]:
+                for item in info[0]:
+                    print(int(item[0]), int(id1))
+                    if int(item[0]) == int(id1):
+                        rev = Feedback()
+                        rev.name = item[1]
+                        rev.estimation = item[2]
+                        rev.comment = item[3]
+                        rev.created_date = item[4]
+                        db_sess_rev.add(rev)
+                        db_sess_rev.commit()
 
-                    delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id1)).first()
-                    db_sess_admin.delete(delete_id)
-                    db_sess_admin.commit()
+                        delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id1)).first()
+                        db_sess_admin.delete(delete_id)
+                        db_sess_admin.commit()
 
-        return redirect('/reviews_admin')
+            return redirect('/reviews_admin')
+    else:
+        return redirect('/')
 
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
@@ -404,21 +417,24 @@ def allowed_file(filename):
 
 @app.route('/add_photo_admin', methods=['GET', 'POST'])
 def open_add_photo():
-    info = Admin.add_photo(request.method)
-    if request.method == 'GET':
-        return info
-    elif request.method == 'POST':
-        if 'file' not in request.files:
-            flash('Не могу прочитать файл')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('Нет выбранного файла')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect('/add_photo_admin')
+    if session.get('admin'):
+        info = Admin.add_photo(request.method)
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            if 'file' not in request.files:
+                flash('Не могу прочитать файл')
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash('Нет выбранного файла')
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                return redirect('/add_photo_admin')
+    else:
+        return redirect('/')
 
 
 @app.route('/event_admin', methods=['GET', 'POST'])
@@ -482,7 +498,7 @@ def open_event_admin():
 
                 return redirect('/event_admin')
     else:
-        return redirect('/authorization')
+        return redirect('/')
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
