@@ -218,9 +218,7 @@ def open_register():
 
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
-    em = ''
-    na = ''
-    sur = ''
+    em, na, sur, gen = '', '', '', ''
     if session.get('authorization'):
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
@@ -230,13 +228,14 @@ def open_cabinet():
                     em = i.email
                     na = i.name
                     sur = i.surname
-            return CabinetPage.account_cabinet('GET', em, na, sur)
+                    gen = i.gender
+            return CabinetPage.account_cabinet('GET', em, na, sur, gen)
         elif request.method == 'POST':
-            change_data_user = CabinetPage.account_cabinet('POST', '', '', '')
+            change_data_user = CabinetPage.account_cabinet('POST', '', '', '', '')
             users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
             if not check_password_hash(users.password, change_data_user[3]) and change_data_user[3] != '':
                 flash('Пароли не совпадают')
-                return CabinetPage.account_cabinet('GET', em, na, sur)
+                return CabinetPage.account_cabinet('GET', em, na, sur, gen)
             if users.email != change_data_user[0] and change_data_user[0] != '':
                 users.email = change_data_user[0]
             elif users.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
