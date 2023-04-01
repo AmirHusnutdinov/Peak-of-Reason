@@ -35,7 +35,7 @@ from Answers.data.answer_db import Answer_db
 
 from Admin.admin import Admin
 from Admin.data import db_session_admin
-from Admin.data.admin_rev import Feedback
+from Admin.data.admin_rev import Feedback_Admin
 
 from About_us.about_us import About
 
@@ -49,8 +49,12 @@ def open_main():
     return StartPage.main()
 
 
+id_of_user = 1
+
+
 @app.route('/reviews', methods=['GET', 'POST'])
 def open_reviews():
+    global id_of_user
     if session.get('authorization'):
         db_session_rev.global_init("Reviews/db/feedback.db")
         db_sess = db_session_rev.create_session()
@@ -73,12 +77,19 @@ def open_reviews():
             return info
 
         elif request.method == 'POST':
+            db_session_accaunt.global_init('Authorization/db/users.db')
+            dbs = db_session_accaunt.create_session()
+            for i in dbs.query(Users):
+                if i.id == id_of_user:
+                    photo = i.photo
+
             db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-            review = Feedback()
+            review = Feedback_Admin()
             review.name = info[0]
             review.estimation = info[1]
             review.comment = info[2]
             review.created_date = info[3]
+            review.photo = photo
 
             db_sess = db_session_admin.create_session()
             db_sess.add(review)
@@ -172,6 +183,7 @@ def open_blog():
 
 @app.route('/authorization', methods=['GET', 'POST'])
 def open_authorization():
+    # if not session.get('authorization'):
     info = Account.account_login(request.method)
     if request.method == 'GET':
         return info
@@ -190,26 +202,50 @@ def open_authorization():
         flash("Неправильный логин или пароль")
         return Account.account_login('GET')
 
+    return redirect('/')
+
+
+app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def open_register():
     info = Account.account_register(request.method)
+
     if request.method == 'GET':
         return info
+
     elif request.method == 'POST':
         if info[1] != info[2]:
             flash('Пароли не совпадают')
             return Account.account_register('GET')
+
         db_sess = db_session_accaunt.create_session()
+
         if db_sess.query(Users).filter(Users.email == info[0]).first():
             flash("Такой пользователь уже есть")
             return Account.account_register('GET')
+
+        if 'file' not in request.files:
+            flash('Не могу прочитать файл')
+            return redirect(request.url)
+        file = request.files['file']
+        flag = False
+        filename = None
+        if file and allowed_file(file.filename) and file.filename != '':
+            filename = str(int(os.listdir('static/assets/images/clients')[-1].split('.')[0]) + 1) + '.jpg'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
+            flag = True
         one_user = Users()
         one_user.email = info[0]
         one_user.password = generate_password_hash(info[1])
         one_user.name = info[3]
         one_user.surname = info[4]
         one_user.gender = info[5]
+        if flag:
+            one_user.photo = f'clients/{filename}'
+        else:
+            one_user.photo = f'clients_example/{str(randrange(1, 10)) + ".jpg"}'
         db_sess.add(one_user)
         db_sess.commit()
 
@@ -218,25 +254,31 @@ def open_register():
 
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
+    global id_of_user
     em = ''
     na = ''
     sur = ''
     if session.get('authorization'):
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
+
         if request.method == 'GET':
             for i in all_information_cabinet:
                 if i.id == session.get('id'):
+                    id_of_user = session.get('id')
                     em = i.email
                     na = i.name
                     sur = i.surname
             return CabinetPage.account_cabinet('GET', em, na, sur)
+
         elif request.method == 'POST':
+
             change_data_user = CabinetPage.account_cabinet('POST', '', '', '')
             users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
             if not check_password_hash(users.password, change_data_user[3]) and change_data_user[3] != '':
                 flash('Пароли не совпадают')
                 return CabinetPage.account_cabinet('GET', em, na, sur)
+
             if users.email != change_data_user[0] and change_data_user[0] != '':
                 users.email = change_data_user[0]
             elif users.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
@@ -380,14 +422,15 @@ def open_reviews_admin():
         db_session_rev.global_init("Reviews/db/feedback.db")
         db_sess_admin = db_session_admin.create_session()
         db_sess_rev = db_session_rev.create_session()
-        all_rev = db_sess_admin.query(Feedback)
+        all_rev = db_sess_admin.query(Feedback_Admin)
         rev_info = []
         for rev in all_rev:
             rev_info.append([rev.id,
                              rev.name,
                              rev.estimation,
                              rev.comment,
-                             rev.created_date])
+                             rev.created_date,
+                             rev.photo])
         info = Admin.admin_rev(request.method, rev_info)
         if request.method == 'GET':
             return info
@@ -396,23 +439,23 @@ def open_reviews_admin():
             for id2 in info[1]:
                 for item in info[0]:
                     if int(item[0]) == int(id2):
-                        delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id2)).first()
+                        delete_id = db_sess_admin.query(Feedback_Admin).filter(Feedback.id == int(id2)).first()
                         db_sess_admin.delete(delete_id)
                         db_sess_admin.commit()
 
             for id1 in info[2]:
                 for item in info[0]:
-                    print(int(item[0]), int(id1))
                     if int(item[0]) == int(id1):
                         rev = Feedback()
                         rev.name = item[1]
                         rev.estimation = item[2]
                         rev.comment = item[3]
                         rev.created_date = item[4]
+                        rev.photo = item[5]
                         db_sess_rev.add(rev)
                         db_sess_rev.commit()
 
-                        delete_id = db_sess_admin.query(Feedback).filter(Feedback.id == int(id1)).first()
+                        delete_id = db_sess_admin.query(Feedback_Admin).filter(Feedback_Admin.id == int(id1)).first()
                         db_sess_admin.delete(delete_id)
                         db_sess_admin.commit()
 

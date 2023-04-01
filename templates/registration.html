@@ -41,7 +41,7 @@
         </div>
     </div>
     </header>
-    <form class="form-signin" method="post">
+    <form class="form-signin" method="post" enctype=multipart/form-data>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
@@ -74,6 +74,11 @@
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="female">
         <label class="form-check-label" for="inlineRadio2">Female</label>
       </div>
+
+        <br>
+
+      <input type=file name=file>
+        <hr>
       <button class="btn btn-lg btn-dark btn-block" type="submit" >Sign up</button>
       <br>
       <br>
