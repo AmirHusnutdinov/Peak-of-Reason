@@ -4,8 +4,14 @@ from Links import about_us, blog, reviews, answers, event1, authorization, gener
 
 class CabinetPage:
     @staticmethod
-    def account_cabinet(method, email, name, surname):
+    def account_cabinet(method, email, name, surname, gender):
         if method == 'GET':
+            if gender == 'male':
+                male = 'checked'
+                female = ''
+            else:
+                male = ''
+                female = 'checked'
             return render_template('cabinet.html',
                                    general=general,
                                    about_us=about_us,
@@ -17,7 +23,8 @@ class CabinetPage:
                                    cabinet=cabinet,
                                    logout=logout,
                                    delete=delete,
-                                   email=email, name=name, surname=surname)
+                                   email=email, name=name, surname=surname,
+                                   male=male, female=female)
         elif method == 'POST':
             return [request.form['inp_email'], request.form['inp_name'], request.form['inp_surname'],
                     request.form['pass_old'], request.form['pass_new'], request.form['inlineRadioOptions']]
