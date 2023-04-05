@@ -20,9 +20,12 @@ body {
 
 .form-signin {
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+    max-width: 361px;
+    padding: 18px;
+    margin: auto;
+    top: 94px;
+    display: inline-grid;
+    position: fixed;
 }
 .form-signin .checkbox {
   font-weight: 400;
