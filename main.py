@@ -49,12 +49,35 @@ def open_main():
     return StartPage.main()
 
 
-id_of_user = 1
+def password_check(passwd):
+    SpecialSym = ['$', '@', '#', '%']
+    val = True
+
+    if len(passwd) < 8:
+        val = False
+        return 'length should be at least 8'
+
+    if not any(char.isdigit() for char in passwd):
+        val = False
+        return 'Password should have at least one numeral'
+
+    if not any(char.isupper() for char in passwd):
+        val = False
+        return 'Password should have at least one uppercase letter'
+
+    if not any(char.islower() for char in passwd):
+        val = False
+        return 'Password should have at least one lowercase letter'
+
+    if not any(char in SpecialSym for char in passwd):
+        val = False
+        return 'Password should have at least one of the symbols $,@,#'
+    if val:
+        return val
 
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def open_reviews():
-    global id_of_user
     if session.get('authorization'):
         db_session_rev.global_init("Reviews/db/feedback.db")
         db_sess = db_session_rev.create_session()
@@ -80,7 +103,7 @@ def open_reviews():
             db_session_accaunt.global_init('Authorization/db/users.db')
             dbs = db_session_accaunt.create_session()
             for i in dbs.query(Users):
-                if i.id == id_of_user:
+                if i.id == session.get('id'):
                     photo = i.photo
 
             db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
@@ -183,24 +206,24 @@ def open_blog():
 
 @app.route('/authorization', methods=['GET', 'POST'])
 def open_authorization():
-    info = Account.account_login(request.method)
-    if request.method == 'GET':
-        return info
-    elif request.method == 'POST':
-        db_sess = db_session_accaunt.create_session()
-        all_information = db_sess.query(Users)
-        for i in all_information:
-            if str(i.email) == info[0] and check_password_hash(i.password, info[1]):
-                session['authorization'] = True
-                session['id'] = i.id
-                if info[2] == 'on':
-                    session.permanent = True
-                if i.is_admin:
-                    session['admin'] = True
-                return redirect('/')
-        flash("Неправильный логин или пароль")
-        return Account.account_login('GET')
-
+    if not session.get('authorization'):
+        info = Account.account_login(request.method)
+        if request.method == 'GET':
+            return info
+        elif request.method == 'POST':
+            db_sess = db_session_accaunt.create_session()
+            all_information = db_sess.query(Users)
+            for i in all_information:
+                if str(i.email) == info[0] and check_password_hash(i.password, info[1]):
+                    session['authorization'] = True
+                    session['id'] = i.id
+                    if info[2] == 'on':
+                        session.permanent = True
+                    if i.is_admin:
+                        session['admin'] = True
+                    return redirect('/')
+            flash("Неправильный логин или пароль")
+            return Account.account_login('GET')
     return redirect('/')
 
 
@@ -209,51 +232,62 @@ app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
 
 @app.route('/register', methods=['GET', 'POST'])
 def open_register():
-    info = Account.account_register(request.method)
+    if not session.get('authorization'):
+        info = Account.account_register(request.method)
 
-    if request.method == 'GET':
-        return info
+        if request.method == 'GET':
+            return info
 
-    elif request.method == 'POST':
-        if info[1] != info[2]:
-            flash('Пароли не совпадают')
-            return Account.account_register('GET')
+        elif request.method == 'POST':
+            if info[1] != info[2]:
+                flash('Пароли не совпадают')
+                return Account.account_register('GET')
+            print(password_check(info[1]), info[1])
+            if password_check(info[1]) != info[1]:
+                flash(password_check(info[1]))
+                return Account.account_register('GET')
+            db_sess = db_session_accaunt.create_session()
 
-        db_sess = db_session_accaunt.create_session()
+            if db_sess.query(Users).filter(Users.email == info[0]).first():
+                flash("Такой пользователь уже есть")
+                return Account.account_register('GET')
+            if info[3].strip() == '' or info[4].strip() == '':
+                flash("Укажите имя и фамилию")
+                return Account.account_register('GET')
+            if len(info[3].strip()) <= 1 or len(info[4].strip()) <= 1:
+                flash("Имя и фамилия не может состоять из одного символа")
+                return Account.account_register('GET')
 
-        if db_sess.query(Users).filter(Users.email == info[0]).first():
-            flash("Такой пользователь уже есть")
-            return Account.account_register('GET')
+            if 'file' not in request.files:
+                flash('Не могу прочитать файл')
+                return redirect(request.url)
+            file = request.files['file']
+            flag = False
+            filename = None
+            if file and allowed_file(file.filename) and file.filename != '':
+                filename = str(int(os.listdir('static/assets/images/clients')[-1].split('.')[0]) + 1) + '.jpg'
+                file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
+                flag = True
+            one_user = Users()
+            one_user.email = info[0]
+            one_user.password = generate_password_hash(info[1])
+            one_user.name = info[3].strip()
+            one_user.surname = info[4].strip()
+            one_user.gender = info[5]
+            if flag:
+                one_user.photo = f'clients/{filename}'
+            else:
+                one_user.photo = f'clients_example/{str(randrange(1, 10)) + ".jpg"}'
+            db_sess.add(one_user)
+            db_sess.commit()
 
-        if 'file' not in request.files:
-            flash('Не могу прочитать файл')
-            return redirect(request.url)
-        file = request.files['file']
-        flag = False
-        filename = None
-        if file and allowed_file(file.filename) and file.filename != '':
-            filename = str(int(os.listdir('static/assets/images/clients')[-1].split('.')[0]) + 1) + '.jpg'
-            file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
-            flag = True
-        one_user = Users()
-        one_user.email = info[0]
-        one_user.password = generate_password_hash(info[1])
-        one_user.name = info[3]
-        one_user.surname = info[4]
-        one_user.gender = info[5]
-        if flag:
-            one_user.photo = f'clients/{filename}'
-        else:
-            one_user.photo = f'clients_example/{str(randrange(1, 10)) + ".jpg"}'
-        db_sess.add(one_user)
-        db_sess.commit()
-
-        return redirect('/authorization')
+            return redirect('/authorization')
+    else:
+        return redirect('/')
 
 
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
-    global id_of_user
     em, na, sur, gen = '', '', '', ''
     if session.get('authorization'):
         db_sess_cabinet = db_session_accaunt.create_session()
@@ -262,7 +296,6 @@ def open_cabinet():
         if request.method == 'GET':
             for i in all_information_cabinet:
                 if i.id == session.get('id'):
-                    id_of_user = session.get('id')
                     em = i.email
                     na = i.name
                     sur = i.surname
@@ -272,17 +305,39 @@ def open_cabinet():
             change_data_user = CabinetPage.account_cabinet('POST', '', '', '', '')
             users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
             if not check_password_hash(users.password, change_data_user[3]) and change_data_user[3] != '':
-                flash('Пароли не совпадают')
+                flash('Это не ваш старый пароль')
                 return CabinetPage.account_cabinet('GET', em, na, sur, gen)
             if users.email != change_data_user[0] and change_data_user[0] != '':
-                users.email = change_data_user[0]
-            elif users.name != change_data_user[1] and change_data_user[1] != '' and change_data_user[1] != ' ':
-                users.name = change_data_user[1]
-            elif users.surname != change_data_user[2] and change_data_user[2] != '' and change_data_user[2] != ' ':
-                users.surname = change_data_user[2]
-            elif change_data_user[4] != '' and change_data_user[3] != '':
-                users.password = generate_password_hash(change_data_user[4])
-            elif users.gender != change_data_user[5]:
+                if db_sess_cabinet.query(Users).filter(Users.email == change_data_user[0]).first():
+                    flash("Такой пользователь с такой почтой уже зарегистрирован")
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                else:
+                    users.email = change_data_user[0]
+            if users.name != change_data_user[1] and change_data_user[1].strip() != '':
+                if change_data_user[1].strip() == '':
+                    flash("Укажите имя")
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                elif len(change_data_user[1].strip()) <= 1:
+                    flash("Имя не может состоять из одного символа")
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                else:
+                    users.name = change_data_user[1]
+            if users.surname != change_data_user[2] and change_data_user[2].strip() != '':
+                if change_data_user[2].strip() == '':
+                    flash("Укажите фамилию")
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                elif len(change_data_user[2].strip()) <= 1:
+                    flash("Фамилия не может состоять из одного символа")
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                else:
+                    users.surname = change_data_user[2]
+            if change_data_user[4].strip() != '' and change_data_user[3].strip() != '':
+                if password_check(change_data_user[4]) != change_data_user[4]:
+                    flash(password_check(change_data_user[4]))
+                    return CabinetPage.account_cabinet('GET', em, na, sur, gen)
+                else:
+                    users.password = generate_password_hash(change_data_user[4])
+            if users.gender != change_data_user[5]:
                 users.gender = change_data_user[5]
             db_sess_cabinet.merge(users)
             db_sess_cabinet.commit()
@@ -307,14 +362,14 @@ def open_cabinet_logout():
 @app.route('/cabinet/delete')
 def open_cabinet_delete():
     if session.get('authorization'):
-        db_sess_cabinet = db_session_accaunt.create_session()
-        all_information_cabinet = db_sess_cabinet.query(Users)
+        db_sess_cabinet_del = db_session_accaunt.create_session()
+        all_information_cabinet = db_sess_cabinet_del.query(Users)
         for i in all_information_cabinet:
             if i.id == session.get('id'):
-                id = session.get('id')
-                delete_id = db_sess_cabinet.query(Users).filter(Users.id == int(id)).first()
-                db_sess_cabinet.delete(delete_id)
-                db_sess_cabinet.commit()
+                inditification = session.get('id')
+                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(inditification)).first()
+                db_sess_cabinet_del.delete(delete_id)
+                db_sess_cabinet_del.commit()
         session.permanent = False
         session.pop('authorization', None)
         session.pop('id', None)
