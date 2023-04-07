@@ -5,7 +5,7 @@ from Links import about_us, blog, reviews, answers, event1, authorization, gener
 class About:
     @staticmethod
     def about():
-        return render_template('contact_page.html',
+        return render_template('about_us.html',
                                general=general,
                                about_us=about_us,
                                blog=blog,
