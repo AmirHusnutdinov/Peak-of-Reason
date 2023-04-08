@@ -5,7 +5,6 @@ import os
 
 from flask import Flask, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
 
 from Authorization.cabinet import CabinetPage
 from Authorization.data import db_session_accaunt
@@ -19,10 +18,9 @@ from Reviews.data.rev import Feedback
 from Reviews.data import db_session_rev
 
 from Events.events import Events
-from Events.data.event_file1 import Event1
-from Events.data.event_file2 import Event2
-from Events.data.event_file3 import Event3
-from Events.data.event_file4 import Event4
+from Events.data.teen_events import Teen_events
+from Events.data.adult_events import Adult_events
+from Events.data.all_events import All_events
 from Events.data import db_session_event
 
 from Blog.blog import Blog
@@ -50,7 +48,7 @@ def open_main():
 
 
 def password_check(passwd):
-    SpecialSym = ['$', '@', '#', '%']
+    special_sym = ['$', '@', '#', '%']
     val = True
 
     if len(passwd) < 8:
@@ -69,7 +67,7 @@ def password_check(passwd):
         val = False
         return 'Password should have at least one lowercase letter'
 
-    if not any(char in SpecialSym for char in passwd):
+    if not any(char in special_sym for char in passwd):
         val = False
         return 'Password should have at least one of the symbols $,@,#'
     if val:
@@ -102,10 +100,11 @@ def open_reviews():
         elif request.method == 'POST':
             db_session_accaunt.global_init('Authorization/db/users.db')
             dbs = db_session_accaunt.create_session()
+            photo = None
             for i in dbs.query(Users):
                 if i.id == session.get('id'):
                     photo = i.photo
-
+                    
             db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
             review = Feedback_Admin()
             review.name = info[0]
@@ -123,11 +122,27 @@ def open_reviews():
         return redirect('/authorization')
 
 
-@app.route('/event1')
+@app.route('/events')
+def open_events():
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess_all = db_session_event.create_session()
+    all_events = db_sess_all.query(All_events)
+    event_info = []
+    for item in all_events:
+        event_info.append([item.id,
+                           item.photo_name,
+                           item.name,
+                           item.signature,
+                           item.link,
+                           item.created_date])
+    return Events.events(event_info)
+
+
+@app.route('/event1/')
 def open_event1():
     db_session_event.global_init("Events/db/activities.db")
     db_sess = db_session_event.create_session()
-    all_event1 = db_sess.query(Event1)
+    all_event1 = db_sess.query(Teen_events)
     event_info = []
     for item in all_event1:
         event_info.append([item.id,
@@ -139,11 +154,11 @@ def open_event1():
     return Events.event1(event_info)
 
 
-@app.route('/event2')
+@app.route('/event2/')
 def open_event2():
     db_session_event.global_init("Events/db/activities.db")
     db_sess = db_session_event.create_session()
-    all_event2 = db_sess.query(Event2)
+    all_event2 = db_sess.query(Adult_events)
     event_info = []
     for item in all_event2:
         event_info.append([item.id,
@@ -153,38 +168,6 @@ def open_event2():
                            item.link,
                            item.created_date])
     return Events.event2(event_info)
-
-
-@app.route('/event3')
-def open_event3():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess = db_session_event.create_session()
-    all_event3 = db_sess.query(Event3)
-    event_info = []
-    for item in all_event3:
-        event_info.append([item.id,
-                           item.photo_name,
-                           item.name,
-                           item.signature,
-                           item.link,
-                           item.created_date])
-    return Events.event3(event_info)
-
-
-@app.route('/event4')
-def open_event4():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess = db_session_event.create_session()
-    all_event4 = db_sess.query(Event4)
-    event_info = []
-    for item in all_event4:
-        event_info.append([item.id,
-                           item.photo_name,
-                           item.name,
-                           item.signature,
-                           item.link,
-                           item.created_date])
-    return Events.event4(event_info)
 
 
 @app.route('/blog/')
@@ -228,6 +211,12 @@ def open_authorization():
 
 
 app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -410,25 +399,7 @@ def open_admin():
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
-            db_session_blog.global_init("Blog/db/resources.db")
-            db_sess = db_session_blog.create_session()
-            all_posts = db_sess.query(Post)
-            ids = []
-            for id_ in all_posts:
-                ids.append(id_.id)
-            post = Post()
-            post.photo_name = info[0]
-            post.name = info[1]
-            post.signature = info[2]
-            post.link = f'http://127.0.0.1:8080/blog/?page={(ids[-1] + 1)}'
-            post.post_text = info[3]
-            post.created_date = info[4]
-
-            db_sess = db_session_blog.create_session()
-            db_sess.add(post)
-            db_sess.commit()
-
-            return redirect('/blog_admin')
+            return redirect(info)
     else:
         return redirect('/')
 
@@ -441,26 +412,11 @@ def open_about_us():
 @app.route('/answers_admin', methods=['GET', 'POST'])
 def open_admin_answers():
     if session.get('admin'):
-        db_session_answers.global_init("Answers/db/asks.db")
-        db_sess = db_session_answers.create_session()
-        all_answers = db_sess.query(Answer_db)
-        answers_info = []
-        for answers in all_answers:
-            answers_info.append([answers.id,
-                                 answers.email,
-                                 answers.name,
-                                 answers.answer])
-        info = Admin.admin_answers(request.method, answers_info)
+        info = Admin.admin_answers(request.method)
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
-            delete_id = list(map(int, ''.join(info[1]).split()))
-            for id_ in delete_id:
-                deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
-                db_sess.delete(deleted_answer)
-                db_sess.commit()
-
-            return redirect('/answers_admin')
+            return redirect(info)
     else:
         return redirect('/')
 
@@ -468,80 +424,27 @@ def open_admin_answers():
 @app.route('/reviews_admin', methods=['GET', 'POST'])
 def open_reviews_admin():
     if session.get('admin'):
-        db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-        db_session_rev.global_init("Reviews/db/feedback.db")
-        db_sess_admin = db_session_admin.create_session()
-        db_sess_rev = db_session_rev.create_session()
-        all_rev = db_sess_admin.query(Feedback_Admin)
-        rev_info = []
-        for rev in all_rev:
-            rev_info.append([rev.id,
-                             rev.name,
-                             rev.estimation,
-                             rev.comment,
-                             rev.created_date,
-                             rev.photo])
-        info = Admin.admin_rev(request.method, rev_info)
+        info = Admin.admin_rev(request.method)
         if request.method == 'GET':
             return info
-
         elif request.method == 'POST':
-            for id2 in info[1]:
-                for item in info[0]:
-                    if int(item[0]) == int(id2):
-                        delete_id = db_sess_admin.query(Feedback_Admin).filter(Feedback.id == int(id2)).first()
-                        db_sess_admin.delete(delete_id)
-                        db_sess_admin.commit()
-
-            for id1 in info[2]:
-                for item in info[0]:
-                    if int(item[0]) == int(id1):
-                        rev = Feedback()
-                        rev.name = item[1]
-                        rev.estimation = item[2]
-                        rev.comment = item[3]
-                        rev.created_date = item[4]
-                        rev.photo = item[5]
-                        db_sess_rev.add(rev)
-                        db_sess_rev.commit()
-
-                        delete_id = db_sess_admin.query(Feedback_Admin).filter(Feedback_Admin.id == int(id1)).first()
-                        db_sess_admin.delete(delete_id)
-                        db_sess_admin.commit()
-
-            return redirect('/reviews_admin')
+            return redirect(info)
     else:
         return redirect('/')
 
 
-ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
 UPLOAD_FOLDER = 'static/assets/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/add_photo_admin', methods=['GET', 'POST'])
 def open_add_photo():
     if session.get('admin'):
-        info = Admin.add_photo(request.method)
+        info = Admin.add_photo(request.method, app)
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
-            if 'file' not in request.files:
-                flash('Не могу прочитать файл')
-                return redirect(request.url)
-            file = request.files['file']
-            if file.filename == '':
-                flash('Нет выбранного файла')
-                return redirect(request.url)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect('/add_photo_admin')
+            return redirect(info)
     else:
         return redirect('/')
 
@@ -553,59 +456,7 @@ def open_event_admin():
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
-            db_session_event.global_init("Events/db/activities.db")
-            db_sess = db_session_event.create_session()
-            if int(info[0]) == 1:
-                ev = Event1()
-                ev.photo_name = info[1]
-                ev.name = info[2]
-                ev.signature = info[3]
-                ev.link = info[4]
-                ev.created_date = info[5]
-
-                db_sess.add(ev)
-                db_sess.commit()
-
-                return redirect('/event_admin')
-
-            elif int(info[0]) == 2:
-                ev = Event2()
-                ev.photo_name = info[1]
-                ev.name = info[2]
-                ev.signature = info[3]
-                ev.link = info[4]
-                ev.created_date = info[5]
-
-                db_sess.add(ev)
-                db_sess.commit()
-
-                return redirect('/event_admin')
-
-            elif int(info[0]) == 3:
-                ev = Event3()
-                ev.photo_name = info[1]
-                ev.name = info[2]
-                ev.signature = info[3]
-                ev.link = info[4]
-                ev.created_date = info[5]
-
-                db_sess.add(ev)
-                db_sess.commit()
-
-                return redirect('/event_admin')
-
-            elif int(info[0]) == 4:
-                ev = Event4()
-                ev.photo_name = info[1]
-                ev.name = info[2]
-                ev.signature = info[3]
-                ev.link = info[4]
-                ev.created_date = info[5]
-
-                db_sess.add(ev)
-                db_sess.commit()
-
-                return redirect('/event_admin')
+            return redirect(info)
     else:
         return redirect('/')
 

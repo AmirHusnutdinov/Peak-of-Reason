@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/assets/css/style3.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/assets/css/style2.css">
     <link rel="icon" href="../static/assets/images/login/icon.png">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='assets/css/style2.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Kaushan+Script|Montserrat:400,700&amp;subset=cyrillic-ext" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <title>Events</title>
@@ -19,7 +20,7 @@
 
             <nav class="nav1" id="nav">
                 <a class="nav__link" href="{{authorization}}">LOG IN</a>
-                <a class="nav__link active" href="{{event1}}">Events</a>
+                <a class="nav__link active" href="{{events}}">Events</a>
                 <a class="nav__link" href="{{blog}}">Blog</a>
                 <a class="nav__link" href="{{answers}}">Answers</a>
                 <a class="nav__link" href="{{reviews}}">Reviews</a>
@@ -39,10 +40,10 @@
 <br>
 
 <div class="text-center">
-    <a type="button" class="btn btn-dark" href="{{event1}}">Консультации</a>
-    <a type="button" class="btn btn-dark" href="{{event2}}">Онлайн мероприятия</a>
-    <button type="button" class="btn btn-dark" disabled>Групповые очные занятия</button>
-    <a type="button" class="btn btn-dark" href="{{event4}}">Коучинг</a>
+    <nav class="nav1" id="nav1">
+                <a class="nav__link1" href="{{event1}}">Дети и подростки</a>
+                <a class="nav__link1" href="{{event2}}">Взрослые</a>
+            </nav>
 </div>
 <hr>
 <br>
@@ -50,9 +51,8 @@
 <br>
 
     <div class="container">
-
         <div class="section__header">
-            <h2 class="section__title">Групповые очные занятия</h2>
+            <h2 class="section__title">Предстоящие события</h2>
         </div>
         {% for items in posts %}
         <div class="blog">
@@ -63,8 +63,8 @@
                         <img class="blog__photo" src="../static/assets/images/blog/{{item[1]}}" alt="">
                     </a>
                     <div class="blog__date">
-                        <div class="blog__date-day">{{item[5].split()[0]}}</div>
-                        {{item[5].split()[1]}}
+                        <div class="blog__date-day">{{item[5]}}</div>
+                        {{item[6]}}
                     </div>
                 </div>
                 <div class="blog__content">
@@ -91,4 +91,5 @@
 
             </div></footer>
 <br>
+
 </html>

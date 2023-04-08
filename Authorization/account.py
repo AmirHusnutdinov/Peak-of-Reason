@@ -2,7 +2,7 @@ from flask import render_template, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
-from Links import about_us, blog, reviews, answers, event1, authorization, general, register, cabinet
+from Links import about_us, blog, reviews, answers, events, authorization, general, register, cabinet
 
 
 class Account:
@@ -14,7 +14,7 @@ class Account:
                                    blog=blog,
                                    reviews=reviews,
                                    answers=answers,
-                                   event1=event1,
+                                   events=events,
                                    authorization=authorization,
                                    register=register,
                                    cabinet=cabinet)
@@ -31,7 +31,7 @@ class Account:
                                    blog=blog,
                                    reviews=reviews,
                                    answers=answers,
-                                   event1=event1,
+                                   events=events,
                                    authorization=authorization,
                                    cabinet=cabinet)
         elif method == 'POST':

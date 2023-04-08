@@ -2,8 +2,8 @@ import sqlalchemy
 from .db_session_event import SqlAlchemyBase
 
 
-class Event2(SqlAlchemyBase):
-    __tablename__ = 'event2'
+class Adult_events(SqlAlchemyBase):
+    __tablename__ = 'adult'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True,

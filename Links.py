@@ -1,4 +1,5 @@
 reviews = 'http://127.0.0.1:8080/reviews'
+events = 'http://127.0.0.1:8080/events'
 event1 = 'http://127.0.0.1:8080/event1'
 event2 = 'http://127.0.0.1:8080/event2'
 event3 = 'http://127.0.0.1:8080/event3'

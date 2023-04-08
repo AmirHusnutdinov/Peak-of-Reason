@@ -1,5 +1,5 @@
 from flask import render_template, request
-from Links import about_us, blog, reviews, answers, event1, authorization, general, cabinet
+from Links import about_us, blog, reviews, answers, events, authorization, general, cabinet
 from datetime import datetime
 
 
@@ -32,7 +32,7 @@ class Reviews:
                                    blog=blog,
                                    reviews=reviews,
                                    answers=answers,
-                                   event1=event1,
+                                   events=events,
                                    authorization=authorization,
                                    reviews_=rand_list,
                                    cabinet=cabinet)

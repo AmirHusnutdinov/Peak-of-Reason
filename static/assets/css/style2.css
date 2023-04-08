@@ -163,6 +163,19 @@ hr {
     transition: color .1s linear;
 }
 
+.nav__link1 {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 20px;
+    position: relative;
+    font-size: 18px;
+
+    color: black;
+    text-decoration: none;
+
+    transition: color .1s linear;
+}
+
 .nav__link:after {
     content: "";
     display: block;
@@ -170,6 +183,23 @@ hr {
     height: 3px;
 
     background-color: #fce38a;
+    opacity: 0;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+
+    transition: opacity .1s linear;
+}
+
+.nav__link1:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+
+    background-color: #95e1d3;
     opacity: 0;
 
     position: absolute;
@@ -191,6 +221,16 @@ hr {
 
 .nav__link.active {
     color: #fce38a;
+}
+
+
+.nav__link1:hover {
+    color: #95e1d3;
+}
+
+.nav__link1:hover:after,
+.nav__link1.active:after {
+    opacity: 1;
 }
 
 
