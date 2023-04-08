@@ -49,29 +49,23 @@ def open_main():
 
 def password_check(passwd):
     special_sym = ['$', '@', '#', '%']
-    val = True
 
     if len(passwd) < 8:
-        val = False
         return 'length should be at least 8'
 
-    if not any(char.isdigit() for char in passwd):
-        val = False
+    elif not any(char.isdigit() for char in passwd):
         return 'Password should have at least one numeral'
 
-    if not any(char.isupper() for char in passwd):
-        val = False
+    elif not any(char.isupper() for char in passwd):
         return 'Password should have at least one uppercase letter'
 
-    if not any(char.islower() for char in passwd):
-        val = False
+    elif not any(char.islower() for char in passwd):
         return 'Password should have at least one lowercase letter'
 
-    if not any(char in special_sym for char in passwd):
-        val = False
+    elif not any(char in special_sym for char in passwd):
         return 'Password should have at least one of the symbols $,@,#'
-    if val:
-        return val
+    else:
+        return passwd
 
 
 @app.route('/reviews', methods=['GET', 'POST'])
@@ -231,7 +225,6 @@ def open_register():
             if info[1] != info[2]:
                 flash('Пароли не совпадают')
                 return Account.account_register('GET')
-            print(password_check(info[1]), info[1])
             if password_check(info[1]) != info[1]:
                 flash(password_check(info[1]))
                 return Account.account_register('GET')
