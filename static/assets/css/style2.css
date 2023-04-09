@@ -141,6 +141,11 @@ hr {
     text-transform: uppercase;
 }
 
+.nav2 {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
 .blog {
     display: flex;
     justify-content: left;
@@ -164,6 +169,19 @@ hr {
 }
 
 .nav__link1 {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 20px;
+    position: relative;
+    font-size: 18px;
+
+    color: black;
+    text-decoration: none;
+
+    transition: color .1s linear;
+}
+
+.nav__link2 {
     display: inline-block;
     vertical-align: top;
     margin: 0 20px;
