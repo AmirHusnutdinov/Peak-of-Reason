@@ -25,7 +25,7 @@ body {
     margin: auto;
     top: 94px;
     display: inline-grid;
-    position: fixed;
+    position: relative;
 }
 .form-signin .checkbox {
   font-weight: 400;
