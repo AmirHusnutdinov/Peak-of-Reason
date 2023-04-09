@@ -187,7 +187,9 @@ class Admin:
             db_sess.add(all_event)
             db_sess.commit()
 
-            if int(request.form['inp0']) == 1:
+            if request.form['class'] == 'Копилка возможностей' or\
+                    request.form['class'] == 'Тренинги для подростков' or\
+                    request.form['class'] == 'Ораторское искусство':
                 teev_event = Teen_events()
                 teev_event.photo_name = request.form['inp1']
                 teev_event.name = request.form['inp2']
@@ -195,18 +197,38 @@ class Admin:
                 teev_event.link = request.form['inp4']
                 teev_event.created_date = request.form['inp5']
 
+                if request.form['class'] == 'Копилка возможностей':
+                    teev_event.a_piggy_bank_of_possibilities = True
+
+                elif request.form['class'] == 'Тренинги для подростков':
+                    teev_event.trainings_for_teenagers = True
+
+                elif request.form['class'] == 'Ораторское искусство':
+                    teev_event.oratory = True
+
                 db_sess.add(teev_event)
                 db_sess.commit()
 
                 return '/event_admin'
 
-            elif int(request.form['inp0']) == 2:
+            elif request.form['class'] == 'Тренинги для родителей' or\
+                    request.form['class'] == 'Индивидуальные консультации' or\
+                    request.form['class'] == 'Искусство общения':
                 adult_event = Adult_events
                 adult_event.photo_name = request.form['inp1']
                 adult_event.name = request.form['inp2']
                 adult_event.signature = request.form['inp3']
                 adult_event.link = request.form['inp4']
                 adult_event.created_date = request.form['inp5']
+
+                if request.form['class'] == 'Тренинги для родителей':
+                    adult_event.trainings_for_parents = True
+
+                elif request.form['class'] == 'Индивидуальные консультации':
+                    adult_event.individual_consultations = True
+
+                elif request.form['class'] == 'Искусство общения':
+                    adult_event.the_art_of_communication = True
 
                 db_sess.add(adult_event)
                 db_sess.commit()

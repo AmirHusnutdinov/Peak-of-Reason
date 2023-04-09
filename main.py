@@ -148,6 +148,55 @@ def open_event1():
     return Events.event1(event_info)
 
 
+@app.route('/event1/types/')
+def open_event_type():
+    db_session_event.global_init("Events/db/activities.db")
+    db_sess = db_session_event.create_session()
+    all_event1 = db_sess.query(Teen_events)
+    event_info = []
+
+    query1 = request.args.get('pb')
+    query2 = request.args.get('tt')
+    query3 = request.args.get('orator')
+
+    if query1 and query1 != '':
+        label = 'Копилка возможностей'
+        for item in all_event1:
+            if item.a_piggy_bank_of_possibilities == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+
+    elif query2 and query2 != '':
+        label = 'Подростковые тренинги'
+        for item in all_event1:
+            if item.trainings_for_teenagers == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+
+    elif query3 and query3 != '':
+        label = 'Ораторское искусство'
+        for item in all_event1:
+            if item.oratory == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+    return redirect('/')
+
+
 @app.route('/event2/')
 def open_event2():
     db_session_event.global_init("Events/db/activities.db")

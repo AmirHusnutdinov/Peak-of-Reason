@@ -13,3 +13,6 @@ class Adult_events(SqlAlchemyBase):
     signature = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     link = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     created_date = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    trainings_for_parents = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
+    individual_consultations = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
+    the_art_of_communication = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
