@@ -1,10 +1,6 @@
-import datetime
-from flask import flash
 from random import randrange
-import os
 
-from flask import Flask, request, redirect, session
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import request, redirect, session
 
 from Authorization.cabinet import CabinetPage
 from Authorization.data import db_session_accaunt
@@ -109,32 +105,49 @@ def open_events():
     return Events.events(event_info)
 
 
-@app.route('/event1/')
+@app.route('/event/')
 def open_event1():
     db_session_event.global_init("Events/db/activities.db")
     db_sess = db_session_event.create_session()
-    all_event1 = db_sess.query(Teen_events)
+
+    query1 = request.args.get('teen')
+    query2 = request.args.get('adult')
+    mode = ''
+    all_event = []
+
+    if query1 and query1 != '':
+        all_event = db_sess.query(Teen_events)
+        mode = 'teen'
+
+    elif query2 and query2 != '':
+        all_event = db_sess.query(Adult_events)
+        mode = 'adult'
+
     event_info = []
-    for item in all_event1:
+    for item in all_event:
         event_info.append([item.id,
                            item.photo_name,
                            item.name,
                            item.signature,
                            item.link,
                            item.created_date])
-    return Events.event1(event_info)
+    return Events.event(event_info, mode)
 
 
-@app.route('/event1/types/')
+@app.route('/event/types/')
 def open_event_type():
     db_session_event.global_init("Events/db/activities.db")
     db_sess = db_session_event.create_session()
     all_event1 = db_sess.query(Teen_events)
+    all_event2 = db_sess.query(Adult_events)
     event_info = []
 
     query1 = request.args.get('pb')
     query2 = request.args.get('tt')
     query3 = request.args.get('orator')
+    query4 = request.args.get('tp')
+    query5 = request.args.get('ic')
+    query6 = request.args.get('ac')
 
     if query1 and query1 != '':
         label = 'Копилка возможностей'
@@ -171,23 +184,44 @@ def open_event_type():
                                    item.link,
                                    item.created_date])
         return Events.types_of_events(event_info, label)
+
+    elif query4 and query4 != '':
+        label = 'Тренинги для родителей'
+        for item in all_event2:
+            if item.trainings_for_parents == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+
+    elif query5 and query5 != '':
+        label = 'Индивидуальные консультации'
+        for item in all_event2:
+            if item.individual_consultations == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+
+    elif query6 and query6 != '':
+        label = 'Искусство общения'
+        for item in all_event2:
+            if item.the_art_of_communication == 1:
+                event_info.append([item.id,
+                                   item.photo_name,
+                                   item.name,
+                                   item.signature,
+                                   item.link,
+                                   item.created_date])
+        return Events.types_of_events(event_info, label)
+
     return redirect('/')
-
-
-@app.route('/event2/')
-def open_event2():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess = db_session_event.create_session()
-    all_event2 = db_sess.query(Adult_events)
-    event_info = []
-    for item in all_event2:
-        event_info.append([item.id,
-                           item.photo_name,
-                           item.name,
-                           item.signature,
-                           item.link,
-                           item.created_date])
-    return Events.event2(event_info)
 
 
 @app.route('/blog/')
