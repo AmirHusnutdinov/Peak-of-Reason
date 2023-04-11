@@ -32,26 +32,36 @@ class Events:
         return three_posts
 
     @staticmethod
-    def events(events_lst):
+    def events(events_lst, file):
         three_posts = Events.three_posts_funk(events_lst)
         event1 = event + '/?teen=1'
         event2 = event + '/?adult=1'
-        return render_template('events.html',
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
-                               events=events,
-                               event1=event1,
-                               event2=event2,
-                               authorization=authorization,
-                               cabinet=cabinet,
-                               posts=three_posts)
+        if not file:
+            return render_template('events.html',
+                                   general=general,
+                                   about_us=about_us,
+                                   blog=blog,
+                                   reviews=reviews,
+                                   answers=answers,
+                                   events=events,
+                                   event1=event1,
+                                   event2=event2,
+                                   authorization=authorization,
+                                   cabinet=cabinet,
+                                   posts=three_posts)
+        else:
+            return render_template(file,
+                                   general=general,
+                                   about_us=about_us,
+                                   blog=blog,
+                                   reviews=reviews,
+                                   answers=answers,
+                                   events=events,
+                                   authorization=authorization,
+                                   cabinet=cabinet)
 
     @staticmethod
     def event(events1, mode):
-        print(mode)
         three_posts = Events.three_posts_funk(events1)
         pb = ''
         tt = ''

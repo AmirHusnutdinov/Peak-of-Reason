@@ -89,12 +89,16 @@ def open_reviews():
         return redirect('/authorization')
 
 
-@app.route('/events')
+@app.route('/events/')
 def open_events():
     db_session_event.global_init("Events/db/activities.db")
     db_sess_all = db_session_event.create_session()
     all_events = db_sess_all.query(All_events)
     event_info = []
+    page = request.args.get('page')
+    file = None
+    if page and page != '':
+        file = 'event_example.html'
     for item in all_events:
         event_info.append([item.id,
                            item.photo_name,
@@ -102,7 +106,7 @@ def open_events():
                            item.signature,
                            item.link,
                            item.created_date])
-    return Events.events(event_info)
+    return Events.events(event_info, file)
 
 
 @app.route('/event/')
@@ -148,6 +152,7 @@ def open_event_type():
     query4 = request.args.get('tp')
     query5 = request.args.get('ic')
     query6 = request.args.get('ac')
+    page = request.args.get('page')
 
     if query1 and query1 != '':
         label = 'Копилка возможностей'
@@ -220,6 +225,9 @@ def open_event_type():
                                    item.link,
                                    item.created_date])
         return Events.types_of_events(event_info, label)
+
+    elif page and page != '':
+        pass
 
     return redirect('/')
 
