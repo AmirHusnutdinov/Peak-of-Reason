@@ -176,12 +176,17 @@ class Admin:
         elif method == 'POST':
             db_session_event.global_init("Events/db/activities.db")
             db_sess = db_session_event.create_session()
+            all_posts = db_sess.query(Post)
+            ids = []
+
+            for id_ in all_posts:
+                ids.append(id_.id)
 
             all_event = All_events()
             all_event.photo_name = request.form['inp1']
             all_event.name = request.form['inp2']
             all_event.signature = request.form['inp3']
-            all_event.link = request.form['inp4']
+            all_event.link = f'http://127.0.0.1:8080/events/?page={(ids[-1] + 1)}'
             all_event.created_date = request.form['inp5']
 
             db_sess.add(all_event)
@@ -194,7 +199,16 @@ class Admin:
                 teev_event.photo_name = request.form['inp1']
                 teev_event.name = request.form['inp2']
                 teev_event.signature = request.form['inp3']
-                teev_event.link = request.form['inp4']
+
+                if request.form['class'] == 'Копилка возможностей':
+                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}pb=1'
+
+                elif request.form['class'] == 'Тренинги для подростков':
+                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tt=1'
+
+                elif request.form['class'] == 'Ораторское искусство':
+                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}orator=1'
+
                 teev_event.created_date = request.form['inp5']
 
                 if request.form['class'] == 'Копилка возможностей':
@@ -218,7 +232,16 @@ class Admin:
                 adult_event.photo_name = request.form['inp1']
                 adult_event.name = request.form['inp2']
                 adult_event.signature = request.form['inp3']
-                adult_event.link = request.form['inp4']
+
+                if request.form['class'] == 'Тренинги для родителей':
+                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tp=1'
+
+                elif request.form['class'] == 'Индивидуальные консультации':
+                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ic=1'
+
+                elif request.form['class'] == 'Искусство общения':
+                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ac=1'
+
                 adult_event.created_date = request.form['inp5']
 
                 if request.form['class'] == 'Тренинги для родителей':

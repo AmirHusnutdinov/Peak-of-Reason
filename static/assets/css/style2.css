@@ -168,7 +168,7 @@ hr {
     transition: color .1s linear;
 }
 
-.nav__link1 {
+.nav__link2 {
     display: inline-block;
     vertical-align: top;
     margin: 0 20px;
@@ -211,7 +211,7 @@ hr {
     transition: opacity .1s linear;
 }
 
-.nav__link1:after {
+.nav__link2:after {
     content: "";
     display: block;
     width: 100%;
@@ -242,12 +242,12 @@ hr {
 }
 
 
-.nav__link1:hover {
+.nav__link2:hover {
     color: #95e1d3;
 }
 
-.nav__link1:hover:after,
-.nav__link1.active:after {
+.nav__link2:hover:after,
+.nav__link2.active:after {
     opacity: 1;
 }
 

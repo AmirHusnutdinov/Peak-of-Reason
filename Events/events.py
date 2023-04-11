@@ -1,7 +1,7 @@
 from flask import render_template
 import math
-from Links import about_us, blog, reviews, answers, event1, \
-    event2, authorization, general, cabinet, events, types
+from Links import about_us, blog, reviews, answers, event, \
+    authorization, general, cabinet, events, types
 
 
 class Events:
@@ -34,6 +34,8 @@ class Events:
     @staticmethod
     def events(events_lst):
         three_posts = Events.three_posts_funk(events_lst)
+        event1 = event + '/?teen=1'
+        event2 = event + '/?adult=1'
         return render_template('events.html',
                                general=general,
                                about_us=about_us,
@@ -48,39 +50,38 @@ class Events:
                                posts=three_posts)
 
     @staticmethod
-    def event1(events1):
+    def event(events1, mode):
+        print(mode)
         three_posts = Events.three_posts_funk(events1)
-        pb = types + '/?pb=1'
-        tt = types + '/?tt=1'
-        orator = types + '/?orator=1'
-        return render_template('event1.html',
+        pb = ''
+        tt = ''
+        orator = ''
+        file = ''
+
+        if mode == 'teen':
+            pb = types + '/?pb=1'
+            tt = types + '/?tt=1'
+            orator = types + '/?orator=1'
+            file = 'event1.html'
+
+        elif mode == 'adult':
+            pb = types + '/?tp=1'
+            tt = types + '/?ic=1'
+            orator = types + '/?ac=1'
+            file = 'event2.html'
+
+        return render_template(file,
                                general=general,
                                about_us=about_us,
                                blog=blog,
                                reviews=reviews,
                                answers=answers,
-                               event2=event2,
                                pb=pb,
                                tt=tt,
                                orator=orator,
                                authorization=authorization,
                                cabinet=cabinet,
                                posts=three_posts)
-
-    @staticmethod
-    def event2(events2):
-        three_posts = Events.three_posts_funk(events2)
-        return render_template('event2.html',
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
-                               event1=event1,
-                               posts=three_posts,
-                               authorization=authorization,
-                               cabinet=cabinet
-                               )
 
     @staticmethod
     def types_of_events(events_type, label):
@@ -91,7 +92,7 @@ class Events:
                                blog=blog,
                                reviews=reviews,
                                answers=answers,
-                               event1=event1,
+                               events=events,
                                posts=three_posts,
                                authorization=authorization,
                                cabinet=cabinet,

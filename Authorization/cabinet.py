@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Links import about_us, blog, reviews, answers, event1, authorization, general, cabinet, logout, delete
+from Links import about_us, blog, reviews, answers, events, authorization, general, cabinet, logout, delete
 
 
 class CabinetPage:
@@ -32,7 +32,7 @@ class CabinetPage:
                                    blog=blog,
                                    reviews=reviews,
                                    answers=answers,
-                                   event1=event1,
+                                   event1=events,
                                    authorization=authorization,
                                    cabinet=cabinet,
                                    logout=logout,
