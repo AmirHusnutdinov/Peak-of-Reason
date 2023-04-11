@@ -1,6 +1,6 @@
 import os
 from random import randrange
-
+from email_validate import validate
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -15,19 +15,19 @@ def password_check(passwd):
     special_sym = ['$', '@', '#', '%']
 
     if len(passwd) < 8:
-        return 'length should be at least 8'
+        return 'length should be at least 8!'
 
     elif not any(char.isdigit() for char in passwd):
-        return 'Password should have at least one numeral'
+        return 'Password should have at least one numeral!'
 
     elif not any(char.isupper() for char in passwd):
-        return 'Password should have at least one uppercase letter'
+        return 'Password should have at least one uppercase letter!'
 
     elif not any(char.islower() for char in passwd):
-        return 'Password should have at least one lowercase letter'
+        return 'Password should have at least one lowercase letter!'
 
     elif not any(char in special_sym for char in passwd):
-        return 'Password should have at least one of the symbols $,@,#'
+        return 'Password should have at least one of the symbols $,@,#!'
     else:
         return passwd
 
@@ -84,11 +84,11 @@ class Account:
         elif method == 'POST':
 
             mass_register = [request.form['email'],
-                    request.form['password1'],
-                    request.form['password2'],
-                    request.form['name'],
-                    request.form['surname'],
-                    request.form['inlineRadioOptions']]
+                             request.form['password1'],
+                             request.form['password2'],
+                             request.form['name'],
+                             request.form['surname'],
+                             request.form['inlineRadioOptions']]
             db_sess = db_session_accaunt.create_session()
             if mass_register[1] != mass_register[2]:
                 flash('Пароли не совпадают')
@@ -98,6 +98,9 @@ class Account:
                 return '/register'
             if db_sess.query(Users).filter(Users.email == mass_register[0]).first():
                 flash("Такой пользователь уже есть")
+                return '/register'
+            if not validate(mass_register[0]):
+                flash("Email не прошел проверку!")
                 return '/register'
             if mass_register[3].strip() == '' or mass_register[4].strip() == '':
                 flash("Укажите имя и фамилию")
