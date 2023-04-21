@@ -10,6 +10,7 @@ from Links import about_us, blog, reviews, answers, events, authorization, gener
 class CabinetPage:
     @staticmethod
     def account_cabinet(method):
+        global gender
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
         if method == 'GET':
