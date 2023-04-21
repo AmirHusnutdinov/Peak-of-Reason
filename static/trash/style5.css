@@ -72,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #fff;
 }
 
-.header {
+.header__nav {
     width: 100%;
     padding-top: 30px;
 
@@ -258,10 +258,6 @@ h1, h2, h3, h4, h5, h6 {
     .intro__title {
         font-size: 80px;
     }
-}
-
-@media (max-width: 990px) {
-
 
     .intro {
         min-height: 650px;

@@ -1,7 +1,7 @@
 from flask import render_template
 import math
 from Links import about_us, blog, reviews, answers, event, \
-    authorization, general, cabinet, events, types
+    authorization, general, cabinet, events, types, params
 
 
 class Events:
@@ -37,28 +37,12 @@ class Events:
         event1 = event + '/?teen=1'
         event2 = event + '/?adult=1'
         if not file:
-            return render_template('events.html',
-                                   general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   events=events,
+            return render_template('events.html', **params, ev_is_active='active',
                                    event1=event1,
                                    event2=event2,
-                                   authorization=authorization,
-                                   cabinet=cabinet,
                                    posts=three_posts)
         else:
-            return render_template(file,
-                                   general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   events=events,
-                                   authorization=authorization,
-                                   cabinet=cabinet)
+            return render_template(file, **params, ev_is_active='active',)
 
     @staticmethod
     def event(events1, mode):
@@ -80,31 +64,17 @@ class Events:
             orator = types + '/?ac=1'
             file = 'event2.html'
 
-        return render_template(file,
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
+        return render_template(file, **params, ev_is_active='active',
                                pb=pb,
                                tt=tt,
                                orator=orator,
-                               authorization=authorization,
-                               cabinet=cabinet,
                                posts=three_posts)
 
     @staticmethod
     def types_of_events(events_type, label):
         three_posts = Events.three_posts_funk(events_type)
         return render_template('types.html',
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
-                               events=events,
+                               **params, ev_is_active='active',
                                posts=three_posts,
-                               authorization=authorization,
-                               cabinet=cabinet,
                                label=label
                                )

@@ -1,5 +1,5 @@
 from flask import render_template
-from Links import about_us, blog, reviews, answers, events, authorization, general, cabinet
+from Links import params
 import math
 
 
@@ -30,29 +30,13 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
-        return render_template('blog_page.html',
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
-                               events=events,
-                               authorization=authorization,
-                               posts=three_posts,
-                               cabinet=cabinet
+        return render_template('blog_page.html', **params, bl_is_active='active'
                                )
 
     @staticmethod
     def blog_pages(item):
-        return render_template('blog_page_example.html',
-                               general=general,
-                               about_us=about_us,
-                               blog=blog,
-                               reviews=reviews,
-                               answers=answers,
-                               events=events,
-                               authorization=authorization,
-                               cabinet=cabinet,
+        return render_template('blog_page_example.html', **params,
+                               bl_is_active='active',
                                name=item[2],
                                signature=item[3],
                                date=item[5],

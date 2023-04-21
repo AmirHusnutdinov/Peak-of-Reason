@@ -16,3 +16,6 @@ delete = 'http://127.0.0.1:8080/cabinet/delete'
 reviews_Admin = 'http://127.0.0.1:8080/reviews_admin'
 photo_add_Admin = 'http://127.0.0.1:8080/add_photo_admin'
 types = 'http://127.0.0.1:8080/event/types'
+params = {'general': general, 'about_us': about_us, 'blog': blog, 'reviews': reviews,
+          'answers': answers, 'events': events, 'authorization': authorization, 'cabinet': cabinet}
+
