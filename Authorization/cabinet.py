@@ -12,6 +12,11 @@ class CabinetPage:
     def account_cabinet(method):
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
+        gender = ''
+        email = ''
+        name = ''
+        surname = ''
+
         if method == 'GET':
             for i in all_information_cabinet:
                 if i.id == session.get('id'):
