@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/assets/css/style2.css">
+    <link rel="icon" href="../static/assets/images/login/icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script|Montserrat:400,700&amp;subset=cyrillic-ext" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>Admin</title>
+</head>
+<body>
+
+<header class="header"  id="header">
+    <div class="container">
+        <div class="header__inner">
+            <div>
+            <a class="header__logo" href="{{general}}" style="text-decoration: none;">Mindease </a></div>
+
+            <nav class="nav1__nav" id="nav">
+                <a class="nav__link {{bl_is}}" href="{{blog_Admin}}">Blog Admin</a>
+                    <a class="nav__link {{ev_is}}" href="{{event_Admin}}">Event Admin</a>
+                    <a class="nav__link {{an_is}}" href="{{answers_Admin}}">Answers Admin</a>
+                    <a class="nav__link {{re_is}}" href="{{reviews_Admin}}">Reviews Admin</a>
+                    <a class="nav__link {{ph_is}}" href="{{photo_add_Admin}}">Photo add Admin</a>
+            </nav>
+
+            <button class="nav-toggle" id="nav_toggle" type="button">
+                <span class="nav-toggle__item">Menu</span>
+            </button>
+        </div>
+    </div>
+</header>
+    <br>
+    <br>
+    <br>
+{% block content %}{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sli-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="{{ url_for('static',filename='assets/js/app.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>

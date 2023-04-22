@@ -6,7 +6,6 @@ from Authorization.data.users import Users
 from Links import delete, params
 
 
-
 class CabinetPage:
     @staticmethod
     def account_cabinet(method):

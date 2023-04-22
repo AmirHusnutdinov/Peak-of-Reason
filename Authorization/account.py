@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Links import params
+from Links import params, register
 
 from settings import app, ALLOWED_EXTENSIONS
 
@@ -47,7 +47,7 @@ class Account:
     @staticmethod
     def account_login(method):
         if method == 'GET':
-            return render_template('login.htm', **params,
+            return render_template('login.htm', **params, register=register,
                                    au_is_active='active')
         elif method == 'POST':
             if len(request.form) == 3:
