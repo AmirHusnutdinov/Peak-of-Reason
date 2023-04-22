@@ -1,5 +1,5 @@
 from flask import render_template, request
-from Links import blog_Admin, event_Admin, answers_Admin, reviews_Admin, general, photo_add_Admin
+from Links import blog_Admin, event_Admin, answers_Admin, reviews_Admin, general, photo_add_Admin, params_admin
 import os
 from werkzeug.utils import secure_filename
 from Events.data.teen_events import Teen_events
@@ -25,12 +25,7 @@ class Admin:
     def admin(method):
         if method == 'GET':
             return render_template('admin_page.html',
-                                   general=general,
-                                   blog_Admin=blog_Admin,
-                                   event_Admin=event_Admin,
-                                   answers_Admin=answers_Admin,
-                                   reviews_Admin=reviews_Admin,
-                                   photo_add_Admin=photo_add_Admin
+                                   **params_admin, bl_is='active'
                                    )
         elif method == 'POST':
             db_session_blog.global_init("Blog/db/resources.db")
@@ -67,14 +62,8 @@ class Admin:
         len_ans = len(answers_info)
         if method == 'GET':
             return render_template('admin_answers_page.html',
-                                   general=general,
-                                   blog_Admin=blog_Admin,
-                                   event_Admin=event_Admin,
-                                   answers_Admin=answers_Admin,
-                                   reviews_Admin=reviews_Admin,
-                                   answers=answers_info,
-                                   remained=len_ans,
-                                   photo_add_Admin=photo_add_Admin
+                                   **params_admin,
+                                   remained=len_ans, an_is='active'
                                    )
         elif method == 'POST':
             delete_id = list(map(int, ''.join(request.form['inp1']).split()))
@@ -105,14 +94,9 @@ class Admin:
         len_rev = len(rev_info)
         if method == 'GET':
             return render_template('rev_admin_page.html',
-                                   general=general,
-                                   blog_Admin=blog_Admin,
-                                   event_Admin=event_Admin,
-                                   answers_Admin=answers_Admin,
-                                   reviews_Admin=reviews_Admin,
+                                   **params_admin,
                                    review=rev_info,
-                                   remained=len_rev,
-                                   photo_add_Admin=photo_add_Admin)
+                                   remained=len_rev, re_is='active')
         elif method == 'POST':
             for id2 in (request.form['inp1']).split():
                 for item in rev_info:
@@ -144,12 +128,8 @@ class Admin:
     @staticmethod
     def add_photo(method, app):
         if method == 'GET':
-            return render_template('add_new_image.html', general=general,
-                                   blog_Admin=blog_Admin,
-                                   event_Admin=event_Admin,
-                                   answers_Admin=answers_Admin,
-                                   reviews_Admin=reviews_Admin,
-                                   photo_add_Admin=photo_add_Admin)
+            return render_template('add_new_image.html',
+                                   **params_admin, ph_is='active')
 
         elif method == 'POST':
             if 'file' not in request.files:
@@ -166,12 +146,7 @@ class Admin:
     def event_admin(method):
         if method == 'GET':
             return render_template('admin_event.html',
-                                   general=general,
-                                   blog_Admin=blog_Admin,
-                                   event_Admin=event_Admin,
-                                   answers_Admin=answers_Admin,
-                                   reviews_Admin=reviews_Admin,
-                                   photo_add_Admin=photo_add_Admin
+                                   **params_admin, ev_is='active'
                                    )
         elif method == 'POST':
             db_session_event.global_init("Events/db/activities.db")

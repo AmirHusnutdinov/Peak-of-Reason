@@ -108,7 +108,7 @@ hr {
 .header {
     width: 100%;
     padding-top: 30px;
-
+    background-color: #000000;
     position: absolute;
     top: 0;
     left: 0;

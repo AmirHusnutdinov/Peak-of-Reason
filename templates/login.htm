@@ -1,48 +1,7 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+{% extends "base_login.html" %}
 
-    <link rel="icon" href="../static/assets/images/login/icon.png">
-    <link rel="stylesheet" href="../static/assets/css/style2.css">
-    <title>Signin Template for Bootstrap</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../static/assets/css/signin.css" rel="stylesheet">
-  </head>
-
-  <body>
-    <header class="header"  id="header">
-    <div class="container">
-        <div class="header__inner">
-            <div>
-            <a class="header__logo" href="{{general}}" style="text-decoration: none;">Mindease </a></div>
-
-            <nav class="nav1" id="nav">
-                <a class="nav__link active" style="text-decoration: none;" href="{{authorization}}">LOG IN</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{events}}">Events</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{blog}}">Blog</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{answers}}">Answers</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{reviews}}">Reviews</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{about_us}}">About us</a>
-                <a class="nav__link" style="text-decoration: none;" href="{{cabinet}}"><img  src="../static/assets/images/user-ico.svg" width="30px"></a>
-            </nav>
-
-            <button class="nav-toggle" id="nav_toggle" type="button">
-                <span class="nav-toggle__item">Menu</span>
-            </button>
-        </div>
-    </div>
-    </header>
-    <form class="form-signin" method="post">
+{% block content %}
+<form class="form-signin" method="post">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
@@ -67,19 +26,12 @@
       <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
       <br>
       <label>
-        No account? <a href="{{register}}">Register</a>
+          No account? <a href="{{register}}">Register</a>
       </label>
       <br>
       <br>
       <br>
       <br>
       <p class="mt-5 mb-3 text-muted">© 2023 The source code of this <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">site</a></p>
-    </form>
-  
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script src="{{ url_for('static',filename='assets/js/app.js') }}"></script>
-
-</body>
-</html>
+</form>
+{% endblock %}
