@@ -10,7 +10,7 @@ blueprint = Blueprint(
 )
 
 
-@blueprint.route('/api/blog', method=['GET'])
+@blueprint.route('/api/blog', methods=['GET'])
 def get_posts():
     db_sess = db_session_blog.create_session()
     posts = db_sess.query(Post).all()
@@ -23,8 +23,8 @@ def get_posts():
     )
 
 
-@blueprint.route('/api/blog/<int:post_id>', method=['GET'])
-def get_posts(post_id):
+@blueprint.route('/api/blog/<int:post_id>', methods=['GET'])
+def get_post(post_id):
     if post_id and type(post_id) == int:
         ids = []
         db_sess = db_session_blog.create_session()
