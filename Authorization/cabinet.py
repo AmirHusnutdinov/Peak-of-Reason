@@ -1,10 +1,10 @@
 from flask import render_template, request, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
-from email_validate import validate
-from Authorization.account import password_check
+from Authorization.account import password_check, check_email
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
 from Links import delete, params
+
 
 
 class CabinetPage:
@@ -49,7 +49,7 @@ class CabinetPage:
                     return '/cabinet'
                 else:
                     users.email = mass_cabinet[0]
-            if not validate(mass_cabinet[0]):
+            if not check_email(mass_cabinet[0]):
                 flash("Email не прошел проверку!")
                 return '/cabinet'
             if users.name != mass_cabinet[1] and mass_cabinet[1].strip() != '':

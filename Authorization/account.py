@@ -1,6 +1,6 @@
 import os
+import re
 from random import randrange
-from email_validate import validate
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -35,6 +35,12 @@ def password_check(passwd):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def check_email(email):
+    if re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
+        return True
+    return False
 
 
 class Account:
@@ -86,7 +92,7 @@ class Account:
             if db_sess.query(Users).filter(Users.email == mass_register[0]).first():
                 flash("Такой пользователь уже есть")
                 return '/register'
-            if not validate(mass_register[0]):
+            if not check_email(mass_register[0]):
                 flash("Email не прошел проверку!")
                 return '/register'
             if mass_register[3].strip() == '' or mass_register[4].strip() == '':

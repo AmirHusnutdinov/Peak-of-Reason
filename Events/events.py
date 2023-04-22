@@ -1,7 +1,6 @@
 from flask import render_template
 import math
-from Links import about_us, blog, reviews, answers, event, \
-    authorization, general, cabinet, events, types, params
+from Links import types, params, event
 
 
 class Events:
