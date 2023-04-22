@@ -20,7 +20,7 @@ from Events.data.all_events import All_events
 from Events.data import db_session_event
 
 from Blog.blog import Blog
-from Blog.data import db_session_blog
+from Blog.data import db_session_blog, blog_api
 from Blog.data.Post import Post
 
 from Answers.answers import Answers
@@ -410,5 +410,6 @@ def open_event_admin():
 
 
 db_session_accaunt.global_init("Authorization/db/users.db")
-
+db_session_blog.global_init("Blog/db/resources.db")
+app.register_blueprint(blog_api.blueprint)
 app.run(port=8080, host='127.0.0.1')
