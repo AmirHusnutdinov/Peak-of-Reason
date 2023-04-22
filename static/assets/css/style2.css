@@ -94,6 +94,17 @@ hr {
 }
 
 /* Header */
+.header__nav {
+    width: 100%;
+    padding-top: 30px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
 .header {
     width: 100%;
     padding-top: 30px;
@@ -119,6 +130,26 @@ hr {
     transform: translate3d(0, 0, 0);
 }
 
+.header__nav.fixed {
+    padding: 10px 0;
+
+    background-color: #eb8b8d;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    transform: translate3d(0, 0, 0);
+}
+
+
+.nav1 {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
 .header.active {
     background-color: #eb8b8d;
 }
@@ -141,21 +172,6 @@ hr {
 .nav1 {
     font-size: 14px;
     text-transform: uppercase;
-}
-
-.nav2 {
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
-.blog {
-    display: flex;
-    justify-content: left;
-}
-
-.blog__item {
-    width: 31%;
-    padding-right:20px;
 }
 
 .nav__link {
@@ -273,6 +289,10 @@ hr {
     top: 24px;
     right: 24px;
     z-index: 1;
+}
+
+.nav-toggle:focus {
+    outline: 0;
 }
 
 .nav-toggle__item {
@@ -1001,9 +1021,14 @@ hr {
 
 
 /* Blog */
+.blog {
+    display: flex;
+    justify-content: left;
+}
 
 .blog__item {
     width: 31%;
+    padding-right:20px;
 }
 
 .blog__header {
@@ -1382,6 +1407,13 @@ hr {
         min-height: 650px;
     }
 
+    .intro__suptitle {
+        font-size: 32px;
+    }
+
+    .intro__title {
+        font-size: 80px;
+    }
 
     /* Header */
     .header {
@@ -1389,6 +1421,21 @@ hr {
     }
 
     /* Nav */
+    .nav1__nav {
+        display: none;
+        width: 100%;
+
+        position: absolute;
+        top: 100%;
+        left: 0;
+
+        background: linear-gradient(#5e9af57a, #000000)
+    }
+
+    .nav1__nav.active {
+        display: block;
+    }
+
     .nav1 {
         display: none;
         width: 100%;
@@ -1526,6 +1573,17 @@ hr {
         width: 100%;
     }
 }
+
+@media (max-width: 575px) {
+
+    /* Intro */
+    .intro__suptitle {
+        font-size: 32px;
+    }
+
+    .intro__title {
+        font-size: 40px;
+    }
 
     /* Section */
     .section__header {

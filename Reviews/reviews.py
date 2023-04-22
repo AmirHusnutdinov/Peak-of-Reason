@@ -1,5 +1,5 @@
 from flask import render_template, request
-from Links import about_us, blog, reviews, answers, events, authorization, general, cabinet
+from Links import params
 from datetime import datetime
 
 
@@ -27,15 +27,10 @@ class Reviews:
     def reviews(method, rand_list):
         if method == 'GET':
             return render_template('reviews_page.html',
-                                   general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   events=events,
-                                   authorization=authorization,
+                                   **params,
                                    reviews_=rand_list,
-                                   cabinet=cabinet)
+                                   re_is_active='active'
+                                   )
         elif method == 'POST':
             date = Reviews.get_date(''.join(str(datetime.today().strftime('%d-%m-%Y'))))
             return [request.form['inp1'],

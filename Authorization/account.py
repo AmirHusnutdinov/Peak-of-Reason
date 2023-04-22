@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Links import about_us, blog, reviews, answers, events, authorization, general, register, cabinet
+from Links import params
 
 from settings import app, ALLOWED_EXTENSIONS
 
@@ -41,15 +41,8 @@ class Account:
     @staticmethod
     def account_login(method):
         if method == 'GET':
-            return render_template('login.htm', general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   events=events,
-                                   authorization=authorization,
-                                   register=register,
-                                   cabinet=cabinet)
+            return render_template('login.htm', **params,
+                                   au_is_active='active')
         elif method == 'POST':
             if len(request.form) == 3:
                 mass_login = [request.form['email'], request.form['password'], request.form['check']]
@@ -73,14 +66,8 @@ class Account:
     @staticmethod
     def account_register(method):
         if method == 'GET':
-            return render_template('registration.html', general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   events=events,
-                                   authorization=authorization,
-                                   cabinet=cabinet)
+            return render_template('registration.html', **params,
+                                   au_is_active='active')
         elif method == 'POST':
 
             mass_register = [request.form['email'],

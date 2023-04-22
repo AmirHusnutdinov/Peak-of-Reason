@@ -4,12 +4,13 @@ from email_validate import validate
 from Authorization.account import password_check
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Links import about_us, blog, reviews, answers, events, authorization, general, cabinet, logout, delete
+from Links import delete, params
 
 
 class CabinetPage:
     @staticmethod
     def account_cabinet(method):
+        global gender
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
         gender = ''
@@ -31,19 +32,9 @@ class CabinetPage:
             else:
                 male = ''
                 female = 'checked'
-            return render_template('cabinet.html',
-                                   general=general,
-                                   about_us=about_us,
-                                   blog=blog,
-                                   reviews=reviews,
-                                   answers=answers,
-                                   event1=events,
-                                   authorization=authorization,
-                                   cabinet=cabinet,
-                                   logout=logout,
-                                   delete=delete,
-                                   email=email, name=name, surname=surname,
-                                   male=male, female=female)
+            return render_template('cabinet.html', **params,
+                                   delete=delete, email=email, name=name, surname=surname,
+                                   male=male, female=female, is_cabinet='-after')
         elif method == 'POST':
             mass_cabinet = [request.form['inp_email'], request.form['inp_name'], request.form['inp_surname'],
                             request.form['pass_old'], request.form['pass_new'], request.form['inlineRadioOptions']]
