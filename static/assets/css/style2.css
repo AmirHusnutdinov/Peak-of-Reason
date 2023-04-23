@@ -144,12 +144,6 @@ hr {
     transform: translate3d(0, 0, 0);
 }
 
-
-.nav1 {
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
 .header.active {
     background-color: #eb8b8d;
 }
@@ -169,11 +163,6 @@ hr {
 
 
 /* Nav */
-.nav1 {
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
 .nav__link {
     display: inline-block;
     vertical-align: top;
@@ -1436,17 +1425,6 @@ hr {
         display: block;
     }
 
-    .nav1 {
-        display: none;
-        width: 100%;
-
-        position: absolute;
-        top: 100%;
-        left: 0;
-
-        background-color: #000000;
-    }
-
     .nav__link {
         display: block;
         margin: 0;
@@ -1455,10 +1433,6 @@ hr {
 
     .nav-toggle {
         display: block;
-    }
-
-    .nav1.active {
-    display: block;
     }
     /* Section */
     .section {

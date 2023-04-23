@@ -63,7 +63,8 @@ class Admin:
         if method == 'GET':
             return render_template('admin_answers_page.html',
                                    **params_admin,
-                                   remained=len_ans, an_is='active'
+                                   remained=len_ans, an_is='active',
+                                   answers=answers_info
                                    )
         elif method == 'POST':
             delete_id = list(map(int, ''.join(request.form['inp1']).split()))
