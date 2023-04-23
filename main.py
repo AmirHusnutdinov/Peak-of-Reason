@@ -17,14 +17,14 @@ from Events.events import Events
 from Events.data.teen_events import Teen_events
 from Events.data.adult_events import Adult_events
 from Events.data.all_events import All_events
-from Events.data import db_session_event
+from Events.data import db_session_event, event_api
 
 from Blog.blog import Blog
 from Blog.data import db_session_blog, blog_api
 from Blog.data.Post import Post
 
 from Answers.answers import Answers
-from Answers.data import db_session_answers
+from Answers.data import db_session_answers, answer_api
 from Answers.data.answer_db import Answer_db
 
 from Admin.admin import Admin
@@ -411,5 +411,9 @@ def open_event_admin():
 
 db_session_accaunt.global_init("Authorization/db/users.db")
 db_session_blog.global_init("Blog/db/resources.db")
+db_session_answers.global_init('Answers/db/asks.db')
+db_session_blog.global_init('Events/db/activities.db')
+app.register_blueprint(event_api.blueprint)
+app.register_blueprint(answer_api.blueprint)
 app.register_blueprint(blog_api.blueprint)
 app.run(port=8080, host='127.0.0.1')
