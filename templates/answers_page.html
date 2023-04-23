@@ -75,21 +75,22 @@
     <div>
         <h3 class="subscribe" style="text-align:center;">Нет ответа на твой вопрос? Задай его!</h3>
         <form class="subscribe" method="post">
+                    {{ form.hidden_tag() }}
                 <div class="mb-3">
-                    <label for="exampleFormControlInput6" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput6" name="inp1" placeholder="name@example.com">
+                    <label class="form-label">Email address</label>
+                    {{ form.email(type="email", class="form-control", id="exampleFormControlInput6", placeholder="name@example.com") }}
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput7" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput7" name="inp2" placeholder="Example_name">
+                    <label class="form-label">Name</label>
+                    {{ form.name(type="text", class="form-control", id="exampleFormControlInput7", placeholder="Example_name") }}
                 </div>
                 <div id="textarea_ask" class="mb-3">
-                    <label for="exampleFormControlTextarea3" class="form-label">Напишите свой вопрос</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea3" name="inp3"></textarea>
+                    <label class="form-label">Напишите свой вопрос</label>
+                    {{ form.text(class="form-control", id="exampleFormControlTextarea3") }}
                 </div>
                 <br>
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark">Отправить вопрос</button>
+                    {{ form.submit(type="submit", class="btn btn-dark") }}
                 </div>
 
         </form>
