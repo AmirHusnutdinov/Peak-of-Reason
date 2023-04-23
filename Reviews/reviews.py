@@ -2,6 +2,8 @@ from flask import render_template, request
 from Links import params
 from datetime import datetime
 
+from Reviews.reviewsform import ReviewsForm
+
 
 class Reviews:
 
@@ -25,15 +27,15 @@ class Reviews:
 
     @staticmethod
     def reviews(method, rand_list):
-        if method == 'GET':
-            return render_template('reviews_page.html',
-                                   **params,
-                                   reviews_=rand_list,
-                                   re_is_active='active'
-                                   )
-        elif method == 'POST':
+        form = ReviewsForm()
+        if form.validate_on_submit():
             date = Reviews.get_date(''.join(str(datetime.today().strftime('%d-%m-%Y'))))
-            return [request.form['inp1'],
-                    request.form['inp2'],
-                    request.form['inp3'],
+            return [form.name.data,
+                    form.prof.data,
+                    form.text.data,
                     date]
+        return render_template('reviews_page.html',
+                               **params,
+                               reviews_=rand_list,
+                               re_is_active='active', form=form
+                               )

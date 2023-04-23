@@ -38,21 +38,22 @@
     <div>
         <h3 class="subscribe" style="text-align:center;">Заполни анкету</h3>
         <form class="subscribe" method="post">
+            {{ form.hidden_tag() }}
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Имя</label>
-                    <input type="text" class="form-control" placeholder="Ваше имя" id="exampleFormControlInput1" name="inp1">
+                    <labelclass="form-label">Имя</label>
+                    {{ form.name(type="text", class="form-control", placeholder="Ваше имя", id="exampleFormControlInput1") }}
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Оценка</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="5/5" name="inp2">
+                    <label class="form-label">Оценка</label>
+                    {{ form.prof(type="text", class="form-control", placeholder="5/5", id="exampleFormControlInput2") }}
                 </div>
                 <div id="textarea_ask" class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Напишите свой отзыв</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" name="inp3"></textarea>
+                    <label class="form-label">Напишите свой отзыв</label>
+                    {{ form.text(class="form-control", id="exampleFormControlTextarea1") }}
                 </div>
                 <br>
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark">Отправить</button>
+                    {{ form.submit(type="submit", class="btn btn-dark") }}
                 </div>
                 <br>
         </form>
