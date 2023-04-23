@@ -73,7 +73,8 @@ class CabinetPage:
                 surname = i.surname
                 gender = i.gender
                 break
-        form.gender.default = gender
+        form.gender.data = gender
         return render_template('cabinet.html', **params,
                                delete=delete, logout=logout, email=email, name=name, surname=surname,
-                               is_cabinet='-after', form=form)
+                               is_cabinet='-after', form=form,
+                               title='Your cabinet')

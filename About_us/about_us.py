@@ -6,4 +6,4 @@ class About:
     @staticmethod
     def about():
         return render_template('about_us.html', **params,
-                               ab_is_active='active')
+                               ab_is_active='active', title='About us')

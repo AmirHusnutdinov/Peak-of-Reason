@@ -39,9 +39,9 @@ class Events:
             return render_template('events.html', **params, ev_is_active='active',
                                    event1=event1,
                                    event2=event2,
-                                   posts=three_posts)
+                                   posts=three_posts, title='Events')
         else:
-            return render_template(file, **params, ev_is_active='active',)
+            return render_template(file, **params, ev_is_active='active', title='Events')
 
     @staticmethod
     def event(events1, mode):
@@ -67,7 +67,7 @@ class Events:
                                pb=pb,
                                tt=tt,
                                orator=orator,
-                               posts=three_posts)
+                               posts=three_posts, title='Events')
 
     @staticmethod
     def types_of_events(events_type, label):
@@ -75,5 +75,5 @@ class Events:
         return render_template('types.html',
                                **params, ev_is_active='active',
                                posts=three_posts,
-                               label=label
+                               label=label, title='Events'
                                )

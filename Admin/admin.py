@@ -1,4 +1,7 @@
 from flask import render_template, request
+
+from Admin.blog_adminform import BlogAdminForm
+from Admin.event_adminform import EventAdminForm
 from Links import blog_Admin, event_Admin, answers_Admin, reviews_Admin, general, photo_add_Admin, params_admin
 import os
 from werkzeug.utils import secure_filename
@@ -23,11 +26,8 @@ from Blog.data.Post import Post
 class Admin:
     @staticmethod
     def admin(method):
-        if method == 'GET':
-            return render_template('admin_page.html',
-                                   **params_admin, bl_is='active'
-                                   )
-        elif method == 'POST':
+        form = BlogAdminForm()
+        if form.validate_on_submit():
             db_session_blog.global_init("Blog/db/resources.db")
             db_sess = db_session_blog.create_session()
             all_posts = db_sess.query(Post)
@@ -35,18 +35,21 @@ class Admin:
             for id_ in all_posts:
                 ids.append(id_.id)
             post = Post()
-            post.photo_name = request.form['inp1']
-            post.name = request.form['inp2']
-            post.signature = request.form['inp3']
+            post.photo_name = form.photo_name.data
+            post.name = form.name.data
+            post.signature = form.signature.data
             post.link = f'http://127.0.0.1:8080/blog/?page={(ids[-1] + 1)}'
-            post.post_text = request.form['inp4']
-            post.created_date = request.form['inp5']
+            post.post_text = form.text.data
+            post.created_date = form.date.data
 
             db_sess = db_session_blog.create_session()
             db_sess.add(post)
             db_sess.commit()
 
             return '/blog_admin'
+        return render_template('admin_page.html',
+                               **params_admin, bl_is='active', form=form,
+                               )
 
     @staticmethod
     def admin_answers(method):
@@ -145,11 +148,8 @@ class Admin:
 
     @staticmethod
     def event_admin(method):
-        if method == 'GET':
-            return render_template('admin_event.html',
-                                   **params_admin, ev_is='active'
-                                   )
-        elif method == 'POST':
+        form = EventAdminForm()
+        if form.validate_on_submit():
             db_session_event.global_init("Events/db/activities.db")
             db_sess = db_session_event.create_session()
             all_posts = db_sess.query(Post)
@@ -233,6 +233,11 @@ class Admin:
                 db_sess.commit()
 
                 return '/event_admin'
+
+        return render_template('admin_event.html',
+                               **params_admin, ev_is='active',
+                               form=form
+                               )
 
 
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']

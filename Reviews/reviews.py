@@ -37,5 +37,6 @@ class Reviews:
         return render_template('reviews_page.html',
                                **params,
                                reviews_=rand_list,
-                               re_is_active='active', form=form
+                               re_is_active='active', form=form,
+                               title='Reviews'
                                )

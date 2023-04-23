@@ -65,7 +65,8 @@ class Account:
             flash("Неправильный логин или пароль")
             return '/authorization'
         return render_template('login.htm', **params, register=register,
-                               au_is_active='active', form=form)
+                               au_is_active='active', form=form,
+                               title='Authorization')
 
     @staticmethod
     def account_register(method):
@@ -122,7 +123,8 @@ class Account:
 
             return '/authorization'
         return render_template('registration.html', **params,
-                               au_is_active='active', form=form)
+                               au_is_active='active', form=form,
+                               title='Register')
 
     @staticmethod
     def users_info(blog_info: list):

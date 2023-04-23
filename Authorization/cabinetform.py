@@ -9,6 +9,6 @@ class CabinetForm(FlaskForm):
     surname = StringField('Surname')
     password_old = PasswordField('Пароль', validators=[DataRequired()])
     password_new = PasswordField('Новый пароль')
-    gender = RadioField('Выберите пол', choices=[('M', 'male'), ('F', 'female')],
+    gender = RadioField('Выберите пол', choices=[('male', 'male'), ('female', 'female')],
                         default='male', validators=[DataRequired()])
     submit = SubmitField('SAVE')

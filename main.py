@@ -276,7 +276,6 @@ def open_register():
 def open_cabinet():
     if session.get('authorization'):
         info = CabinetPage.account_cabinet(request.method)
-        print(request.method, info[:50])
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
@@ -304,15 +303,14 @@ def open_cabinet_delete():
         all_information_cabinet = db_sess_cabinet_del.query(Users)
         for i in all_information_cabinet:
             if i.id == session.get('id'):
-                inditification = session.get('id')
-                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(inditification)).first()
+                indit = session.get('id')
+                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(indit)).first()
                 db_sess_cabinet_del.delete(delete_id)
                 db_sess_cabinet_del.commit()
         session.permanent = False
         session.pop('authorization', None)
         session.pop('id', None)
         session.pop('admin', None)
-
         return redirect('/')
     else:
         return redirect('/authorization')

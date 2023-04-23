@@ -30,7 +30,8 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
-        return render_template('blog_page.html', **params, bl_is_active='active'
+        return render_template('blog_page.html', **params, bl_is_active='active',
+                               title='Blog page'
                                )
 
     @staticmethod
@@ -41,4 +42,4 @@ class Blog:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6])
+                               text=item[6], title='Blog page')
