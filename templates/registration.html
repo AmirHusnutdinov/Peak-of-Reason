@@ -2,6 +2,7 @@
 
 {% block content %}
     <form class="form-signin" method="post" enctype=multipart/form-data>
+    {{ form.hidden_tag() }}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
@@ -16,30 +17,24 @@
       </p>
 
       <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus="">
-      <label for="inputName" class="sr-only">Name</label>
-      <input type="text" name="name" id="inputName" class="form-control" placeholder="Name">
-      <label for="inputName" class="sr-only">Surname</label>
-      <input type="text" name="surname" id="inputSurname" class="form-control" placeholder="Surname">
-      <label for="inputPassword1" class="sr-only">Password</label>
-      <input type="password" name="password1" id="inputPassword1" class="form-control" placeholder="Password">
-      <label for="inputPassword2" class="sr-only">Password again</label>
-      <input type="password" name="password2" id="inputPassword2" class="form-control" placeholder="Password again">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="male" checked>
-        <label class="form-check-label" for="inlineRadio1">Male</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="female">
-        <label class="form-check-label" for="inlineRadio2">Female</label>
-      </div>
+      <label class="sr-only">Email address</label>
+      {{ form.email(type="email", id="inputEmail", class="form-control", placeholder="Email address", autofocus="") }}
+      <label class="sr-only">Name</label>
+      {{ form.name(type="text", id="inputName", class="form-control", placeholder="Name", autofocus="") }}
+      <label class="sr-only">Surname</label>
+      {{ form.surname(type="text", id="inputSurname", class="form-control", placeholder="Surname", autofocus="") }}
+      <label class="sr-only">Password</label>
+      {{ form.password1(type="password", id="inputPassword1", class="form-control", placeholder="Password") }}
+      <label class="sr-only">Password again</label>
+      {{ form.password2(type="password", id="inputPassword2", class="form-control", placeholder="Password again") }}
+      <label class="form-check-label">Gender</label>
+      {{ form.gender(type="radio", id="inlineRadio0") }}
 
         <br>
 
       <input type=file name=file>
         <hr>
-      <button class="btn btn-lg btn-dark btn-block" type="submit" >Sign up</button>
+      {{form.submit(class="btn btn-lg btn-dark btn-block", type="submit" ) }}
       <br>
       <br>
       <br>

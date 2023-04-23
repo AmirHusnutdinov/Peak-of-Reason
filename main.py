@@ -276,6 +276,7 @@ def open_register():
 def open_cabinet():
     if session.get('authorization'):
         info = CabinetPage.account_cabinet(request.method)
+        print(request.method, info[:50])
         if request.method == 'GET':
             return info
         elif request.method == 'POST':

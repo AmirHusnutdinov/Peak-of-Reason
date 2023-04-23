@@ -2,6 +2,7 @@
 
 {% block content %}
 <form class="form-signin" method="post">
+    {{ form.hidden_tag() }}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
@@ -15,15 +16,15 @@
           <img class="mb-4" src="../static/assets/images/login/vector_icon.png" alt="" width="120">
       </p>
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus="">
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
+      <label class="sr-only">Email address</label>
+      {{ form.email(type="email", id="inputEmail", class="form-control", placeholder="Email address", autofocus="") }}
+      <label class="sr-only">Password</label>
+      {{ form.password(type="password", id="inputPassword", class="form-control", placeholder="Password") }}
       <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="acceptRules" name="check">
+        {{form.remember_me(type="checkbox", class="form-check-input", id="acceptRules") }}
         <label> Remember me</label>
       </div>
-      <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
+      {{ form.submit(class="btn btn-lg btn-dark btn-block", type="submit") }}
       <br>
       <label>
           No account? <a href="{{register}}">Register</a>

@@ -7,7 +7,8 @@
 
     <div>
         <h3 class="subscribe" style="text-align:center;">Ваши данные</h3>
-        <form class="subscribe" method="post">
+        <form class="subscribe" method="post" novalidate>
+        {{ form.hidden_tag() }}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -18,40 +19,35 @@
             {% endif %}
         {% endwith %}
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Ваше имя</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" name="inp_name" placeholder="{{name}}">
+                    <label class="form-label">Ваше имя</label>
+                    {{ form.name(type="text", id="exampleFormControlInput1", class="form-control", placeholder=name, autofocus="") }}
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput2" class="form-label">Ваша фамилия</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput2" name="inp_surname" placeholder="{{surname}}">
+                    <label class="form-label">Ваша фамилия</label>
+                    {{ form.surname(type="text", id="exampleFormControlInput2", class="form-control", placeholder=surname, autofocus="") }}
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput3" class="form-label">Ваша почта</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput3" name="inp_email" placeholder="{{email}}">
+                    <label class="form-label">Ваша почта</label>
+                    {{ form.email(type="email", id="exampleFormControlInput3", class="form-control", placeholder=email, autofocus="") }}
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput3" class="form-label">Старый пароль</label>
-                    <input type="password" name="pass_old" class="form-control" id="exampleFormControlInput4" placeholder="если хотите поменять пароль напишите актуальный пароль">
+                    <label class="form-label">Старый пароль</label>
+                    {{ form.password_old(type="password", id="exampleFormControlInput4", class="form-control", placeholder="если хотите поменять пароль напишите актуальный пароль") }}
                 </div>
 <br>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput3" class="form-label">Новый пароль</label>
-                    <input type="password" name="pass_new" class="form-control" id="exampleFormControlInput5" placeholder="а здесь напишите новый пароль">
+                    <label class="form-label">Новый пароль</label>
+                    {{ form.password_new(type="password", id="exampleFormControlInput5", class="form-control", placeholder="а здесь напишите новый пароль") }}
                 </div>
 <br>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="male" {{male}}>
-                    <label class="form-check-label" for="inlineRadio1">Male</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="female" {{female}}>
-                    <label class="form-check-label" for="inlineRadio2">Female</label>
-                </div>
+                <label class="form-check-label">Gender</label>
+                {{ form.gender(type="radio", id="inlineRadio0") }}
 <br>
 <br>
+
                 <div class="d-grid gap-2">
                     <!-- Кнопка-триггер модального окна -->
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1">
@@ -72,7 +68,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="submit" name="save" class="btn btn-dark" id="1">SAVE</button>
+                        {{ form.submit(type="submit", class="btn btn-dark") }}
                       </div>
                     </div>
                   </div>
@@ -94,7 +90,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
               </div>
               <div class="modal-body">
-                Доступ к некоторым страницам будет закрыт. Придется заново авторизовываться.
+                Доступ к некоторым страницам будет закрыт. Придется заново авторизоваться.
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
@@ -130,4 +126,5 @@
           </div>
         </div>
     </div>
+    </div>>
 {% endblock %}

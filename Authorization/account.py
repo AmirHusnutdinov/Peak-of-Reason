@@ -6,6 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
+from Authorization.loginform import LoginForm
+from Authorization.registerform import RegisterForm
 from Links import params, register
 
 from settings import app, ALLOWED_EXTENSIONS
@@ -46,42 +48,35 @@ def check_email(email):
 class Account:
     @staticmethod
     def account_login(method):
-        if method == 'GET':
-            return render_template('login.htm', **params, register=register,
-                                   au_is_active='active')
-        elif method == 'POST':
-            if len(request.form) == 3:
-                mass_login = [request.form['email'], request.form['password'], request.form['check']]
-            else:
-                mass_login = [request.form['email'], request.form['password'], 'off']
-
+        form = LoginForm()
+        if form.validate_on_submit():
+            mass_login = [form.email.data, form.password.data, form.remember_me.data]
             db_sess = db_session_accaunt.create_session()
             all_information = db_sess.query(Users)
             for i in all_information:
                 if str(i.email) == mass_login[0] and check_password_hash(i.password, mass_login[1]):
                     session['authorization'] = True
                     session['id'] = i.id
-                    if mass_login[2] == 'on':
+                    if mass_login[2]:
                         session.permanent = True
                     if i.is_admin:
                         session['admin'] = True
                     return '/'
             flash("Неправильный логин или пароль")
             return '/authorization'
+        return render_template('login.htm', **params, register=register,
+                               au_is_active='active', form=form)
 
     @staticmethod
     def account_register(method):
-        if method == 'GET':
-            return render_template('registration.html', **params,
-                                   au_is_active='active')
-        elif method == 'POST':
-
-            mass_register = [request.form['email'],
-                             request.form['password1'],
-                             request.form['password2'],
-                             request.form['name'],
-                             request.form['surname'],
-                             request.form['inlineRadioOptions']]
+        form = RegisterForm()
+        if form.validate_on_submit():
+            mass_register = [form.email.data,
+                             form.password1.data,
+                             form.password2.data,
+                             form.name.data,
+                             form.surname.data,
+                             form.gender.data]
             db_sess = db_session_accaunt.create_session()
             if mass_register[1] != mass_register[2]:
                 flash('Пароли не совпадают')
@@ -126,6 +121,8 @@ class Account:
             db_sess.commit()
 
             return '/authorization'
+        return render_template('registration.html', **params,
+                               au_is_active='active', form=form)
 
     @staticmethod
     def users_info(blog_info: list):

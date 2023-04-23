@@ -1,9 +1,10 @@
 from flask import render_template, request, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
+from Authorization.cabinetform import CabinetForm
 from Authorization.data import db_session_accaunt
 from Authorization.data.users import Users
-from Links import delete, params
+from Links import delete, params, logout
 
 
 class CabinetPage:
@@ -16,29 +17,14 @@ class CabinetPage:
         email = ''
         name = ''
         surname = ''
-
-        if method == 'GET':
-            for i in all_information_cabinet:
-                if i.id == session.get('id'):
-                    email = i.email
-                    name = i.name
-                    surname = i.surname
-                    gender = i.gender
-                    break
-            if gender == 'male':
-                male = 'checked'
-                female = ''
-            else:
-                male = ''
-                female = 'checked'
-            return render_template('cabinet.html', **params,
-                                   delete=delete, email=email, name=name, surname=surname,
-                                   male=male, female=female, is_cabinet='-after')
-        elif method == 'POST':
-            mass_cabinet = [request.form['inp_email'], request.form['inp_name'], request.form['inp_surname'],
-                            request.form['pass_old'], request.form['pass_new'], request.form['inlineRadioOptions']]
-
+        form = CabinetForm()
+        if form.validate_on_submit():
+            mass_cabinet = [form.email.data, form.name.data, form.surname.data,
+                            form.password_old.data, form.password_new.data, form.gender.data]
             users = db_sess_cabinet.query(Users).filter(Users.id == session.get('id')).first()
+            if mass_cabinet[3].strip() == '':
+                flash('Чтобы изменить данные введите пароль')
+                return '/cabinet'
             if not check_password_hash(users.password, mass_cabinet[3]) and mass_cabinet[3] != '':
                 flash('Это не ваш старый пароль')
                 return '/cabinet'
@@ -79,5 +65,15 @@ class CabinetPage:
                 users.gender = mass_cabinet[5]
             db_sess_cabinet.merge(users)
             db_sess_cabinet.commit()
-
-        return '/cabinet'
+            return '/cabinet'
+        for i in all_information_cabinet:
+            if i.id == session.get('id'):
+                email = i.email
+                name = i.name
+                surname = i.surname
+                gender = i.gender
+                break
+        form.gender.default = gender
+        return render_template('cabinet.html', **params,
+                               delete=delete, logout=logout, email=email, name=name, surname=surname,
+                               is_cabinet='-after', form=form)
