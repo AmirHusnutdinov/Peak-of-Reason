@@ -14,7 +14,7 @@ git clone https://github.com/AmirHusnutdinov/Peak-of-Reason.git
 cd Peak-of-Reason
 pip install -r requirements.txt
 ```
-* Запускаем сайт с помощью файла main.py
+* Запускаем сайт с помощью файла server.py
 ```shell
 python3 server.py
 ```
