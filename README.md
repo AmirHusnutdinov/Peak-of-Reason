@@ -14,11 +14,11 @@ git clone https://github.com/AmirHusnutdinov/Peak-of-Reason.git
 cd Peak-of-Reason
 pip install -r requirements.txt
 ```
-* Запускаем игру с помощью файла main.py
+* Запускаем сайт с помощью файла main.py
 ```shell
 python3 server.py
 ```
 
 ## Авторы
 * #### Github - [@ilyas13z](https://github.com/ilyas13z)
-* #### Github - [@AmirHusnutdinov](https://github.com/AmirHusnutdinov)
+* #### Github - [@AmirHusnutdinov](https://github.com/AmirHusnutdinov)**
