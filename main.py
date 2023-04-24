@@ -305,8 +305,8 @@ def open_cabinet_delete():
         all_information_cabinet = db_sess_cabinet_del.query(Users)
         for i in all_information_cabinet:
             if i.id == session.get('id'):
-                indit = session.get('id')
-                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(indit)).first()
+                id_user = session.get('id')
+                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(id_user)).first()
                 db_sess_cabinet_del.delete(delete_id)
                 db_sess_cabinet_del.commit()
         session.permanent = False
