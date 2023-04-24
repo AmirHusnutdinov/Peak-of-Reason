@@ -32,8 +32,8 @@ class Admin:
             db_sess = db_session_blog.create_session()
             all_posts = db_sess.query(Post)
             ids = []
-            for id_ in all_posts:
-                ids.append(id_.id)
+            for i in all_posts:
+                ids.append(i.id)
             post = Post()
             post.photo_name = form.photo_name.data
             post.name = form.name.data
@@ -150,50 +150,49 @@ class Admin:
     def event_admin(method):
         form = EventAdminForm()
         if form.validate_on_submit():
+
             db_session_event.global_init("Events/db/activities.db")
             db_sess = db_session_event.create_session()
-            all_posts = db_sess.query(Post)
+            all_posts = db_sess.query(All_events)
             ids = []
-
-            for id_ in all_posts:
-                ids.append(id_.id)
+            print(all_posts)
+            for i in all_posts:
+                ids.append(i.id)
 
             all_event = All_events()
-            all_event.photo_name = request.form['inp1']
-            all_event.name = request.form['inp2']
-            all_event.signature = request.form['inp3']
+            all_event.photo_name = form.photo_name.data
+            all_event.name = form.name.data
+            all_event.signature = form.signature.data
             all_event.link = f'http://127.0.0.1:8080/events/?page={(ids[-1] + 1)}'
-            all_event.created_date = request.form['inp5']
+            all_event.created_date = form.date.data
 
             db_sess.add(all_event)
             db_sess.commit()
 
-            if request.form['class'] == 'Копилка возможностей' or\
-                    request.form['class'] == 'Тренинги для подростков' or\
-                    request.form['class'] == 'Ораторское искусство':
+            if form.category.data in ['Копилка возможностей', 'Тренинги для подростков', 'Ораторское искусство']:
                 teev_event = Teen_events()
-                teev_event.photo_name = request.form['inp1']
-                teev_event.name = request.form['inp2']
-                teev_event.signature = request.form['inp3']
+                teev_event.photo_name = form.photo_name.data
+                teev_event.name = form.name.data
+                teev_event.signature = form.signature.data
 
-                if request.form['class'] == 'Копилка возможностей':
+                if form.category.data == 'Копилка возможностей':
                     teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}pb=1'
 
-                elif request.form['class'] == 'Тренинги для подростков':
+                elif form.category.data == 'Тренинги для подростков':
                     teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tt=1'
 
-                elif request.form['class'] == 'Ораторское искусство':
+                elif form.category.data == 'Ораторское искусство':
                     teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}orator=1'
 
-                teev_event.created_date = request.form['inp5']
+                teev_event.created_date = form.date.data
 
-                if request.form['class'] == 'Копилка возможностей':
+                if form.category.data == 'Копилка возможностей':
                     teev_event.a_piggy_bank_of_possibilities = True
 
-                elif request.form['class'] == 'Тренинги для подростков':
+                elif form.category.data == 'Тренинги для подростков':
                     teev_event.trainings_for_teenagers = True
 
-                elif request.form['class'] == 'Ораторское искусство':
+                elif form.category.data == 'Ораторское искусство':
                     teev_event.oratory = True
 
                 db_sess.add(teev_event)
@@ -201,32 +200,30 @@ class Admin:
 
                 return '/event_admin'
 
-            elif request.form['class'] == 'Тренинги для родителей' or\
-                    request.form['class'] == 'Индивидуальные консультации' or\
-                    request.form['class'] == 'Искусство общения':
+            elif form.category.data in ['Тренинги для родителей', 'Индивидуальные консультации', 'Искусство общения']:
                 adult_event = Adult_events
-                adult_event.photo_name = request.form['inp1']
-                adult_event.name = request.form['inp2']
-                adult_event.signature = request.form['inp3']
+                adult_event.photo_name = form.photo_name.data
+                adult_event.name = form.name.data
+                adult_event.signature = form.signature.data
 
-                if request.form['class'] == 'Тренинги для родителей':
+                if form.category.data == 'Тренинги для родителей':
                     adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tp=1'
 
-                elif request.form['class'] == 'Индивидуальные консультации':
+                elif form.category.data == 'Индивидуальные консультации':
                     adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ic=1'
 
-                elif request.form['class'] == 'Искусство общения':
+                elif form.category.data == 'Искусство общения':
                     adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ac=1'
 
-                adult_event.created_date = request.form['inp5']
+                adult_event.created_date = form.date.data
 
-                if request.form['class'] == 'Тренинги для родителей':
+                if form.category.data == 'Тренинги для родителей':
                     adult_event.trainings_for_parents = True
 
-                elif request.form['class'] == 'Индивидуальные консультации':
+                elif form.category.data == 'Индивидуальные консультации':
                     adult_event.individual_consultations = True
 
-                elif request.form['class'] == 'Искусство общения':
+                elif form.category.data == 'Искусство общения':
                     adult_event.the_art_of_communication = True
 
                 db_sess.add(adult_event)
