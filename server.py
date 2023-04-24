@@ -1,3 +1,4 @@
+import os
 from random import randrange
 
 from flask import request, redirect, session
@@ -417,4 +418,5 @@ db_session_blog.global_init('Events/db/activities.db')
 app.register_blueprint(event_api.blueprint)
 app.register_blueprint(answer_api.blueprint)
 app.register_blueprint(blog_api.blueprint)
-app.run(port=8080, host='127.0.0.1')
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0', port=port)
