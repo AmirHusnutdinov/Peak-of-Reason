@@ -243,8 +243,10 @@ def open_blog():
                            posts.name, posts.signature,
                            posts.link, posts.created_date, posts.post_text])
     query = request.args.get('page')
+    print(posts_info)
     if query and query != '':
         item = posts_info[int(query) - 1]
+        print(item)
         return Blog.blog_pages(item)
     return Blog.blog(posts_info)
 

@@ -31,7 +31,7 @@ class Blog:
                 end += 1
 
         return render_template('blog_page.html', **params, bl_is_active='active',
-                               title='Blog page'
+                               title='Blog page', posts=three_posts,
                                )
 
     @staticmethod

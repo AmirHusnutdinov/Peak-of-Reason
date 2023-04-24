@@ -42,7 +42,6 @@ class Admin:
             post.post_text = form.text.data
             post.created_date = form.date.data
 
-            db_sess = db_session_blog.create_session()
             db_sess.add(post)
             db_sess.commit()
 
