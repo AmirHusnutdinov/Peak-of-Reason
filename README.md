@@ -21,4 +21,4 @@ python3 server.py
 
 ## Авторы
 * #### Github - [@ilyas13z](https://github.com/ilyas13z)
-* #### Github - [@AmirHusnutdinov](https://github.com/AmirHusnutdinov)**
+* #### Github - [@AmirHusnutdinov](https://github.com/AmirHusnutdinov)
