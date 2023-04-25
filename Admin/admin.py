@@ -21,6 +21,7 @@ from Answers.data.answer_db import Answer_db
 
 from Blog.data import db_session_blog
 from Blog.data.Post import Post
+from settings import GENERAL_NAME_LINK
 
 
 class Admin:
@@ -38,7 +39,7 @@ class Admin:
             post.photo_name = form.photo_name.data
             post.name = form.name.data
             post.signature = form.signature.data
-            post.link = f'http://127.0.0.1:8080/blog/?page={(ids[-1] + 1)}'
+            post.link = f'/blog/?page={(ids[-1] + 1)}'
             post.post_text = form.text.data
             post.created_date = form.date.data
 
@@ -162,7 +163,7 @@ class Admin:
             all_event.photo_name = form.photo_name.data
             all_event.name = form.name.data
             all_event.signature = form.signature.data
-            all_event.link = f'http://127.0.0.1:8080/events/?page={(ids[-1] + 1)}'
+            all_event.link = f'/events/?page={(ids[-1] + 1)}'
             all_event.created_date = form.date.data
 
             db_sess.add(all_event)
@@ -175,13 +176,13 @@ class Admin:
                 teev_event.signature = form.signature.data
 
                 if form.category.data == 'Копилка возможностей':
-                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}pb=1'
+                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}pb=1'
 
                 elif form.category.data == 'Тренинги для подростков':
-                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tt=1'
+                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}tt=1'
 
                 elif form.category.data == 'Ораторское искусство':
-                    teev_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}orator=1'
+                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}orator=1'
 
                 teev_event.created_date = form.date.data
 
@@ -206,13 +207,13 @@ class Admin:
                 adult_event.signature = form.signature.data
 
                 if form.category.data == 'Тренинги для родителей':
-                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}tp=1'
+                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}tp=1'
 
                 elif form.category.data == 'Индивидуальные консультации':
-                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ic=1'
+                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}ic=1'
 
                 elif form.category.data == 'Искусство общения':
-                    adult_event.link = all_event.link = f'http://127.0.0.1:8080/event/types/?page={(ids[-1] + 1)}ac=1'
+                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}ac=1'
 
                 adult_event.created_date = form.date.data
 
