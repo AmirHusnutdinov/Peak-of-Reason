@@ -55,7 +55,7 @@ def add_answer():
         return jsonify({'error': 'Empty request'})
 
     elif not all(key in request.json for key in
-                 ['id', 'email', 'name', 'answer']):
+                 ['email', 'name', 'answer']):
         return jsonify({'error': 'Bad request'})
 
     db_sess = db_session_answers.create_session()
