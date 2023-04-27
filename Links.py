@@ -1,5 +1,3 @@
-import os
-
 from settings import GENERAL_NAME_LINK
 
 reviews = f'{GENERAL_NAME_LINK}/reviews'

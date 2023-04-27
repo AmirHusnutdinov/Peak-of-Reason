@@ -14,7 +14,7 @@ from settings import app, ALLOWED_EXTENSIONS
 
 
 def password_check(passwd):
-    special_sym = ['$', '@', '#', '%']
+    special_sym = ['$', '@', '#', '%', '!', '_']
 
     if len(passwd) < 8:
         return 'length should be at least 8!'
@@ -29,7 +29,7 @@ def password_check(passwd):
         return 'Password should have at least one lowercase letter!'
 
     elif not any(char in special_sym for char in passwd):
-        return 'Password should have at least one of the symbols $,@,#!'
+        return 'Password should have at least one of the symbols $,@,#,!,_,%'
     else:
         return passwd
 
@@ -47,7 +47,7 @@ def check_email(email):
 
 class Account:
     @staticmethod
-    def account_login(method):
+    def account_login():
         form = LoginForm()
         if form.validate_on_submit():
             mass_login = [form.email.data, form.password.data, form.remember_me.data]
@@ -69,7 +69,7 @@ class Account:
                                title='Authorization')
 
     @staticmethod
-    def account_register(method):
+    def account_register():
         form = RegisterForm()
         if form.validate_on_submit():
             mass_register = [form.email.data,
@@ -97,7 +97,6 @@ class Account:
             if len(mass_register[3].strip()) <= 1 or len(mass_register[4].strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
                 return '/register'
-
             if 'file' not in request.files:
                 flash('Не могу прочитать файл')
                 return '/register'

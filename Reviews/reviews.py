@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template
 from Links import params
 from datetime import datetime
 
@@ -6,7 +6,6 @@ from Reviews.reviewsform import ReviewsForm
 
 
 class Reviews:
-
     @staticmethod
     def get_date(date):
         day_list = ['первое', 'второе', 'третье', 'четвёртое',
@@ -15,7 +14,7 @@ class Reviews:
                     'тринадцатое', 'четырнадцатое', 'пятнадцатое', 'шестнадцатое',
                     'семнадцатое', 'восемнадцатое', 'девятнадцатое', 'двадцатое',
                     'двадцать первое', 'двадцать второе', 'двадцать третье',
-                    'двадацать четвёртое', 'двадцать пятое', 'двадцать шестое',
+                    'двадцать четвёртое', 'двадцать пятое', 'двадцать шестое',
                     'двадцать седьмое', 'двадцать восьмое', 'двадцать девятое',
                     'тридцатое', 'тридцать первое']
         month_list = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
@@ -26,7 +25,7 @@ class Reviews:
                 date_list[2] + ' года')
 
     @staticmethod
-    def reviews(method, rand_list):
+    def reviews(rand_list):
         form = ReviewsForm()
         if form.validate_on_submit():
             date = Reviews.get_date(''.join(str(datetime.today().strftime('%d-%m-%Y'))))

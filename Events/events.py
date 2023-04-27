@@ -13,9 +13,9 @@ class Events:
 
         start = 0
         end = 3
-        blog_inform = events_lst[::-1]
+        event_inform = events_lst[::-1]
         for i in range(count_of_columns):
-            three_posts.append(blog_inform[start:end])
+            three_posts.append(event_inform[start:end])
 
             if start + 3 <= count_of_posts:
                 start += 3

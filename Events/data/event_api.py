@@ -30,7 +30,7 @@ def get_event(event_id):
         db_sess = db_session_event.create_session()
         events = db_sess.query(All_events).all()
         for event in events:
-            ids.append(id)
+            ids.append(event.id)
         if event_id not in ids:
             return jsonify(
                 {'Error': 'not such id in db'})
@@ -42,7 +42,7 @@ def get_event(event_id):
     events = db_sess.query(All_events).all()
     return jsonify(
         {
-            'events':
+            'event':
                 [[item.id, item.photo_name, item.name, item.signature, item.link, item.created_date]
                  for item in events if item.id == event_id]
         }
@@ -89,7 +89,7 @@ def update_event(update_id):
     if not request.json:
         return jsonify({'error': 'Empty request'})
 
-    event_to_update = db_sess.query(All_events).filter(event.id == update_id).first()
+    event_to_update = db_sess.query(All_events).filter(All_events.id == update_id).first()
     for key in request.json:
         if key == 'photo_name':
             event_to_update.photo_name = request.json['photo_name']

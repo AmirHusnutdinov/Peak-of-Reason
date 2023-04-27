@@ -23,14 +23,14 @@ def get_answers():
     )
 
 
-@blueprint.route('/api/blog/<int:answer_id>', methods=['GET'])
+@blueprint.route('/api/answers/<int:answer_id>', methods=['GET'])
 def get_answer(answer_id):
     if answer_id and type(answer_id) == int:
         ids = []
         db_sess = db_session_answers.create_session()
         answers = db_sess.query(Answer_db).all()
         for answer in answers:
-            ids.append(id)
+            ids.append(answer.id)
         if answer_id not in ids:
             return jsonify(
                 {'Error': 'not such id in db'})
@@ -86,7 +86,7 @@ def update_answer(update_id):
     if not request.json:
         return jsonify({'error': 'Empty request'})
 
-    answer_to_update = db_sess.query(Answer_db).filter(answer.id == update_id).first()
+    answer_to_update = db_sess.query(Answer_db).filter(Answer_db.id == update_id).first()
     for key in request.json:
         if key == 'email':
             answer_to_update.email = request.json['email']

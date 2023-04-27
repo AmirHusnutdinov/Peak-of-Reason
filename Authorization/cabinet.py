@@ -1,4 +1,4 @@
-from flask import render_template, request, session, flash
+from flask import render_template, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
 from Authorization.cabinetform import CabinetForm
@@ -9,7 +9,7 @@ from Links import delete, params, logout
 
 class CabinetPage:
     @staticmethod
-    def account_cabinet(method):
+    def account_cabinet():
         global gender
         db_sess_cabinet = db_session_accaunt.create_session()
         all_information_cabinet = db_sess_cabinet.query(Users)
@@ -25,10 +25,10 @@ class CabinetPage:
             if mass_cabinet[3].strip() == '':
                 flash('Чтобы изменить данные введите пароль')
                 return '/cabinet'
-            if not check_password_hash(users.password, mass_cabinet[3]) and mass_cabinet[3] != '':
+            if not check_password_hash(users.password, mass_cabinet[3]) and mass_cabinet[3].strip() != '':
                 flash('Это не ваш старый пароль')
                 return '/cabinet'
-            if users.email != mass_cabinet[0] and mass_cabinet[0] != '':
+            if users.email != mass_cabinet[0] and mass_cabinet[0].strip() != '':
                 if db_sess_cabinet.query(Users).filter(Users.email == mass_cabinet[0]).first():
                     flash("Такой пользователь с такой почтой уже зарегистрирован")
                     return '/cabinet'

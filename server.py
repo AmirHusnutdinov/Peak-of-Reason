@@ -61,7 +61,7 @@ def open_reviews():
             ind.add(randrange(0, len(rev_info)))
         for i in ind:
             rand_list.append(rev_info[i])
-        info = Reviews.reviews(request.method, rand_list)
+        info = Reviews.reviews(rand_list)
         if request.method == 'GET':
             return info
 
@@ -244,10 +244,8 @@ def open_blog():
                            posts.name, posts.signature,
                            posts.link, posts.created_date, posts.post_text])
     query = request.args.get('page')
-    print(posts_info)
     if query and query != '':
         item = posts_info[int(query) - 1]
-        print(item)
         return Blog.blog_pages(item)
     return Blog.blog(posts_info)
 
@@ -255,7 +253,7 @@ def open_blog():
 @app.route('/authorization', methods=['GET', 'POST'])
 def open_authorization():
     if not session.get('authorization'):
-        info = Account.account_login(request.method)
+        info = Account.account_login()
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
@@ -266,7 +264,7 @@ def open_authorization():
 @app.route('/register', methods=['GET', 'POST'])
 def open_register():
     if not session.get('authorization'):
-        info = Account.account_register(request.method)
+        info = Account.account_register()
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
@@ -278,7 +276,7 @@ def open_register():
 @app.route('/cabinet', methods=['GET', 'POST'])
 def open_cabinet():
     if session.get('authorization'):
-        info = CabinetPage.account_cabinet(request.method)
+        info = CabinetPage.account_cabinet()
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
@@ -299,22 +297,23 @@ def open_cabinet_logout():
         return redirect('/authorization')
 
 
-@app.route('/cabinet/delete')
+@app.route('/cabinet/delete', methods=['GET', 'POST'])
 def open_cabinet_delete():
     if session.get('authorization'):
-        db_sess_cabinet_del = db_session_accaunt.create_session()
-        all_information_cabinet = db_sess_cabinet_del.query(Users)
-        for i in all_information_cabinet:
-            if i.id == session.get('id'):
-                id_user = session.get('id')
-                delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(id_user)).first()
-                db_sess_cabinet_del.delete(delete_id)
-                db_sess_cabinet_del.commit()
-        session.permanent = False
-        session.pop('authorization', None)
-        session.pop('id', None)
-        session.pop('admin', None)
-        return redirect('/')
+        if request.method == 'GET':
+            db_sess_cabinet_del = db_session_accaunt.create_session()
+            all_information_cabinet = db_sess_cabinet_del.query(Users)
+            for i in all_information_cabinet:
+                if i.id == session.get('id'):
+                    id_user = session.get('id')
+                    delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(id_user)).first()
+                    db_sess_cabinet_del.delete(delete_id)
+                    db_sess_cabinet_del.commit()
+            session.permanent = False
+            session.pop('authorization', None)
+            session.pop('id', None)
+            session.pop('admin', None)
+            return redirect('/')
     else:
         return redirect('/authorization')
 
@@ -322,7 +321,7 @@ def open_cabinet_delete():
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
     if session.get('authorization'):
-        info = Answers.answers(request.method)
+        info = Answers.answers()
 
         if request.method == 'GET':
             return info
@@ -345,7 +344,7 @@ def open_answers():
 @app.route('/blog_admin', methods=['POST', 'GET'])
 def open_admin():
     if session.get('admin'):
-        info = Admin.admin(request.method)
+        info = Admin.admin()
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
@@ -383,10 +382,6 @@ def open_reviews_admin():
         return redirect('/')
 
 
-UPLOAD_FOLDER = 'static/assets/images'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
 @app.route('/add_photo_admin', methods=['GET', 'POST'])
 def open_add_photo():
     if session.get('admin'):
@@ -402,7 +397,7 @@ def open_add_photo():
 @app.route('/event_admin', methods=['GET', 'POST'])
 def open_event_admin():
     if session.get('admin'):
-        info = Admin.event_admin(request.method)
+        info = Admin.event_admin()
         if request.method == 'GET':
             return info
         elif request.method == 'POST':

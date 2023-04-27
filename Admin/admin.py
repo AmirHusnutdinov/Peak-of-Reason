@@ -2,7 +2,7 @@ from flask import render_template, request
 
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
-from Links import blog_Admin, event_Admin, answers_Admin, reviews_Admin, general, photo_add_Admin, params_admin
+from Links import params_admin
 import os
 from werkzeug.utils import secure_filename
 from Events.data.teen_events import Teen_events
@@ -21,12 +21,11 @@ from Answers.data.answer_db import Answer_db
 
 from Blog.data import db_session_blog
 from Blog.data.Post import Post
-from settings import GENERAL_NAME_LINK
 
 
 class Admin:
     @staticmethod
-    def admin(method):
+    def admin():
         form = BlogAdminForm()
         if form.validate_on_submit():
             db_session_blog.global_init("Blog/db/resources.db")
@@ -48,7 +47,7 @@ class Admin:
 
             return '/blog_admin'
         return render_template('admin_page.html',
-                               **params_admin, bl_is='active', form=form,
+                               **params_admin, bl_is='active', form=form
                                )
 
     @staticmethod
@@ -147,7 +146,7 @@ class Admin:
                 return '/add_photo_admin'
 
     @staticmethod
-    def event_admin(method):
+    def event_admin():
         form = EventAdminForm()
         if form.validate_on_submit():
 
@@ -155,7 +154,6 @@ class Admin:
             db_sess = db_session_event.create_session()
             all_posts = db_sess.query(All_events)
             ids = []
-            print(all_posts)
             for i in all_posts:
                 ids.append(i.id)
 

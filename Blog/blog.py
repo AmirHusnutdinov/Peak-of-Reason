@@ -7,7 +7,7 @@ class Blog:
     @staticmethod
     def blog(blog_inform):
 
-        count_of_colums = math.ceil(len(blog_inform) / 3)
+        count_of_columns = math.ceil(len(blog_inform) / 3)
         count_of_posts = len(blog_inform)
 
         three_posts = []
@@ -15,7 +15,7 @@ class Blog:
         start = 0
         end = 3
         blog_inform = blog_inform[::-1]
-        for i in range(count_of_colums):
+        for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
             if start + 3 <= count_of_posts:

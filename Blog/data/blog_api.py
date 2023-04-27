@@ -10,7 +10,7 @@ blueprint = Blueprint(
 )
 
 
-@blueprint.route('/api/blog', methods=['GET'])
+@blueprint.route('/api/blogs', methods=['GET'])
 def get_posts():
     db_sess = db_session_blog.create_session()
     posts = db_sess.query(Post).all()
@@ -30,7 +30,7 @@ def get_post(post_id):
         db_sess = db_session_blog.create_session()
         posts = db_sess.query(Post).all()
         for post in posts:
-            ids.append(id)
+            ids.append(post.id)
         if post_id not in ids:
             return jsonify(
                 {'Error': 'not such id in db'})
@@ -42,7 +42,7 @@ def get_post(post_id):
     posts = db_sess.query(Post).all()
     return jsonify(
         {
-            'posts':
+            'post':
                 [[item.id, item.photo_name, item.name, item.link, item.created_date, item.post_text]
                  for item in posts if item.id == post_id]
         }
@@ -55,7 +55,7 @@ def add_post():
         return jsonify({'error': 'Empty request'})
 
     elif not all(key in request.json for key in
-                 ['id', 'photo_name', 'name', 'signature', 'link', 'created_date', 'post_text']):
+                 ['photo_name', 'name', 'signature', 'link', 'created_date', 'post_text']):
         return jsonify({'error': 'Bad request'})
 
     db_sess = db_session_blog.create_session()

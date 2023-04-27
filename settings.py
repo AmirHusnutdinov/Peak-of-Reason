@@ -10,6 +10,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '__secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
+UPLOAD_FOLDER = 'static/assets/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 

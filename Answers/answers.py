@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template
 
 from Answers.answerform import AnswerForm
 from Links import params
@@ -6,7 +6,7 @@ from Links import params
 
 class Answers:
     @staticmethod
-    def answers(method):
+    def answers():
         form = AnswerForm()
         if form.validate_on_submit():
             return [form.email.data, form.name.data, form.text.data]
