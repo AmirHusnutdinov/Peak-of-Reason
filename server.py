@@ -12,7 +12,7 @@ from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
 from Reviews.data.rev import Feedback
-from Reviews.data import db_session_rev
+from Reviews.data import db_session_rev, feedback_api
 
 from Events.events import Events
 from Events.data.teen_events import Teen_events
@@ -410,8 +410,12 @@ db_session_accaunt.global_init("Authorization/db/users.db")
 db_session_blog.global_init("Blog/db/resources.db")
 db_session_answers.global_init('Answers/db/asks.db')
 db_session_event.global_init('Events/db/activities.db')
+db_session_rev.global_init('Reviews/db/feedback.db')
+
+app.register_blueprint(feedback_api.blueprint)
 app.register_blueprint(event_api.blueprint)
 app.register_blueprint(answer_api.blueprint)
 app.register_blueprint(blog_api.blueprint)
+
 port = int(os.environ.get("PORT", 5000))
 app.run(host='0.0.0.0', port=port)
