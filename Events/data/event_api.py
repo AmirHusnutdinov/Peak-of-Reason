@@ -23,7 +23,7 @@ def get_events():
     )
 
 
-@blueprint.route('/api/blog/<int:event_id>', methods=['GET'])
+@blueprint.route('/api/event/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     if event_id and type(event_id) == int:
         ids = []

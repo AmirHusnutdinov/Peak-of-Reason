@@ -414,7 +414,7 @@ def open_event_admin():
 db_session_accaunt.global_init("Authorization/db/users.db")
 db_session_blog.global_init("Blog/db/resources.db")
 db_session_answers.global_init('Answers/db/asks.db')
-db_session_blog.global_init('Events/db/activities.db')
+db_session_event.global_init('Events/db/activities.db')
 app.register_blueprint(event_api.blueprint)
 app.register_blueprint(answer_api.blueprint)
 app.register_blueprint(blog_api.blueprint)
