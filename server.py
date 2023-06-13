@@ -237,18 +237,10 @@ def open_event_type():
 @app.route('/blog/')
 def open_blog():
     db_session_blog.global_init("Blog/db/resources.db")
-    db_sess = db_session_blog.create_session()
-    all_posts = db_sess.query(Post)
-    posts_info = []
-    for posts in all_posts:
-        posts_info.append([posts.id, posts.photo_name,
-                           posts.name, posts.signature,
-                           posts.link, posts.created_date, posts.post_text])
     query = request.args.get('page')
     if query and query != '':
-        item = posts_info[int(query) - 1]
-        return Blog.blog_pages(item)
-    return Blog.blog(posts_info)
+        return Blog.blog_pages(query)
+    return Blog.blog()
 
 
 @app.route('/authorization', methods=['GET', 'POST'])

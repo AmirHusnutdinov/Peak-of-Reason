@@ -1,3 +1,4 @@
+import psycopg2
 from flask import render_template, request
 
 from Admin.blog_adminform import BlogAdminForm
@@ -19,8 +20,7 @@ from Admin.data.admin_rev import Feedback_Admin
 from Answers.data import db_session_answers
 from Answers.data.answer_db import Answer_db
 
-from Blog.data import db_session_blog
-from Blog.data.Post import Post
+from settings import host, user, password, db_name
 
 
 class Admin:
@@ -28,22 +28,52 @@ class Admin:
     def admin():
         form = BlogAdminForm()
         if form.validate_on_submit():
-            db_session_blog.global_init("Blog/db/resources.db")
-            db_sess = db_session_blog.create_session()
-            all_posts = db_sess.query(Post)
-            ids = []
-            for i in all_posts:
-                ids.append(i.id)
-            post = Post()
-            post.photo_name = form.photo_name.data
-            post.name = form.name.data
-            post.signature = form.signature.data
-            post.link = f'/blog/?page={(ids[-1] + 1)}'
-            post.post_text = form.text.data
-            post.created_date = form.date.data
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
 
-            db_sess.add(post)
-            db_sess.commit()
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """SELECT id FROM blog;"""
+                    )
+                    ids = cursor.fetchall()
+                    if not ids:
+                        ids = [0]
+                with connection.cursor() as cursor:
+                    cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
+                    date = cursor.fetchone()
+                    date = date[0]
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""INSERT INTO blog VALUES
+                                ({ids[-1]}, '{form.name.data}', '{form.signature.data}', '{form.text.data}',
+                                '/blog/?page={ids[-1]}', '{date}'::date, '{form.photo_name.data}');"""
+                    )
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
 
             return '/blog_admin'
         return render_template('admin_page.html',
@@ -52,28 +82,81 @@ class Admin:
 
     @staticmethod
     def admin_answers(method):
-        db_session_answers.global_init("Answers/db/asks.db")
-        db_sess = db_session_answers.create_session()
-        all_answers = db_sess.query(Answer_db)
-        answers_info = []
-        for answers in all_answers:
-            answers_info.append([answers.id,
-                                 answers.email,
-                                 answers.name,
-                                 answers.answer])
+        try:
+            # connect to exist database
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            # the cursor for perfoming database operations
+            # cursor = connection.cursor()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT version();"
+                )
+
+                print(f"Server version: {cursor.fetchone()}")
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, users.email, users.name, answer FROM answers
+                    INNER JOIN users ON answers.user_id = users.user_id;"""
+                )
+                answers_info = cursor.fetchall()
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                # cursor.close()
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
         len_ans = len(answers_info)
         if method == 'GET':
             return render_template('admin_answers_page.html',
-                                   **params_admin,
-                                   remained=len_ans, an_is='active',
-                                   answers=answers_info
+                                   **params_admin, remained=len_ans,
+                                   answers = answers_info
                                    )
         elif method == 'POST':
             delete_id = list(map(int, ''.join(request.form['inp1']).split()))
-            for id_ in delete_id:
-                deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
-                db_sess.delete(deleted_answer)
-                db_sess.commit()
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM answers WHERE id = {int(delete_id[0])}::int;"""
+                    )
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
 
             return '/answers_admin'
 

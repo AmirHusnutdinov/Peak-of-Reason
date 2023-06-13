@@ -1,8 +1,8 @@
 import datetime
 
 from flask import Flask
-
-GENERAL_NAME_LINK = 'http://127.0.0.1:5000'
+host = '127.0.0.1'
+GENERAL_NAME_LINK = f'http://{host}:5000'
 
 
 app = Flask(__name__)
@@ -15,6 +15,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+
+
+user = 'skill'
+password = '12345'
+db_name = 'mindease'
 
 # app.config['UPLOADED_PHOTOS_DEST'] = 'static/assets/images/clients'
 #
