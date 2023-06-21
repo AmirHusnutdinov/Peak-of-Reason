@@ -1,5 +1,6 @@
 import os
 
+import psycopg2
 from flask import request, redirect, session
 
 from Authorization.cabinet import CabinetPage
@@ -26,7 +27,7 @@ from Admin.admin import Admin
 
 from About_us.about_us import About
 
-from settings import app
+from settings import app, host, user, password, db_name
 
 
 @app.route('/')
@@ -48,150 +49,174 @@ def open_reviews():
 
 @app.route('/events/')
 def open_events():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess_all = db_session_event.create_session()
-    all_events = db_sess_all.query(All_events)
-    event_info = []
-    page = request.args.get('page')
-    file = None
-    if page and page != '':
-        file = 'event_example.html'
-    for item in all_events:
-        event_info.append([item.id,
-                           item.photo_name,
-                           item.name,
-                           item.signature,
-                           item.link,
-                           item.created_date])
-    return Events.events(event_info, file)
+    try:
+        # connect to exist database
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                FROM events;"""
+            )
+            event_info = cursor.fetchall()
+        page = request.args.get('page')
+        file = None
+        if page and page != '':
+            file = 'event_example.html'
+        return Events.events(event_info, file)
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
 
 
 @app.route('/event/')
 def open_event1():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess = db_session_event.create_session()
+    try:
+        # connect to exist database
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+        connection.autocommit = True
 
-    query1 = request.args.get('teen')
-    query2 = request.args.get('adult')
-    mode = ''
-    all_event = []
+        query1 = request.args.get('teen')
+        query2 = request.args.get('adult')
+        mode = ''
 
-    if query1 and query1 != '':
-        all_event = db_sess.query(Teen_events)
-        mode = 'teen'
+        if query1 and query1 != '':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_teen = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
 
-    elif query2 and query2 != '':
-        all_event = db_sess.query(Adult_events)
-        mode = 'adult'
+            mode = 'teen'
 
-    event_info = []
-    for item in all_event:
-        event_info.append([item.id,
-                           item.photo_name,
-                           item.name,
-                           item.signature,
-                           item.link,
-                           item.created_date])
+        elif query2 and query2 != '':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')   
+                    FROM events WHERE is_adult = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            mode = 'adult'
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
     return Events.event(event_info, mode)
 
 
 @app.route('/event/types/')
 def open_event_type():
-    db_session_event.global_init("Events/db/activities.db")
-    db_sess = db_session_event.create_session()
-    all_event1 = db_sess.query(Teen_events)
-    all_event2 = db_sess.query(Adult_events)
-    event_info = []
+    try:
+        # connect to exist database
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+        connection.autocommit = True
 
-    query1 = request.args.get('pb')
-    query2 = request.args.get('tt')
-    query3 = request.args.get('orator')
-    query4 = request.args.get('tp')
-    query5 = request.args.get('ic')
-    query6 = request.args.get('ac')
-    page = request.args.get('page')
+        query1 = request.args.get('pb')
+        query2 = request.args.get('tt')
+        query3 = request.args.get('orator')
+        query4 = request.args.get('tp')
+        query5 = request.args.get('ic')
+        query6 = request.args.get('ac')
+        page = request.args.get('page')
 
-    if query1 and query1 != '':
-        label = 'Копилка возможностей'
-        for item in all_event1:
-            if item.a_piggy_bank_of_possibilities == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        if query1 and query1 != '':
+            label = 'Копилка возможностей'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_apbop = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif query2 and query2 != '':
-        label = 'Подростковые тренинги'
-        for item in all_event1:
-            if item.trainings_for_teenagers == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        elif query2 and query2 != '':
+            label = 'Подростковые тренинги'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_tft = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif query3 and query3 != '':
-        label = 'Ораторское искусство'
-        for item in all_event1:
-            if item.oratory == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        elif query3 and query3 != '':
+            label = 'Ораторское искусство'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_oratory = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif query4 and query4 != '':
-        label = 'Тренинги для родителей'
-        for item in all_event2:
-            if item.trainings_for_parents == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        elif query4 and query4 != '':
+            label = 'Тренинги для родителей'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_tfp = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif query5 and query5 != '':
-        label = 'Индивидуальные консультации'
-        for item in all_event2:
-            if item.individual_consultations == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        elif query5 and query5 != '':
+            label = 'Индивидуальные консультации'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_ic = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif query6 and query6 != '':
-        label = 'Искусство общения'
-        for item in all_event2:
-            if item.the_art_of_communication == 1:
-                event_info.append([item.id,
-                                   item.photo_name,
-                                   item.name,
-                                   item.signature,
-                                   item.link,
-                                   item.created_date])
-        return Events.types_of_events(event_info, label)
+        elif query6 and query6 != '':
+            label = 'Искусство общения'
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    FROM events WHERE is_taoc = 'true'::bool;"""
+                )
+                event_info = cursor.fetchall()
+            return Events.types_of_events(event_info, label)
 
-    elif page and page != '':
-        pass
-
+        elif page and page != '':
+            pass
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
     return redirect('/')
 
 
 @app.route('/blog/')
 def open_blog():
-    db_session_blog.global_init("Blog/db/resources.db")
     query = request.args.get('page')
     if query and query != '':
         return Blog.blog_pages(int(query))

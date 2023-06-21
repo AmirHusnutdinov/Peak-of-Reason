@@ -3,8 +3,6 @@ from flask import render_template, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
 from Authorization.cabinetform import CabinetForm
-from Authorization.data import db_session_accaunt
-from Authorization.data.users import Users
 from Links import delete, params, logout
 from settings import host, user, password, db_name
 
@@ -13,12 +11,7 @@ class CabinetPage:
     @staticmethod
     def account_cabinet():
         global gender
-        db_sess_cabinet = db_session_accaunt.create_session()
-        all_information_cabinet = db_sess_cabinet.query(Users)
         gender = ''
-        email = ''
-        name = ''
-        surname = ''
         form = CabinetForm()
         try:
             # connect to exist database
@@ -72,7 +65,13 @@ class CabinetPage:
                     flash('Это не ваш старый пароль')
                     return '/cabinet'
                 if user_list[0] != form.email.data and form.email.data.strip() != '':
-                    if db_sess_cabinet.query(Users).filter(Users.email == form.email.data).first():
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""SELECT COUNT(*) FROM users
+                            WHERE email = '{form.email.data.strip()}';"""
+                        )
+                        email_is_one = bool(cursor.fetchone()[0])
+                    if email_is_one:
                         flash("Такой пользователь с такой почтой уже зарегистрирован")
                         return '/cabinet'
                     else:
