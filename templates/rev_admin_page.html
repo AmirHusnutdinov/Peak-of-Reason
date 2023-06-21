@@ -35,16 +35,18 @@
             </form>
         <hr>
         <form class="subscribe">
-            {% for rev in review%}
+            {% for rev in review %}
 
                 <div class="mb-3">
                     <p>Отзыв номер "{{rev[0]}}"</p>
                     <p class="form-label">От: {{rev[1]}}</p>
+                    <p class="form-label">Его id: {{rev[5]}}</p>
                     <p>Оценка: {{rev[2]}}</p>
                     <p>Комментарий:</p>
                     <p>Дата добавления: {{rev[4]}}</p>
                     <textarea cols="130" disabled rows="7">{{rev[3]}}
                     </textarea>
+                    <img src= "../{{directory}}/{{rev[6]}}" width="200" height="200">
                 </div>
             <br>
             <br>

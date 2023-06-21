@@ -1,19 +1,14 @@
 import os
 
-from random import randrange
-
 from flask import request, redirect, session
 
 from Authorization.cabinet import CabinetPage
-from Authorization.data import db_session_accaunt
-from Authorization.data.users import Users
 from Authorization.account import Account
 
 from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
-from Reviews.data.rev import Feedback
-from Reviews.data import db_session_rev, feedback_api
+from Reviews.data import feedback_api
 
 from Events.events import Events
 from Events.data.teen_events import Teen_events
@@ -23,15 +18,11 @@ from Events.data import db_session_event, event_api
 
 from Blog.blog import Blog
 from Blog.data import db_session_blog, blog_api
-from Blog.data.Post import Post
 
 from Answers.answers import Answers
-from Answers.data import db_session_answers, answer_api
-from Answers.data.answer_db import Answer_db
+from Answers.data import answer_api
 
 from Admin.admin import Admin
-from Admin.data import db_session_admin
-from Admin.data.admin_rev import Feedback_Admin
 
 from About_us.about_us import About
 
@@ -46,47 +37,11 @@ def open_main():
 @app.route('/reviews', methods=['GET', 'POST'])
 def open_reviews():
     if session.get('authorization'):
-        db_session_rev.global_init("Reviews/db/feedback.db")
-        db_sess = db_session_rev.create_session()
-        all_rev = db_sess.query(Feedback)
-        rev_info = []
-        for rev in all_rev:
-            rev_info.append([rev.name,
-                             rev.estimation,
-                             rev.comment,
-                             rev.created_date,
-                             rev.photo])
-        ind = set()
-        rand_list = []
-        while len(ind) != 4:
-            ind.add(randrange(0, len(rev_info)))
-        for i in ind:
-            rand_list.append(rev_info[i])
-        info = Reviews.reviews(rand_list)
+        info = Reviews.reviews()
         if request.method == 'GET':
             return info
-
         elif request.method == 'POST':
-            db_session_accaunt.global_init('Authorization/db/users.db')
-            dbs = db_session_accaunt.create_session()
-            photo = None
-            for i in dbs.query(Users):
-                if i.id == session.get('id'):
-                    photo = i.photo
-                    
-            db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-            review = Feedback_Admin()
-            review.name = info[0]
-            review.estimation = info[1]
-            review.comment = info[2]
-            review.created_date = info[3]
-            review.photo = photo
-
-            db_sess = db_session_admin.create_session()
-            db_sess.add(review)
-            db_sess.commit()
-
-            return redirect('/reviews')
+            return redirect(info)
     else:
         return redirect('/authorization')
 
@@ -239,7 +194,7 @@ def open_blog():
     db_session_blog.global_init("Blog/db/resources.db")
     query = request.args.get('page')
     if query and query != '':
-        return Blog.blog_pages(query)
+        return Blog.blog_pages(int(query))
     return Blog.blog()
 
 
@@ -294,14 +249,7 @@ def open_cabinet_logout():
 def open_cabinet_delete():
     if session.get('authorization'):
         if request.method == 'GET':
-            db_sess_cabinet_del = db_session_accaunt.create_session()
-            all_information_cabinet = db_sess_cabinet_del.query(Users)
-            for i in all_information_cabinet:
-                if i.id == session.get('id'):
-                    id_user = session.get('id')
-                    delete_id = db_sess_cabinet_del.query(Users).filter(Users.id == int(id_user)).first()
-                    db_sess_cabinet_del.delete(delete_id)
-                    db_sess_cabinet_del.commit()
+            CabinetPage.account_cabinet_del()
             session.permanent = False
             session.pop('authorization', None)
             session.pop('id', None)
@@ -315,21 +263,10 @@ def open_cabinet_delete():
 def open_answers():
     if session.get('authorization'):
         info = Answers.answers()
-
         if request.method == 'GET':
             return info
         elif request.method == 'POST':
-            db_session_answers.global_init("Answers/db/asks.db")
-            answers = Answer_db()
-            answers.email = info[0]
-            answers.name = info[1]
-            answers.answer = info[2]
-
-            db_sess = db_session_answers.create_session()
-            db_sess.add(answers)
-            db_sess.commit()
-
-            return redirect('/answers')
+            return redirect(info)
     else:
         return redirect('/authorization')
 
@@ -399,11 +336,7 @@ def open_event_admin():
         return redirect('/')
 
 
-db_session_accaunt.global_init("Authorization/db/users.db")
 db_session_blog.global_init("Blog/db/resources.db")
-db_session_answers.global_init('Answers/db/asks.db')
-db_session_event.global_init('Events/db/activities.db')
-db_session_rev.global_init('Reviews/db/feedback.db')
 
 app.register_blueprint(feedback_api.blueprint)
 app.register_blueprint(event_api.blueprint)

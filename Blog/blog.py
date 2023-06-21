@@ -42,14 +42,14 @@ class Blog:
                 # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
-        count_of_columns = math.ceil(len(blog_inform) / 3)
-        count_of_posts = len(blog_inform)
 
         three_posts = []
 
         start = 0
         end = 3
         blog_inform = posts[::-1]
+        count_of_columns = math.ceil(len(blog_inform) / 3)
+        count_of_posts = len(blog_inform)
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 

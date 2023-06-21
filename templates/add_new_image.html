@@ -8,8 +8,15 @@
 <p class="subscribe" style="text-align:center;">Примечание: имя файла должно быть на английском языке</p>
 <hr>
 <br>
-    <form method=post enctype=multipart/form-data style="text-align:center;">
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+<form action="" method="post" novalidate enctype="multipart/form-data" style="text-align:center;" class="subscribe">
+
+    {{ form.hidden_tag() }}
+
+    {{ form.fileName.label }}<br><br>
+
+    <p style="width: 300px; position: relative; right: -350px;">{{ form.fileName(class="form-control") }}</p><br>
+
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+
+</form>
 {% endblock %}

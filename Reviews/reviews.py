@@ -1,8 +1,10 @@
-from flask import render_template
+import psycopg2
+from flask import render_template, session
 from Links import params
 from datetime import datetime
 
 from Reviews.reviewsform import ReviewsForm
+from settings import host, user, password, db_name
 
 
 class Reviews:
@@ -25,14 +27,84 @@ class Reviews:
                 date_list[2] + ' года')
 
     @staticmethod
-    def reviews(rand_list):
+    def reviews():
+        try:
+            # connect to exist database
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT version();"
+                )
+
+                print(f"Server version: {cursor.fetchone()}")
+
+            # get data from a table
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """select users.name, estimation, comment, created_date, feedback.photo_way from feedback 
+                    INNER JOIN users ON feedback.user_id = users.user_id
+                    order by random() limit 4;"""
+                )
+                rand_list = cursor.fetchall()
+                print(rand_list)
+            with connection.cursor() as cursor:
+                cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
+                date = cursor.fetchone()[0]
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                # cursor.close()
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+
         form = ReviewsForm()
         if form.validate_on_submit():
-            date = Reviews.get_date(''.join(str(datetime.today().strftime('%d-%m-%Y'))))
-            return [form.name.data,
-                    form.prof.data,
-                    form.text.data,
-                    date]
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""INSERT INTO feedback_to_moderate (user_id, estimation, comment, created_date) 
+                            values
+                            ((SELECT user_id FROM users WHERE user_id = {session.get("id")}::int), '{form.prof.data}',
+                            '{form.text.data}', '{date}'::date);"""
+                    )
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            return '/reviews'
+
         return render_template('reviews_page.html',
                                **params,
                                reviews_=rand_list,
