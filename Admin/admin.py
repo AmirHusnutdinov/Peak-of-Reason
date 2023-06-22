@@ -163,11 +163,6 @@ class Admin:
 
     @staticmethod
     def admin_rev(method):
-        db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-        db_session_rev.global_init("Reviews/db/feedback.db")
-
-        db_sess_admin = db_session_admin.create_session()
-        db_sess_rev = db_session_rev.create_session()
         try:
             # connect to exist database
             connection = psycopg2.connect(
@@ -190,7 +185,8 @@ class Admin:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"""SELECT id, users.name, estimation, comment, created_date, users.user_id, users.photo_way 
+                    f"""SELECT id, users.name, estimation, comment, to_char(created_date, 'dd-mm-yyyy'), users.user_id, 
+                    users.photo_way 
                     FROM feedback_to_moderate
                     INNER JOIN users ON feedback_to_moderate.user_id = users.user_id
                     ORDER BY id ASC ;"""

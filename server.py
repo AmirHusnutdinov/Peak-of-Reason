@@ -12,10 +12,7 @@ from Reviews.reviews import Reviews
 from Reviews.data import feedback_api
 
 from Events.events import Events
-from Events.data.teen_events import Teen_events
-from Events.data.adult_events import Adult_events
-from Events.data.all_events import All_events
-from Events.data import db_session_event, event_api
+from Events.data import event_api
 
 from Blog.blog import Blog
 from Blog.data import db_session_blog, blog_api
