@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
 from Authorization.cabinetform import CabinetForm
 from Links import delete, params, logout
-from settings import host, user, password, db_name
+from settings import host, user, password, db_name, UPLOAD_FOLDER
 
 
 class CabinetPage:
@@ -142,10 +142,12 @@ class CabinetPage:
         email = user_list[0]
         name = user_list[1]
         surname = user_list[2]
+        photo_way = user_list[5]
         form.gender.data = user_list[4]
 
         return render_template('cabinet.html', **params,
                                delete=delete, logout=logout, email=email, name=name, surname=surname,
+                               photo_way=photo_way, directory=UPLOAD_FOLDER,
                                is_cabinet='-after', form=form,
                                title='Your cabinet')
 

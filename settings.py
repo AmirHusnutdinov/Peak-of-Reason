@@ -13,7 +13,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 UPLOAD_FOLDER = 'static/assets/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['UPLOAD_FOLDER1'] = 'static/assets/images/clients'
+UPLOAD_FOLDER1 = 'static/assets/images/clients'
+app.config['UPLOAD_FOLDER1'] = UPLOAD_FOLDER1
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 

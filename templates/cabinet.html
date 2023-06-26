@@ -18,6 +18,12 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+                <label class="form-check-label">Твое фото</label>
+<br>
+                <img src="../{{directory}}/{{photo_way}}" width="200" height="200">
+                {{ form.photo(type="file", id="exampleFormControlInput6") }}
+<br>
+<br>
                 <div class="mb-3">
                     <label class="form-label">Ваше имя</label>
                     {{ form.name(type="text", id="exampleFormControlInput1", class="form-control", placeholder=name, autofocus="") }}
@@ -46,6 +52,7 @@
                 <label class="form-check-label">Gender</label>
                 {{ form.gender(type="radio", id="inlineRadio0") }}
 <br>
+
 <br>
 
                 <div class="d-grid gap-2">

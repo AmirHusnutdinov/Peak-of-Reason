@@ -123,13 +123,6 @@ class Account:
     def account_register():
         form = RegisterForm()
         if form.validate_on_submit():
-            mass_register = [form.email.data,
-                             form.password1.data,
-                             form.password2.data,
-                             form.name.data,
-                             form.surname.data,
-                             form.gender.data]
-
             try:
                 # connect to exist database
                 connection = psycopg2.connect(
@@ -164,7 +157,6 @@ class Account:
                     # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
-            db_sess = db_session_accaunt.create_session()
             if form.password1.data != form.password2.data:
                 flash('Пароли не совпадают')
                 return '/register'
