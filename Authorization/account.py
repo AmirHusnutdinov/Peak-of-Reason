@@ -175,21 +175,20 @@ class Account:
             if len(form.name.data.strip()) <= 1 or len(form.surname.data.strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
                 return '/register'
-            if 'file' not in request.files:
-                flash('Не могу прочитать файл')
-                return '/register'
-            file = request.files['file']
             flag = False
             filename = None
-            if file and allowed_file(file.filename) and file.filename != '':
-                filename = str(int(os.listdir('static/assets/images/clients')[-1].split('.')[0]) + 1) + '.jpg'
-                file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
+            if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and form.fileName.data.filename != '':
+                last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
+                last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
+                last_file = last_file[-1]
+                image_data = request.files[form.fileName.name].read()
+                filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
+                open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
                 flag = True
-
             if flag:
                 photo = f'clients/{filename}'
             else:
-                photo = f'clients_example/{str(randrange(1, 10)) + ".jpg"}'
+                photo = f'clients_example/{str(randrange(1, 9)) + ".jpg"}'
             try:
                 # connect to exist database
                 connection = psycopg2.connect(
@@ -212,10 +211,10 @@ class Account:
 
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way) 
+                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way)
                             values
-                            ('{form.name.data}', '{form.surname.data}', '{form.email.data}', 
-                            '{generate_password_hash(form.password1.data)}', 'False'::bool, 
+                            ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
+                            '{generate_password_hash(form.password1.data)}', 'False'::bool,
                             '{form.gender.data}', '{photo}');"""
                     )
 

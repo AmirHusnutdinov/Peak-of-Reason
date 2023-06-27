@@ -11,5 +11,5 @@ class CabinetForm(FlaskForm):
     password_new = PasswordField('Новый пароль')
     gender = RadioField('Выберите пол', choices=[('male', 'male'), ('female', 'female')],
                         default='male', validators=[DataRequired()])
-    photo = FileField('Select file')
+    fileName = FileField('Select file')
     submit = SubmitField('SAVE')

@@ -1,10 +1,17 @@
+import os
+
 import psycopg2
-from flask import render_template, session, flash
+from flask import render_template, session, flash, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
 from Authorization.cabinetform import CabinetForm
 from Links import delete, params, logout
-from settings import host, user, password, db_name, UPLOAD_FOLDER
+from settings import host, user, password, db_name, UPLOAD_FOLDER, ALLOWED_EXTENSIONS, app
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 class CabinetPage:
@@ -130,6 +137,22 @@ class CabinetPage:
                             SET gender = '{form.gender.data}'
                             WHERE user_id = '{session.get("id")}'::int;"""
                         )
+                if form.fileName.data.filename and allowed_file(form.fileName.data.filename)\
+                        and form.fileName.data.filename != '':
+                    last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
+                    last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
+                    last_file = last_file[-1]
+                    image_data = request.files[form.fileName.name].read()
+                    filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
+                    open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
+
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""UPDATE users
+                            SET photo_way = '{'/clients/' + filename}'
+                            WHERE user_id = '{session.get("id")}'::int;"""
+                        )
+
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:

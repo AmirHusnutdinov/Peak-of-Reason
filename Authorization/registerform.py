@@ -11,5 +11,5 @@ class RegisterForm(FlaskForm):
     password2 = PasswordField('Повторите пароль', validators=[DataRequired()])
     gender = RadioField('Выберите пол', choices=['male', 'female'],
                         default='male', validators=[DataRequired()])
-    photo = FileField('Select file')
+    fileName = FileField('Select file')
     submit = SubmitField('Sign in')

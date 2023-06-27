@@ -296,11 +296,10 @@ class Admin:
     def add_photo(method, app):
         form = FileForm()
         if form.validate_on_submit():
-            print(os.listdir(app.config['UPLOAD_FOLDER1']))
-            last_file = os.listdir(app.config['UPLOAD_FOLDER1'])[-1]
+            last_file = os.listdir(app.config['UPLOAD_FOLDER'])[-1]
             image_data = request.files[form.fileName.name].read()
             filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
-            open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
+            open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb').write(image_data)
             return '/add_photo_admin'
         return render_template('add_new_image.html',
                                **params_admin, ph_is='active', form=form)

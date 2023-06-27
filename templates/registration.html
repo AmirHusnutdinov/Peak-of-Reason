@@ -32,7 +32,8 @@
 
         <br>
 
-      <input type=file name=file>
+      <label class="form-check-label">Выберите свое фото</label>
+      {{ form.fileName(type="file", id="inputFile") }}
         <hr>
       {{form.submit(class="btn btn-lg btn-dark btn-block", type="submit" ) }}
       <br>
