@@ -1,7 +1,7 @@
 import os
 
 import psycopg2
-from flask import request, redirect, session
+from flask import request, redirect, session, render_template
 
 from Authorization.cabinet import CabinetPage
 from Authorization.account import Account
@@ -356,6 +356,16 @@ def open_event_admin():
             return redirect(info)
     else:
         return redirect('/')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_internal_server_error(e):
+    return render_template('500.html'), 500
 
 
 db_session_blog.global_init("Blog/db/resources.db")

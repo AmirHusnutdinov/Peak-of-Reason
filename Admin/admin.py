@@ -6,20 +6,6 @@ from Admin.event_adminform import EventAdminForm
 from Admin.file_adminform import FileForm
 from Links import params_admin
 import os
-from werkzeug.utils import secure_filename
-from Events.data.teen_events import Teen_events
-from Events.data.adult_events import Adult_events
-from Events.data.all_events import All_events
-from Events.data import db_session_event
-
-from Reviews.data import db_session_rev
-from Reviews.data.rev import Feedback
-
-from Admin.data import db_session_admin
-from Admin.data.admin_rev import Feedback_Admin
-
-from Answers.data import db_session_answers
-from Answers.data.answer_db import Answer_db
 
 from settings import host, user, password, db_name, UPLOAD_FOLDER
 
@@ -38,9 +24,6 @@ class Admin:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
 
                 with connection.cursor() as cursor:
                     cursor.execute(
