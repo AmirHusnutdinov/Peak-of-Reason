@@ -295,6 +295,7 @@ def open_answers():
 
 @app.route('/blog_admin', methods=['POST', 'GET'])
 def open_admin():
+    print(session.get('admin'))
     if session.get('admin'):
         info = Admin.admin()
         if request.method == 'GET':
