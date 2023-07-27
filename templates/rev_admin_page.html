@@ -13,46 +13,36 @@
             <h1 class="subscribe" style="text-align:center;">На данный момент отзывов осталось: {{remained}}</h1>
             <br>
 
-            <form class="subscribe" method="post">
-
-            <label for="inp1" class="form-label">Укажите номера отзывов, которые надо удалить, через пробел без запятых</label>
-            <input type="text" class="form-control" name="inp1" id="inp1">
-            <br>
-            <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark">Подтвердить удаление</button>
-
-                </div>
 
         <hr>
-
-            <label for="inp2" class="form-label">Укажите номера отзывов, которые можно оставить, через пробел без запятых</label>
-            <input type="text" class="form-control" name="inp2" id="inp2">
-            <br>
-            <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark">Подтвердить добавление</button>
-
-                </div>
-            </form>
-        <hr>
+        {% for rev in review %}
         <form class="subscribe">
-            {% for rev in review %}
-
-                <div class="mb-3">
+                <div>
                     <p>Отзыв номер "{{rev[0]}}"</p>
                     <p class="form-label">От: {{rev[1]}}</p>
-                    <p class="form-label">Его id: {{rev[5]}}</p>
+                    <p class="form-label">Его id пользователя: {{rev[5]}}</p>
                     <p>Оценка: {{rev[2]}}</p>
-                    <p>Комментарий:</p>
                     <p>Дата добавления: {{rev[4]}}</p>
-                    <textarea cols="130" disabled rows="7">{{rev[3]}}
+                     <p>Комментарий:</p>
+                    <textarea cols="100" disabled rows="8">{{rev[3]}}
                     </textarea>
-                    <img src= "../{{directory}}/{{rev[6]}}" width="200" height="200">
+                    <br>
+                    <img src= "../{{directory}}/{{rev[6]}}" width="200" height="200" style=" border: 5px solid black; border-radius: 10px; margin-left: 80%; margin-top: -24%">
+
+                    <br>
+                    <input type="button" onclick="window.location.href='/add_feedback/?id={{rev[0]}}'" value='Добавить' class="btn btn-success btn-lg" style="width: 42%">
+                    <input type="button" onclick="window.location.href='/delete_feedback/?id={{rev[0]}}'" value='Удалить' class="btn btn-danger btn-lg" style="width: 42%; margin-left: 15%">
+
+
+
                 </div>
             <br>
             <br>
-            <hr>
-            {% endfor %}
+            <hr style="
+	    border-top: 5px solid black;
+	    border-bottom: 2px solid black;">
             </form>
+        {% endfor %}
             {% endif %}
 
     </div>
