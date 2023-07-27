@@ -18,8 +18,8 @@ app.config['UPLOAD_FOLDER1'] = UPLOAD_FOLDER1
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 
-user = 'skill'
-password = '12345'
+user = 'postgres'
+password = 'Ax110811Tx'
 db_name = 'mindease'
 
 # app.config['UPLOADED_PHOTOS_DEST'] = 'static/assets/images/clients'

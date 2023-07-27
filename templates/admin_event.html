@@ -4,7 +4,7 @@
     <br>
 
     <div>
-        <h3 class="subscribe" style="text-align:center;">Здравствуйте уважаемый Admin</h3>
+        <h3 class="subscribe" style="text-align:center;">Здравствуйте уважаемый админ!</h3>
         <h2 class="subscribe" style="text-align:center;">Давайте добавим новое событие в один из блоков</h2>
         </div>
 
@@ -12,23 +12,40 @@
         <form class="subscribe" method="post">
         {{ form.hidden_tag() }}
                 <div class="mb-3">
-                    <label>Выберите категорию</label>
+                    <label style="color: blue">Выберите категорию</label>
                     {{ form.category(class="form-control", id="classSelect") }}
                 </div>
             <br>
 
                 <div class="mb-3">
-                    <label class="form-label">photo_name/ Имя фото</label>
-                    {{ form.photo_name(type="text", class="form-control", id="exampleFormControlInput1", placeholder="1.jpg") }}
+                    <label class="form-label" style="color: blue">photo_name/ Имя фото</label>
+                    <br>
+                <div class="container col-md-6">
+            <div class="mb-5" style="margin-left: -55%">
+                <label for="Image" class="form-label">Выберите нужное изображение</label>
+                <input class="form-control" type="file" id="formFile" onchange="preview()">
+                <button onclick="clearImage()" class="btn btn-primary mt-3">Готово</button>
+            </div>
+            <img id="frame" src="" class="img-fluid" />
+        </div>
+
+        <script>
+            function preview() {
+                frame.src = URL.createObjectURL(event.target.files[0]);
+            }
+            function clearImage() {
+                document.getElementById('formFile').value = null;
+                frame.src = "";
+            }
+        </script>
                 </div>
-<br>
                 <div class="mb-3">
-                    <label class="form-label">name/Имя</label>
+                    <label class="form-label" style="color: blue">name/Имя</label>
                     {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Example_name") }}
                 </div>
 <br>
                 <div id="textarea_ask" class="mb-3">
-                    <label class="form-label">signature/Описание</label>
+                    <label class="form-label" style="color: blue">signature/Описание</label>
                     {{ form.signature(type="text", class="form-control", id="exampleFormControlInput3") }}
                 </div>
 

@@ -1,7 +1,7 @@
 import os
 
 import psycopg2
-from flask import request, redirect, session
+from flask import request, redirect, session, render_template
 
 from Authorization.cabinet import CabinetPage
 from Authorization.account import Account
@@ -295,6 +295,7 @@ def open_answers():
 
 @app.route('/blog_admin', methods=['POST', 'GET'])
 def open_admin():
+    print(session.get('admin'))
     if session.get('admin'):
         info = Admin.admin()
         if request.method == 'GET':
@@ -356,6 +357,131 @@ def open_event_admin():
             return redirect(info)
     else:
         return redirect('/')
+
+
+@app.route('/add_feedback/', methods=['GET'])
+def open_feedback_add():
+    if session.get('admin'):
+        id_to_add = request.args.get('id')
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, users.name, estimation, comment, to_char(created_date, 'dd-mm-yyyy'), users.user_id, 
+                                    users.photo_way 
+                                    FROM feedback_to_moderate
+                                    INNER JOIN users ON feedback_to_moderate.user_id = users.user_id
+                                    ORDER BY id ASC ;"""
+                )
+                feedback_to_add = ''
+                rev_info = cursor.fetchall()
+
+                # Получили все отзывы на модерацию,
+                # чтобы получить нужный по ID и его в модерации удалить, а в основу добавить
+
+                for i in rev_info:
+                    if int(i[0]) == int(id_to_add):
+                        feedback_to_add = i
+
+                print(feedback_to_add)
+
+                cursor.execute(
+                    f"""Insert into feedback(user_id, estimation, comment, created_date, photo_way)
+                     values({feedback_to_add[5]}, {feedback_to_add[2]},
+                    '{feedback_to_add[3]}', '{feedback_to_add[4]}', '{feedback_to_add[6]}')""")
+
+                cursor.execute(
+                    f"""Delete from feedback_to_moderate where id = {id_to_add}""")
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        return redirect('/reviews_admin')
+    else:
+        return redirect('/')
+
+
+@app.route('/delete_feedback/', methods=['GET'])
+def open_feedback_delete():
+    if session.get('admin'):
+        id_to_delete = request.args.get('id')
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""Delete from feedback_to_moderate where id = {id_to_delete}""")
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        return redirect('/reviews_admin')
+    else:
+        return redirect('/')
+
+
+@app.route('/delete_answer/', methods=['GET'])
+def open_answer_delete():
+    if session.get('admin'):
+        id_to_delete = request.args.get('id')
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""Delete from answers where id = {id_to_delete}""")
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        return redirect('/answers_admin')
+    else:
+        return redirect('/')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_internal_server_error(e):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(400)
+def page_bad_request(e):
+    return render_template('400.html'), 400
 
 
 db_session_blog.global_init("Blog/db/resources.db")

@@ -6,20 +6,6 @@ from Admin.event_adminform import EventAdminForm
 from Admin.file_adminform import FileForm
 from Links import params_admin
 import os
-from werkzeug.utils import secure_filename
-from Events.data.teen_events import Teen_events
-from Events.data.adult_events import Adult_events
-from Events.data.all_events import All_events
-from Events.data import db_session_event
-
-from Reviews.data import db_session_rev
-from Reviews.data.rev import Feedback
-
-from Admin.data import db_session_admin
-from Admin.data.admin_rev import Feedback_Admin
-
-from Answers.data import db_session_answers
-from Answers.data.answer_db import Answer_db
 
 from settings import host, user, password, db_name, UPLOAD_FOLDER
 
@@ -38,9 +24,6 @@ class Admin:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
 
                 with connection.cursor() as cursor:
                     cursor.execute(
@@ -84,7 +67,6 @@ class Admin:
     @staticmethod
     def admin_answers(method):
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -92,16 +74,6 @@ class Admin:
                 database=db_name
             )
             connection.autocommit = True
-
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
-
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
 
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -114,57 +86,18 @@ class Admin:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
         len_ans = len(answers_info)
         if method == 'GET':
             return render_template('admin_answers_page.html',
                                    **params_admin, remained=len_ans,
-                                   answers = answers_info
+                                   answers=answers_info, an_is='active'
                                    )
-        elif method == 'POST':
-            delete_id = list(map(int, ''.join(request.form['inp1']).split()))
-            try:
-                # connect to exist database
-                connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
-                )
-                connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
-
-                # get data from a table
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        f"""DELETE FROM answers WHERE id = {int(delete_id[0])}::int;"""
-                    )
-
-            except Exception as _ex:
-                print("[INFO] Error while working with PostgreSQL", _ex)
-            finally:
-                if connection:
-                    # cursor.close()
-                    connection.close()
-                    print("[INFO] PostgreSQL connection closed")
-
-            return '/answers_admin'
 
     @staticmethod
     def admin_rev(method):
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -172,16 +105,6 @@ class Admin:
                 database=db_name
             )
             connection.autocommit = True
-
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
-
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
 
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -203,94 +126,11 @@ class Admin:
 
         len_rev = len(rev_info)
         if method == 'GET':
+
             return render_template('rev_admin_page.html',
                                    **params_admin,
                                    review=rev_info,
                                    remained=len_rev, re_is='active', directory=UPLOAD_FOLDER)
-        elif method == 'POST':
-            for id2 in (request.form['inp1']).split():
-                for item in rev_info:
-                    if int(item[0]) == int(id2):
-                        try:
-                            # connect to exist database
-                            connection = psycopg2.connect(
-                                host=host,
-                                user=user,
-                                password=password,
-                                database=db_name
-                            )
-                            connection.autocommit = True
-
-                            # the cursor for perfoming database operations
-                            # cursor = connection.cursor()
-
-                            with connection.cursor() as cursor:
-                                cursor.execute(
-                                    "SELECT version();"
-                                )
-
-                                print(f"Server version: {cursor.fetchone()}")
-
-                            # get data from a table
-                            with connection.cursor() as cursor:
-                                cursor.execute(
-                                    f"""DELETE FROM feedback_to_moderate WHERE id = {int(id2)}::int;"""
-                                )
-
-                        except Exception as _ex:
-                            print("[INFO] Error while working with PostgreSQL", _ex)
-                        finally:
-                            if connection:
-                                # cursor.close()
-                                connection.close()
-                                print("[INFO] PostgreSQL connection closed")
-
-            for id1 in (request.form['inp2']).split():
-                for item in rev_info:
-                    if int(item[0]) == int(id1):
-                        try:
-                            # connect to exist database
-                            connection = psycopg2.connect(
-                                host=host,
-                                user=user,
-                                password=password,
-                                database=db_name
-                            )
-                            connection.autocommit = True
-
-                            # the cursor for perfoming database operations
-                            # cursor = connection.cursor()
-
-                            with connection.cursor() as cursor:
-                                cursor.execute(
-                                    "SELECT version();"
-                                )
-
-                                print(f"Server version: {cursor.fetchone()}")
-
-                            with connection.cursor() as cursor:
-                                cursor.execute(
-                                    f"""INSERT INTO feedback (user_id, estimation, comment, created_date, photo_way) 
-                                        values
-                                        ((SELECT user_id FROM users WHERE user_id = {item[5]}::int), '{item[2]}',
-                                        '{item[3]}', '{item[4]}'::date, 
-                                        (SELECT photo_way FROM users WHERE user_id = {item[5]}::int));"""
-                                )
-
-                            with connection.cursor() as cursor:
-                                cursor.execute(
-                                    f"""DELETE FROM feedback_to_moderate WHERE id = {id1}::int"""
-                                )
-
-                        except Exception as _ex:
-                            print("[INFO] Error while working with PostgreSQL", _ex)
-                        finally:
-                            if connection:
-                                # cursor.close()
-                                connection.close()
-                                print("[INFO] PostgreSQL connection closed")
-
-            return '/reviews_admin'
 
     @staticmethod
     def add_photo(method, app):
