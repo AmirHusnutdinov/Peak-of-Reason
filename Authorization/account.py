@@ -177,7 +177,8 @@ class Account:
                 return '/register'
             flag = False
             filename = None
-            if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and form.fileName.data.filename != '':
+            if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and \
+                    form.fileName.data.filename != '':
                 last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
                 last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
                 last_file = last_file[-1]
@@ -198,16 +199,6 @@ class Account:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
 
                 with connection.cursor() as cursor:
                     cursor.execute(

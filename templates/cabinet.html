@@ -7,7 +7,7 @@
 
     <div>
         <h3 class="subscribe" style="text-align:center;">Ваши данные</h3>
-        <form class="subscribe" method="post" novalidate>
+        <form class="subscribe" method="post" enctype=multipart/form-data>
         {{ form.hidden_tag() }}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -24,9 +24,22 @@
                 <img src="../{{directory}}/{{photo_way}}" width="200" height="200">
 <br>
             <br>
-                {{ form.fileName(type="file", id="exampleFormControlInput6") }}
-<br>
-            <br>
+                <div class="mb-3">
+                  <label class="form-label">Загрузите новое фото</label>
+                  {{ form.fileName(type="file", id="formFileSm", class="form-control",
+                    onchange="preview()") }}
+                  <img id="frame" src="" class="img-fluid" width="400px">
+                <script>
+                    function preview() {
+                        frame.src = URL.createObjectURL(event.target.files[0]);
+                    }
+                    function clearImage() {
+                        document.getElementById('formFile').value = null;
+                        frame.src = "";
+                    }
+                </script>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label">Ваше имя</label>
                     {{ form.name(type="text", id="exampleFormControlInput1", class="form-control", placeholder=name, autofocus="") }}
