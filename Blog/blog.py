@@ -1,20 +1,55 @@
+import psycopg2
 from flask import render_template
 from Links import params
 import math
 
+from settings import host, user, password, db_name
+
 
 class Blog:
     @staticmethod
-    def blog(blog_inform):
+    def blog():
+        try:
+            # connect to exist database
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
 
-        count_of_columns = math.ceil(len(blog_inform) / 3)
-        count_of_posts = len(blog_inform)
+            # the cursor for perfoming database operations
+            # cursor = connection.cursor()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT version();"
+                )
+
+                print(f"Server version: {cursor.fetchone()}")
+
+            # get data from a table
+            with connection.cursor() as cursor:
+                cursor.execute('''SELECT id, photo_way, name,
+                                        signature, link, created_date, post_text FROM blog;''')
+                posts = cursor.fetchall()
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                # cursor.close()
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
 
         three_posts = []
 
         start = 0
         end = 3
-        blog_inform = blog_inform[::-1]
+        blog_inform = posts[::-1]
+        count_of_columns = math.ceil(len(blog_inform) / 3)
+        count_of_posts = len(blog_inform)
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
@@ -35,7 +70,41 @@ class Blog:
                                )
 
     @staticmethod
-    def blog_pages(item):
+    def blog_pages(number):
+        try:
+            # connect to exist database
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            # the cursor for perfoming database operations
+            # cursor = connection.cursor()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT version();"
+                )
+
+                print(f"Server version: {cursor.fetchone()}")
+
+            # get data from a table
+            with connection.cursor() as cursor:
+                cursor.execute('''SELECT id, photo_way, name,
+                                        signature, link, created_date, post_text FROM blog;''')
+                posts = cursor.fetchall()
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                # cursor.close()
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        item = posts[number]
         return render_template('blog_page_example.html', **params,
                                bl_is_active='active',
                                name=item[2],

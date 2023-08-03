@@ -1,26 +1,13 @@
+import psycopg2
 from flask import render_template, request
 
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
+from Admin.file_adminform import FileForm
 from Links import params_admin
 import os
-from werkzeug.utils import secure_filename
-from Events.data.teen_events import Teen_events
-from Events.data.adult_events import Adult_events
-from Events.data.all_events import All_events
-from Events.data import db_session_event
 
-from Reviews.data import db_session_rev
-from Reviews.data.rev import Feedback
-
-from Admin.data import db_session_admin
-from Admin.data.admin_rev import Feedback_Admin
-
-from Answers.data import db_session_answers
-from Answers.data.answer_db import Answer_db
-
-from Blog.data import db_session_blog
-from Blog.data.Post import Post
+from settings import host, user, password, db_name, UPLOAD_FOLDER
 
 
 class Admin:
@@ -28,22 +15,49 @@ class Admin:
     def admin():
         form = BlogAdminForm()
         if form.validate_on_submit():
-            db_session_blog.global_init("Blog/db/resources.db")
-            db_sess = db_session_blog.create_session()
-            all_posts = db_sess.query(Post)
-            ids = []
-            for i in all_posts:
-                ids.append(i.id)
-            post = Post()
-            post.photo_name = form.photo_name.data
-            post.name = form.name.data
-            post.signature = form.signature.data
-            post.link = f'/blog/?page={(ids[-1] + 1)}'
-            post.post_text = form.text.data
-            post.created_date = form.date.data
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
 
-            db_sess.add(post)
-            db_sess.commit()
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """SELECT id FROM blog;"""
+                    )
+                    ids = cursor.fetchall()
+                    if not ids:
+                        ids = [[0]]
+                with connection.cursor() as cursor:
+                    cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
+                    date = cursor.fetchone()
+                    date = date[0]
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""INSERT INTO blog (name, signature, post_text, link, created_date, photo_way) VALUES
+                                ('{form.name.data}', '{form.signature.data}', '{form.text.data}',
+                                '/blog/?page={int(ids[0][0]) + 1}', '{date}'::date, '{form.photo_name.data}');"""
+                    )
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
 
             return '/blog_admin'
         return render_template('admin_page.html',
@@ -52,182 +66,196 @@ class Admin:
 
     @staticmethod
     def admin_answers(method):
-        db_session_answers.global_init("Answers/db/asks.db")
-        db_sess = db_session_answers.create_session()
-        all_answers = db_sess.query(Answer_db)
-        answers_info = []
-        for answers in all_answers:
-            answers_info.append([answers.id,
-                                 answers.email,
-                                 answers.name,
-                                 answers.answer])
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, users.email, users.name, answer FROM answers
+                    INNER JOIN users ON answers.user_id = users.user_id;"""
+                )
+                answers_info = cursor.fetchall()
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
         len_ans = len(answers_info)
         if method == 'GET':
             return render_template('admin_answers_page.html',
-                                   **params_admin,
-                                   remained=len_ans, an_is='active',
-                                   answers=answers_info
+                                   **params_admin, remained=len_ans,
+                                   answers=answers_info, an_is='active'
                                    )
-        elif method == 'POST':
-            delete_id = list(map(int, ''.join(request.form['inp1']).split()))
-            for id_ in delete_id:
-                deleted_answer = db_sess.query(Answer_db).filter(Answer_db.id == id_).first()
-                db_sess.delete(deleted_answer)
-                db_sess.commit()
-
-            return '/answers_admin'
 
     @staticmethod
     def admin_rev(method):
-        db_session_admin.global_init("Admin/db/feedback_to_moderate.db")
-        db_session_rev.global_init("Reviews/db/feedback.db")
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
 
-        db_sess_admin = db_session_admin.create_session()
-        db_sess_rev = db_session_rev.create_session()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""SELECT id, users.name, estimation, comment, to_char(created_date, 'dd-mm-yyyy'), users.user_id, 
+                    users.photo_way 
+                    FROM feedback_to_moderate
+                    INNER JOIN users ON feedback_to_moderate.user_id = users.user_id
+                    ORDER BY id ASC ;"""
+                )
+                rev_info = cursor.fetchall()
 
-        all_rev = db_sess_admin.query(Feedback_Admin)
-        rev_info = []
-        for rev in all_rev:
-            rev_info.append([rev.id,
-                             rev.name,
-                             rev.estimation,
-                             rev.comment,
-                             rev.created_date,
-                             rev.photo])
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                # cursor.close()
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+
         len_rev = len(rev_info)
         if method == 'GET':
+
             return render_template('rev_admin_page.html',
                                    **params_admin,
                                    review=rev_info,
-                                   remained=len_rev, re_is='active')
-        elif method == 'POST':
-            for id2 in (request.form['inp1']).split():
-                for item in rev_info:
-                    if int(item[0]) == int(id2):
-                        for i in db_sess_admin.query(Feedback_Admin):
-                            if int(i.id) == int(id2):
-                                db_sess_admin.delete(i)
-                                db_sess_admin.commit()
-
-            for id1 in (request.form['inp2']).split():
-                for item in rev_info:
-                    if int(item[0]) == int(id1):
-                        rev = Feedback()
-                        rev.name = item[1]
-                        rev.estimation = item[2]
-                        rev.comment = item[3]
-                        rev.created_date = item[4]
-                        rev.photo = item[5]
-                        db_sess_rev.add(rev)
-                        db_sess_rev.commit()
-
-                        for i in db_sess_admin.query(Feedback_Admin):
-                            if int(i.id) == int(id1):
-                                db_sess_admin.delete(i)
-                                db_sess_admin.commit()
-
-            return '/reviews_admin'
+                                   remained=len_rev, re_is='active', directory=UPLOAD_FOLDER)
 
     @staticmethod
     def add_photo(method, app):
-        if method == 'GET':
-            return render_template('add_new_image.html',
-                                   **params_admin, ph_is='active')
-
-        elif method == 'POST':
-            if 'file' not in request.files:
-                return request.url
-            file = request.files['file']
-            if file.filename == '':
-                return request.url
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return '/add_photo_admin'
+        form = FileForm()
+        if form.validate_on_submit():
+            last_file = os.listdir(app.config['UPLOAD_FOLDER'])[-1]
+            image_data = request.files[form.fileName.name].read()
+            filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
+            open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb').write(image_data)
+            return '/add_photo_admin'
+        return render_template('add_new_image.html',
+                               **params_admin, ph_is='active', form=form)
 
     @staticmethod
     def event_admin():
         form = EventAdminForm()
         if form.validate_on_submit():
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
 
-            db_session_event.global_init("Events/db/activities.db")
-            db_sess = db_session_event.create_session()
-            all_posts = db_sess.query(All_events)
-            ids = []
-            for i in all_posts:
-                ids.append(i.id)
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
 
-            all_event = All_events()
-            all_event.photo_name = form.photo_name.data
-            all_event.name = form.name.data
-            all_event.signature = form.signature.data
-            all_event.link = f'/events/?page={(ids[-1] + 1)}'
-            all_event.created_date = form.date.data
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
 
-            db_sess.add(all_event)
-            db_sess.commit()
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """SELECT id FROM events ORDER BY id DESC;"""
+                    )
+                    ids = cursor.fetchone()
+                    if not ids:
+                        ids = [1]
+                with connection.cursor() as cursor:
+                    cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
+                    date = cursor.fetchone()[0]
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+
+            adult, teen, tfp, ic, taoc, apbop, tft, oratory = False, False, False, False, False, False, False, False
 
             if form.category.data in ['Копилка возможностей', 'Тренинги для подростков', 'Ораторское искусство']:
-                teev_event = Teen_events()
-                teev_event.photo_name = form.photo_name.data
-                teev_event.name = form.name.data
-                teev_event.signature = form.signature.data
-
+                teen = True
                 if form.category.data == 'Копилка возможностей':
-                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}pb=1'
+                    link = f'/event/types/?page={(ids[0] + 1)}pb=1'
+                    apbop = True
 
                 elif form.category.data == 'Тренинги для подростков':
-                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}tt=1'
+                    link = f'/event/types/?page={(ids[0] + 1)}tt=1'
+                    tft = True
 
                 elif form.category.data == 'Ораторское искусство':
-                    teev_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}orator=1'
-
-                teev_event.created_date = form.date.data
-
-                if form.category.data == 'Копилка возможностей':
-                    teev_event.a_piggy_bank_of_possibilities = True
-
-                elif form.category.data == 'Тренинги для подростков':
-                    teev_event.trainings_for_teenagers = True
-
-                elif form.category.data == 'Ораторское искусство':
-                    teev_event.oratory = True
-
-                db_sess.add(teev_event)
-                db_sess.commit()
-
-                return '/event_admin'
+                    link = f'/event/types/?page={(ids[0] + 1)}orator=1'
+                    oratory = True
 
             elif form.category.data in ['Тренинги для родителей', 'Индивидуальные консультации', 'Искусство общения']:
-                adult_event = Adult_events
-                adult_event.photo_name = form.photo_name.data
-                adult_event.name = form.name.data
-                adult_event.signature = form.signature.data
-
+                adult = True
                 if form.category.data == 'Тренинги для родителей':
-                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}tp=1'
+                    link = f'/event/types/?page={(ids[0] + 1)}tp=1'
+                    tfp = True
 
                 elif form.category.data == 'Индивидуальные консультации':
-                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}ic=1'
+                    link = f'/event/types/?page={(ids[0] + 1)}ic=1'
+                    ic = True
 
                 elif form.category.data == 'Искусство общения':
-                    adult_event.link = all_event.link = f'/event/types/?page={(ids[-1] + 1)}ac=1'
+                    link = f'/event/types/?page={(ids[0] + 1)}ac=1'
+                    taoc = True
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
 
-                adult_event.created_date = form.date.data
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
 
-                if form.category.data == 'Тренинги для родителей':
-                    adult_event.trainings_for_parents = True
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
 
-                elif form.category.data == 'Индивидуальные консультации':
-                    adult_event.individual_consultations = True
+                    print(f"Server version: {cursor.fetchone()}")
 
-                elif form.category.data == 'Искусство общения':
-                    adult_event.the_art_of_communication = True
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(f'''insert into events 
+                    (name, signature, created_date, link, photo_way, is_teen, is_apbop, is_tft, is_oratory, is_adult,
+                    is_tfp, is_ic, is_taoc)
+                     values ('{form.name.data}', '{form.signature.data}', '{date}'::date, '{link}',
+                      '{form.photo_name.data}', 
+                      '{teen}'::bool, '{apbop}'::bool, '{tft}'::bool, '{oratory}'::bool,
+                      '{adult}'::bool, '{tfp}'::bool, '{ic}'::bool, '{taoc}'::bool);''')
 
-                db_sess.add(adult_event)
-                db_sess.commit()
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
 
-                return '/event_admin'
+            return '/event_admin'
 
         return render_template('admin_event.html',
                                **params_admin, ev_is='active',

@@ -8,5 +8,4 @@ class BlogAdminForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     signature = TextAreaField('Answer', render_kw={"rows": 6, "cols": 11}, validators=[DataRequired()])
     text = TextAreaField('Answer', render_kw={"rows": 6, "cols": 11}, validators=[DataRequired()])
-    date = StringField('Date', validators=[DataRequired()])
     submit = SubmitField('Отправить')

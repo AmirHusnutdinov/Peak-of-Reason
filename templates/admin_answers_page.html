@@ -12,26 +12,18 @@
             {% else %}
             <h1 class="subscribe" style="text-align:center;">На данный момент вопросов осталось: {{remained}}</h1>
             <br>
-            <form class="subscribe" method="post">
-            <label for="inp1" class="form-label">Укажите номера вопросов на которые вы уже ответили через пробел без запятых</label>
-            <input type="text" class="form-control" name="inp1" id="inp1">
-            <br>
-            <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-dark">Ответ был отправлен</button>
-
-                </div>
-            </form>
         <hr>
         <form class="subscribe">
             {% for answer in answers%}
 
                 <div class="mb-3">
-                    <p>Вопрос номер "{{answer[0]}}"</p>
+                    <p>Вопрос номер: {{answer[0]}}</p>
                     <p class="form-label">От: {{answer[2]}}</p>
                     <p>Email: {{answer[1]}}</p>
                     <p>Вопрос:</p>
                     <textarea cols="130" disabled rows="7">{{answer[3]}}
                     </textarea>
+                    <input type="button" onclick="window.location.href='/delete_answer/?id={{answer[0]}}'" value='Отвечено' class="btn btn-dark btn-lg" style="width: 42%">
                 </div>
             <br>
             <br>

@@ -3,13 +3,38 @@
 {% block content %}
 <br>
 <br>
+
+<br>
 <br>
 <h1 class="subscribe" style="text-align:center;">Загрузить новый файл</h1>
 <p class="subscribe" style="text-align:center;">Примечание: имя файла должно быть на английском языке</p>
 <hr>
 <br>
-    <form method=post enctype=multipart/form-data style="text-align:center;">
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+<center>
+    <div class="btn-group">
+      <button type="button" class="btn btn-info">Выберите место сохранения</button>
+      <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="visually-hidden">Переключатель выпадающего списка</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Блог</a></li>
+        <li><a class="dropdown-item" href="#">Ивент</a></li>
+        <li><a class="dropdown-item" href="#">Аватарки пользователей</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Другое</a></li>
+      </ul>
+</div></center>
+<br>
+<br>
+<form action="" method="post" novalidate enctype="multipart/form-data" style="text-align:center;" class="subscribe">
+
+    {{ form.hidden_tag() }}
+
+    {{ form.fileName.label }}<br><br>
+
+    <p style="width: 300px; position: relative; right: -350px;">{{ form.fileName(class="form-control") }}</p><br>
+
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+
+</form>
 {% endblock %}

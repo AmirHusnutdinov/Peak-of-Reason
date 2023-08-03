@@ -67,7 +67,7 @@ def add_feedback():
         estimation=request.json['estimation'],
         comment=request.json['comment'],
         created_date=datetime.datetime.today(),
-        photo='9.jpg',
+        photo='8.jpg',
     )
     db_sess.add(feedbacks)
     db_sess.commit()

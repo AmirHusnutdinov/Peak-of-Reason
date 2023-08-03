@@ -1,6 +1,8 @@
 import os
 import re
 from random import randrange
+
+import psycopg2
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -10,7 +12,7 @@ from Authorization.loginform import LoginForm
 from Authorization.registerform import RegisterForm
 from Links import params, register
 
-from settings import app, ALLOWED_EXTENSIONS
+from settings import app, ALLOWED_EXTENSIONS, host, user, password, db_name
 
 
 def password_check(passwd):
@@ -50,18 +52,67 @@ class Account:
     def account_login():
         form = LoginForm()
         if form.validate_on_submit():
-            mass_login = [form.email.data, form.password.data, form.remember_me.data]
-            db_sess = db_session_accaunt.create_session()
-            all_information = db_sess.query(Users)
-            for i in all_information:
-                if str(i.email) == mass_login[0] and check_password_hash(i.password, mass_login[1]):
-                    session['authorization'] = True
-                    session['id'] = i.id
-                    if mass_login[2]:
-                        session.permanent = True
-                    if i.is_admin:
-                        session['admin'] = True
-                    return '/'
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
+                    )
+                    is_user = bool(cursor.fetchone()[0])
+                if is_user:
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""SELECT password FROM users WHERE email = '{form.email.data}';"""
+                        )
+                        password_account = cursor.fetchone()[0]
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""SELECT user_id FROM users WHERE email = '{form.email.data}';"""
+                        )
+                        id_account = cursor.fetchone()[0]
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""SELECT is_admin FROM users WHERE email = '{form.email.data}';"""
+                        )
+                        is_admin_account = cursor.fetchone()[0]
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            if not is_user:
+                flash("Такого пользователя не существует")
+                return '/authorization'
+            if check_password_hash(password_account, form.password.data):
+                session['authorization'] = True
+                session['id'] = id_account
+                if form.remember_me.data:
+                    session.permanent = True
+                if is_admin_account:
+                    session['admin'] = True
+                return '/'
             flash("Неправильный логин или пароль")
             return '/authorization'
         return render_template('login.htm', **params, register=register,
@@ -72,53 +123,99 @@ class Account:
     def account_register():
         form = RegisterForm()
         if form.validate_on_submit():
-            mass_register = [form.email.data,
-                             form.password1.data,
-                             form.password2.data,
-                             form.name.data,
-                             form.surname.data,
-                             form.gender.data]
-            db_sess = db_session_accaunt.create_session()
-            if mass_register[1] != mass_register[2]:
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+
+                # the cursor for perfoming database operations
+                # cursor = connection.cursor()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT version();"
+                    )
+
+                    print(f"Server version: {cursor.fetchone()}")
+
+                # get data from a table
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
+                    )
+                    is_user = bool(cursor.fetchone()[0])
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            if form.password1.data != form.password2.data:
                 flash('Пароли не совпадают')
                 return '/register'
-            if password_check(mass_register[1]) != mass_register[1]:
-                flash(password_check(mass_register[1]))
+            if password_check(form.password1.data) != form.password1.data:
+                flash(password_check(form.password1.data))
                 return '/register'
-            if db_sess.query(Users).filter(Users.email == mass_register[0]).first():
+            if is_user:
                 flash("Такой пользователь уже есть")
                 return '/register'
-            if not check_email(mass_register[0]):
+            if not check_email(form.email.data):
                 flash("Email не прошел проверку!")
                 return '/register'
-            if mass_register[3].strip() == '' or mass_register[4].strip() == '':
+            if form.name.data.strip() == '' or form.surname.data.strip() == '':
                 flash("Укажите имя и фамилию")
                 return '/register'
-            if len(mass_register[3].strip()) <= 1 or len(mass_register[4].strip()) <= 1:
+            if len(form.name.data.strip()) <= 1 or len(form.surname.data.strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
                 return '/register'
-            if 'file' not in request.files:
-                flash('Не могу прочитать файл')
-                return '/register'
-            file = request.files['file']
             flag = False
             filename = None
-            if file and allowed_file(file.filename) and file.filename != '':
-                filename = str(int(os.listdir('static/assets/images/clients')[-1].split('.')[0]) + 1) + '.jpg'
-                file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
+            if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and \
+                    form.fileName.data.filename != '':
+                last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
+                last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
+                last_file = last_file[-1]
+                image_data = request.files[form.fileName.name].read()
+                filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
+                open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
                 flag = True
-            one_user = Users()
-            one_user.email = mass_register[0]
-            one_user.password = generate_password_hash(mass_register[1])
-            one_user.name = mass_register[3].strip()
-            one_user.surname = mass_register[4].strip()
-            one_user.gender = mass_register[5]
             if flag:
-                one_user.photo = f'clients/{filename}'
+                photo = f'clients/{filename}'
             else:
-                one_user.photo = f'clients_example/{str(randrange(1, 10)) + ".jpg"}'
-            db_sess.add(one_user)
-            db_sess.commit()
+                photo = f'clients_example/{str(randrange(1, 9)) + ".jpg"}'
+            try:
+                # connect to exist database
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way)
+                            values
+                            ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
+                            '{generate_password_hash(form.password1.data)}', 'False'::bool,
+                            '{form.gender.data}', '{photo}');"""
+                    )
+
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    # cursor.close()
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
 
             return '/authorization'
         return render_template('registration.html', **params,
