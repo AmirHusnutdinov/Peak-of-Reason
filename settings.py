@@ -19,7 +19,7 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 
 user = 'postgres'
-password = 'Ax110811Tx'
+password = '12345'
 db_name = 'mindease'
 
 # app.config['UPLOADED_PHOTOS_DEST'] = 'static/assets/images/clients'

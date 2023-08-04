@@ -5,9 +5,6 @@ from random import randrange
 import psycopg2
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from Authorization.data import db_session_accaunt
-from Authorization.data.users import Users
 from Authorization.loginform import LoginForm
 from Authorization.registerform import RegisterForm
 from Links import params, register
@@ -61,16 +58,6 @@ class Account:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
 
                 # get data from a table
                 with connection.cursor() as cursor:
