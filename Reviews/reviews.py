@@ -1,8 +1,6 @@
 import psycopg2
-from flask import render_template, session
+from flask import render_template, session, flash
 from Links import params
-from datetime import datetime
-
 from Reviews.reviewsform import ReviewsForm
 from settings import host, user, password, db_name
 
@@ -68,6 +66,9 @@ class Reviews:
 
         form = ReviewsForm()
         if form.validate_on_submit():
+            if form.prof.data not in ('5/5', '4/5', '3/5', '2/5', '1/5'):
+                flash('Напишите свою оценку согласно формату (например:5/5, 4/5 и т.д.)')
+                return '/reviews'
             try:
                 # connect to exist database
                 connection = psycopg2.connect(
@@ -77,16 +78,6 @@ class Reviews:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
 
                 with connection.cursor() as cursor:
                     cursor.execute(
