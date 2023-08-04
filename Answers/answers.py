@@ -12,7 +12,6 @@ class Answers:
         form = AnswerForm()
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -20,13 +19,6 @@ class Answers:
                     database=db_name
                 )
                 connection.autocommit = True
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
 
                 with connection.cursor() as cursor:
                     cursor.execute(
@@ -39,7 +31,6 @@ class Answers:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             return '/answers'

@@ -16,7 +16,6 @@ class Admin:
         form = BlogAdminForm()
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -25,14 +24,7 @@ class Admin:
                 )
                 connection.autocommit = True
 
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
 
-                    print(f"Server version: {cursor.fetchone()}")
-
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """SELECT id FROM blog;"""
@@ -55,7 +47,6 @@ class Admin:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
@@ -120,7 +111,6 @@ class Admin:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
 
@@ -149,7 +139,6 @@ class Admin:
         form = EventAdminForm()
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -158,17 +147,6 @@ class Admin:
                 )
                 connection.autocommit = True
 
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
-
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """SELECT id FROM events ORDER BY id DESC;"""
@@ -184,7 +162,6 @@ class Admin:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
@@ -218,7 +195,6 @@ class Admin:
                     link = f'/event/types/?page={(ids[0] + 1)}ac=1'
                     taoc = True
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -227,17 +203,6 @@ class Admin:
                 )
                 connection.autocommit = True
 
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
-
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(f'''insert into events 
                     (name, signature, created_date, link, photo_way, is_teen, is_apbop, is_tft, is_oratory, is_adult,
@@ -251,7 +216,6 @@ class Admin:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 

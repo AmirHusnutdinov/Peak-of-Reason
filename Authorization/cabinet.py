@@ -21,7 +21,6 @@ class CabinetPage:
         gender = ''
         form = CabinetForm()
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -29,16 +28,6 @@ class CabinetPage:
                 database=db_name
             )
             connection.autocommit = True
-
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
-
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
 
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -51,13 +40,11 @@ class CabinetPage:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
 
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -156,7 +143,6 @@ class CabinetPage:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             return '/cabinet'
@@ -176,7 +162,6 @@ class CabinetPage:
     @staticmethod
     def account_cabinet_del():
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -184,9 +169,6 @@ class CabinetPage:
                 database=db_name
             )
             connection.autocommit = True
-
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
 
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -204,6 +186,5 @@ class CabinetPage:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")

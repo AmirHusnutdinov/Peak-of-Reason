@@ -27,7 +27,6 @@ class Reviews:
     @staticmethod
     def reviews():
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -36,14 +35,6 @@ class Reviews:
             )
             connection.autocommit = True
 
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
-
-            # get data from a table
             with connection.cursor() as cursor:
                 cursor.execute(
                     """select users.name, estimation, comment, created_date, feedback.photo_way from feedback 
@@ -60,7 +51,6 @@ class Reviews:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
 
@@ -70,7 +60,6 @@ class Reviews:
                 flash('Напишите свою оценку согласно формату (например:5/5, 4/5 и т.д.)')
                 return '/reviews'
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -91,7 +80,6 @@ class Reviews:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             return '/reviews'

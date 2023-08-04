@@ -10,7 +10,6 @@ class Blog:
     @staticmethod
     def blog():
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -18,18 +17,6 @@ class Blog:
                 database=db_name
             )
             connection.autocommit = True
-
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
-
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
-
-            # get data from a table
             with connection.cursor() as cursor:
                 cursor.execute('''SELECT id, photo_way, name,
                                         signature, link, created_date, post_text FROM blog;''')
@@ -39,7 +26,6 @@ class Blog:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
 
@@ -72,7 +58,6 @@ class Blog:
     @staticmethod
     def blog_pages(number):
         try:
-            # connect to exist database
             connection = psycopg2.connect(
                 host=host,
                 user=user,
@@ -81,9 +66,6 @@ class Blog:
             )
             connection.autocommit = True
 
-            # the cursor for perfoming database operations
-            # cursor = connection.cursor()
-
             with connection.cursor() as cursor:
                 cursor.execute(
                     "SELECT version();"
@@ -91,7 +73,6 @@ class Blog:
 
                 print(f"Server version: {cursor.fetchone()}")
 
-            # get data from a table
             with connection.cursor() as cursor:
                 cursor.execute('''SELECT id, photo_way, name,
                                         signature, link, created_date, post_text FROM blog;''')
@@ -101,7 +82,6 @@ class Blog:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
             if connection:
-                # cursor.close()
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
         item = posts[number]

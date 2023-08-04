@@ -1,5 +1,5 @@
 from flask import render_template
-from Links import events, params
+from Links import params
 
 
 class StartPage:

@@ -21,10 +21,3 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 user = 'postgres'
 password = '12345'
 db_name = 'mindease'
-
-# app.config['UPLOADED_PHOTOS_DEST'] = 'static/assets/images/clients'
-#
-# photos = UploadSet('photos', IMAGES)
-# configure_uploads(app, photos)
-# # максимальный размер файла, по умолчанию 16MB
-# patch_request_class(app)

@@ -45,7 +45,6 @@ def open_reviews():
 @app.route('/events/')
 def open_events():
     try:
-        # connect to exist database
         connection = psycopg2.connect(
             host=host,
             user=user,
@@ -69,7 +68,6 @@ def open_events():
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
         if connection:
-            # cursor.close()
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
@@ -77,7 +75,6 @@ def open_events():
 @app.route('/event/')
 def open_event1():
     try:
-        # connect to exist database
         connection = psycopg2.connect(
             host=host,
             user=user,
@@ -121,7 +118,6 @@ def open_event1():
 @app.route('/event/types/')
 def open_event_type():
     try:
-        # connect to exist database
         connection = psycopg2.connect(
             host=host,
             user=user,
@@ -204,7 +200,6 @@ def open_event_type():
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
         if connection:
-            # cursor.close()
             connection.close()
             print("[INFO] PostgreSQL connection closed")
     return redirect('/')
@@ -302,6 +297,7 @@ def open_admin():
             return redirect(info)
     else:
         return redirect('/')
+
 
 @app.route('/answers_admin', methods=['GET', 'POST'])
 def open_admin_answers():

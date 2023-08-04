@@ -50,7 +50,6 @@ class Account:
         form = LoginForm()
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -59,7 +58,6 @@ class Account:
                 )
                 connection.autocommit = True
 
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
@@ -86,7 +84,6 @@ class Account:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             if not is_user:
@@ -111,7 +108,6 @@ class Account:
         form = RegisterForm()
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -120,17 +116,6 @@ class Account:
                 )
                 connection.autocommit = True
 
-                # the cursor for perfoming database operations
-                # cursor = connection.cursor()
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT version();"
-                    )
-
-                    print(f"Server version: {cursor.fetchone()}")
-
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
@@ -141,7 +126,6 @@ class Account:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             if form.password1.data != form.password2.data:
@@ -178,7 +162,6 @@ class Account:
             else:
                 photo = f'clients_example/{str(randrange(1, 9)) + ".jpg"}'
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -200,7 +183,6 @@ class Account:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
-                    # cursor.close()
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
