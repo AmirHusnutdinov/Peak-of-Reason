@@ -22,8 +22,6 @@ from Answers.data import answer_api
 
 from Admin.admin import Admin
 
-from About_us.about_us import About
-
 from settings import app, host, user, password, db_name
 
 
@@ -304,12 +302,6 @@ def open_admin():
             return redirect(info)
     else:
         return redirect('/')
-
-
-@app.route('/about_us')
-def open_about_us():
-    return About.about()
-
 
 @app.route('/answers_admin', methods=['GET', 'POST'])
 def open_admin_answers():
