@@ -1,5 +1,5 @@
 import psycopg2
-from flask import render_template
+from flask import render_template, session
 from Links import params
 import math
 
@@ -52,7 +52,7 @@ class Blog:
                 end += 1
 
         return render_template('blog_page.html', **params, bl_is_active='active',
-                               title='Blog page', posts=three_posts,
+                               title='Blog page', posts=three_posts, login=session.get('authorization')
                                )
 
     @staticmethod
@@ -91,4 +91,4 @@ class Blog:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='Blog page')
+                               text=item[6], title='Blog page', login=session.get('authorization'))

@@ -1,5 +1,4 @@
 from settings import GENERAL_NAME_LINK
-
 reviews = f'{GENERAL_NAME_LINK}/reviews'
 events = f'{GENERAL_NAME_LINK}/events'
 event = f'{GENERAL_NAME_LINK}/event'

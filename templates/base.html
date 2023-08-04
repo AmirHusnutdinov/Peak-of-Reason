@@ -20,7 +20,9 @@
             <a class="header__logo" href="{{general}}" style="text-decoration: none;">Mindease </a></div>
 
             <nav class="nav1__nav" id="nav">
-                <a class="nav__link {{au_is_active}}" href="{{authorization}}">LOG IN</a>
+                {% if login != True %}
+                    <a class="nav__link {{au_is_active}}" href="{{authorization}}">LOG IN</a>
+                {% endif %}
                 <a class="nav__link {{ev_is_active}}" href="{{events}}">Events</a>
                 <a class="nav__link {{bl_is_active}}" href="{{blog}}">Blog</a>
                 <a class="nav__link {{an_is_active}}" href="{{answers}}">Answers</a>

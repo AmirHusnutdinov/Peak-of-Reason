@@ -88,5 +88,5 @@ class Reviews:
                                **params,
                                reviews_=rand_list,
                                re_is_active='active', form=form,
-                               title='Reviews'
+                               title='Reviews', login=session.get('authorization')
                                )

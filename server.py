@@ -99,8 +99,7 @@ def open_event1():
 
         elif query2 and query2 != '':
             with connection.cursor() as cursor:
-                cursor.execute(
-                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')   
+                cursor.execute(                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')   
                     FROM events WHERE is_adult = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()

@@ -37,4 +37,4 @@ class Answers:
 
         return render_template('answers_page.html', **params,
                                an_is_active='active', form=form,
-                               title='Answers')
+                               title='Answers', login=session.get('authorization'))

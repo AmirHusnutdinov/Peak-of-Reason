@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, session
 import math
 from Links import types, params, event
 
@@ -39,9 +39,10 @@ class Events:
             return render_template('events.html', **params, ev_is_active='active',
                                    event1=event1,
                                    event2=event2,
-                                   posts=three_posts, title='Events')
+                                   posts=three_posts, title='Events', login=session.get('authorization'))
         else:
-            return render_template(file, **params, ev_is_active='active', title='Events')
+            return render_template(file, **params, ev_is_active='active', title='Events',
+                                   login=session.get('authorization'))
 
     @staticmethod
     def event(events1, mode):
@@ -67,7 +68,8 @@ class Events:
                                pb=pb,
                                tt=tt,
                                orator=orator,
-                               posts=three_posts, title='Events')
+                               posts=three_posts, title='Events',
+                               login=session.get('authorization'))
 
     @staticmethod
     def types_of_events(events_type, label):
@@ -75,5 +77,6 @@ class Events:
         return render_template('types.html',
                                **params, ev_is_active='active',
                                posts=three_posts,
-                               label=label, title='Events'
+                               label=label, title='Events',
+                               login=session.get('authorization')
                                )
