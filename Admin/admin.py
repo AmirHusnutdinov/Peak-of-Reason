@@ -1,11 +1,8 @@
 import psycopg2
-from flask import render_template, request, redirect
-from werkzeug.utils import secure_filename
+from flask import render_template
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
-from Admin.file_adminform import FileForm
 from Links import params_admin
-import os
 
 from settings import host, user, password, db_name, UPLOAD_FOLDER
 
@@ -121,28 +118,6 @@ class Admin:
                                    **params_admin,
                                    review=rev_info,
                                    remained=len_rev, re_is='active', directory=UPLOAD_FOLDER)
-
-    @staticmethod
-    def add_photo(method, app):
-        if method == 'GET':
-            form = FileForm()
-            return render_template('add_new_image.html',
-                                   **params_admin, ph_is='active', form=form)
-
-        if method == 'POST':
-            form = FileForm()
-            if 'file' not in request.files:
-                return redirect(request.url)
-
-            file = request.files['file']
-            if file.filename == '':
-                return redirect(request.url)
-
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join('/static/assets/images/blog', filename))
-            return render_template('add_new_image.html',
-                                   **params_admin, ph_is='active', form=form)
 
     @staticmethod
     def event_admin():
