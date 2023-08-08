@@ -1,6 +1,6 @@
 import psycopg2
-from flask import render_template, request
-
+from flask import render_template, request, redirect
+from werkzeug.utils import secure_filename
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
 from Admin.file_adminform import FileForm
@@ -16,6 +16,7 @@ class Admin:
         form = BlogAdminForm()
         if form.validate_on_submit():
             try:
+                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -24,7 +25,7 @@ class Admin:
                 )
                 connection.autocommit = True
 
-
+                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """SELECT id FROM blog;"""
@@ -116,7 +117,6 @@ class Admin:
 
         len_rev = len(rev_info)
         if method == 'GET':
-
             return render_template('rev_admin_page.html',
                                    **params_admin,
                                    review=rev_info,
@@ -124,15 +124,25 @@ class Admin:
 
     @staticmethod
     def add_photo(method, app):
-        form = FileForm()
-        if form.validate_on_submit():
-            last_file = os.listdir(app.config['UPLOAD_FOLDER'])[-1]
-            image_data = request.files[form.fileName.name].read()
-            filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
-            open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb').write(image_data)
-            return '/add_photo_admin'
-        return render_template('add_new_image.html',
-                               **params_admin, ph_is='active', form=form)
+        if method == 'GET':
+            form = FileForm()
+            return render_template('add_new_image.html',
+                                   **params_admin, ph_is='active', form=form)
+
+        if method == 'POST':
+            form = FileForm()
+            if 'file' not in request.files:
+                return redirect(request.url)
+
+            file = request.files['file']
+            if file.filename == '':
+                return redirect(request.url)
+
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join('/static/assets/images/blog', filename))
+            return render_template('add_new_image.html',
+                                   **params_admin, ph_is='active', form=form)
 
     @staticmethod
     def event_admin():
