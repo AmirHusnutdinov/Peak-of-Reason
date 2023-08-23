@@ -11,9 +11,9 @@ class Admin:
     @staticmethod
     def admin():
         form = BlogAdminForm()
+        print(form.photo_name)
         if form.validate_on_submit():
             try:
-                # connect to exist database
                 connection = psycopg2.connect(
                     host=host,
                     user=user,
@@ -22,7 +22,6 @@ class Admin:
                 )
                 connection.autocommit = True
 
-                # get data from a table
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """SELECT id FROM blog;"""
@@ -49,8 +48,10 @@ class Admin:
                     print("[INFO] PostgreSQL connection closed")
 
             return '/blog_admin'
+        import os
+        items = os.listdir('static/assets/images/blog')
         return render_template('admin_page.html',
-                               **params_admin, bl_is='active', form=form
+                               **params_admin, bl_is='active', form=form, items=items
                                )
 
     @staticmethod
