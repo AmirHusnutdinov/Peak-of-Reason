@@ -17,29 +17,44 @@
       </p>
 
       <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
-      <label class="sr-only">Email address</label>
-      {{ form.email(type="email", id="inputEmail", class="form-control", placeholder="Email address", autofocus="") }}
-      <label class="sr-only">Name</label>
-      {{ form.name(type="text", id="inputName", class="form-control", placeholder="Name", autofocus="") }}
-      <label class="sr-only">Surname</label>
-      {{ form.surname(type="text", id="inputSurname", class="form-control", placeholder="Surname", autofocus="") }}
-      <label class="sr-only">Password</label>
-      {{ form.password1(type="password", id="inputPassword1", class="form-control", placeholder="Password") }}
-      <label class="sr-only">Password again</label>
-      {{ form.password2(type="password", id="inputPassword2", class="form-control", placeholder="Password again") }}
-      <label class="form-check-label">Gender</label>
+      <label class="sr-only">Электронная почта*</label>
+      {{ form.email(type="email", id="inputEmail", class="form-control", placeholder="Электронная почта*", autofocus="") }}
+      <label class="sr-only">Имя*</label>
+      {{ form.name(type="text", id="inputName", class="form-control", placeholder="Имя*", autofocus="") }}
+      <label class="sr-only">Фамилия*</label>
+      {{ form.surname(type="text", id="inputSurname", class="form-control", placeholder="Фамилия*", autofocus="") }}
+      <label class="sr-only">Пароль*</label>
+      {{ form.password1(type="password", id="inputPassword1", class="form-control", placeholder="Пароль*") }}
+      <label class="sr-only">Повторите пароль*</label>
+      {{ form.password2(type="password", id="inputPassword2", class="form-control", placeholder="Повторите пароль*") }}
+      <label class="form-check-label">Гендер*</label>
       {{ form.gender(type="radio", id="inlineRadio0") }}
 
-        <br>
+      <br>
 
       <label class="form-check-label">Выберите свое фото</label>
       {{ form.fileName(type="file", id="inputFile") }}
         <hr>
-      {{form.submit(class="btn btn-lg btn-dark btn-block", type="submit" ) }}
+      <p> {{form.checkbox(type="checkbox", id="checkme" )}} Я принимаю условия <a href="/pp/">Пользовательского соглашения</a></p>
+      {{form.submit(class="btn btn-lg btn-dark btn-block", id="button", type="submit", disabled="disabled") }}
       <br>
+      <p>* - помечены обязательные пункты</p>
       <br>
       <br>
       <br>
       <p class="mt-5 mb-3 text-muted">©<script>document.write(new Date().getFullYear())</script> The source code of this <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">site</a></p>
     </form>
+<script>
+ var checker = document.getElementById('checkme');
+ var sendbtn = document.getElementById('button');
+ // when unchecked or checked, run the function
+ checker.onchange = function(){
+if(this.checked){
+    sendbtn.disabled = false;
+} else {
+    sendbtn.disabled = true;
+}
+
+}
+</script>
 {% endblock %}

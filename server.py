@@ -1,6 +1,6 @@
 import psycopg2
 from flask import session, render_template
-from Links import params_admin
+from Links import params_admin, params
 from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
 from Authorization.account import Account
@@ -495,6 +495,11 @@ def page_internal_server_error(e):
 @app.errorhandler(400)
 def page_bad_request(e):
     return render_template('400.html'), 400
+
+
+@app.route('/pp/')
+def open_pp():
+    return render_template('privacy_policy.html', title='Политика конфиденциальности персональных данных', login=session.get('authorization'), **params)
 
 
 db_session_blog.global_init("Blog/db/resources.db")
