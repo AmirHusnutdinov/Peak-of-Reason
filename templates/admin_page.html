@@ -13,26 +13,31 @@
                 <div class="mb-3">
                     <label class="form-label" style="color: blue">photo_name/ Имя фото</label>
                     <br>
-                <div class="container col-md-6">
-            <div class="mb-5" style="margin-left: -55%">
-                <label for="Image" class="form-label">Выберите нужное изображение</label>
-                <input class="form-control" type="file" id="formFile" onchange="preview()">
-                <button onclick="clearImage()" class="btn btn-primary mt-3">Готово</button>
-            </div>
-            <img id="frame" src="" class="img-fluid" />
-        </div>
 
-        <script>
+
+        <select id="Selector" class="form-control" onchange="preview()">
+
+        <option disabled selected>Выберите фото</option>
+            {% for item in items %}
+            <option value="{{item}}">{{item}}</option>
+            {% endfor %}
+
+        </select>
+        <br>
+        <img  id="frame" src="" class="img-fluid" style="margin-left: 30%; border: 4px solid #6495ED; border-radius: 10px"/>
+
+           <script>
             function preview() {
-                frame.src = URL.createObjectURL(event.target.files[0]);
-            }
-            function clearImage() {
-                document.getElementById('formFile').value = null;
                 frame.src = "";
+                var src = document.getElementById("Selector");
+                var value = src.value;
+                frame.src = "../static/assets/images/blog/" + value;
             }
         </script>
+
                 </div>
 <br>
+
                 <div class="mb-3">
                     <label class="form-label" style="color: blue">name/Имя</label>
                     {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Example_name") }}

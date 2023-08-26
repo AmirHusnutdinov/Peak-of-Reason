@@ -1,8 +1,7 @@
-import os
-
 import psycopg2
-from flask import request, redirect, session, render_template
-
+from flask import session, render_template
+from Links import params_admin
+from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
 from Authorization.account import Account
 
@@ -23,6 +22,14 @@ from Answers.data import answer_api
 from Admin.admin import Admin
 
 from settings import app, host, user, password, db_name
+
+
+import os
+from flask import flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -287,7 +294,6 @@ def open_answers():
 
 @app.route('/blog_admin', methods=['POST', 'GET'])
 def open_admin():
-    print(session.get('admin'))
     if session.get('admin'):
         info = Admin.admin()
         if request.method == 'GET':
@@ -322,16 +328,36 @@ def open_reviews_admin():
         return redirect('/')
 
 
+def allowed_file(filename):
+    """ Функция проверки расширения файла """
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/add_photo_admin', methods=['GET', 'POST'])
 def open_add_photo():
-    if session.get('admin'):
-        info = Admin.add_photo(request.method, app)
-        if request.method == 'GET':
-            return info
-        elif request.method == 'POST':
-            return redirect(info)
-    else:
-        return redirect('/')
+    form = FileForm()
+    if request.method == 'GET':
+        return render_template('add_new_image.html',
+                               **params_admin, ph_is='active', form=form)
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('Не могу прочитать файл')
+            return redirect(request.url)
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('Нет выбранного файла')
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+
+            filename = secure_filename(file.filename)
+
+            file.save(os.path.join(f'static/assets/images/{request.form["teamDropdown"]}', filename))
+
+            return render_template('add_new_image.html',
+                                   **params_admin, ph_is='active', form=form)
 
 
 @app.route('/event_admin', methods=['GET', 'POST'])

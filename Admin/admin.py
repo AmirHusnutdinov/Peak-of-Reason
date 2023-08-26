@@ -1,11 +1,8 @@
 import psycopg2
-from flask import render_template, request
-
+from flask import render_template
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
-from Admin.file_adminform import FileForm
 from Links import params_admin
-import os
 
 from settings import host, user, password, db_name, UPLOAD_FOLDER
 
@@ -14,6 +11,7 @@ class Admin:
     @staticmethod
     def admin():
         form = BlogAdminForm()
+        print(form.photo_name)
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
@@ -23,7 +21,6 @@ class Admin:
                     database=db_name
                 )
                 connection.autocommit = True
-
 
                 with connection.cursor() as cursor:
                     cursor.execute(
@@ -51,8 +48,10 @@ class Admin:
                     print("[INFO] PostgreSQL connection closed")
 
             return '/blog_admin'
+        import os
+        items = os.listdir('static/assets/images/blog')
         return render_template('admin_page.html',
-                               **params_admin, bl_is='active', form=form
+                               **params_admin, bl_is='active', form=form, items=items
                                )
 
     @staticmethod
@@ -116,23 +115,10 @@ class Admin:
 
         len_rev = len(rev_info)
         if method == 'GET':
-
             return render_template('rev_admin_page.html',
                                    **params_admin,
                                    review=rev_info,
                                    remained=len_rev, re_is='active', directory=UPLOAD_FOLDER)
-
-    @staticmethod
-    def add_photo(method, app):
-        form = FileForm()
-        if form.validate_on_submit():
-            last_file = os.listdir(app.config['UPLOAD_FOLDER'])[-1]
-            image_data = request.files[form.fileName.name].read()
-            filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
-            open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb').write(image_data)
-            return '/add_photo_admin'
-        return render_template('add_new_image.html',
-                               **params_admin, ph_is='active', form=form)
 
     @staticmethod
     def event_admin():
