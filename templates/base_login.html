@@ -27,7 +27,10 @@
                 <a class="nav__link" href="{{blog}}">Blog</a>
                 <a class="nav__link" href="{{answers}}">Answers</a>
                 <a class="nav__link" href="{{reviews}}">Reviews</a>
+                {% if login == True %}
                 <a class="nav__link" href="{{cabinet}}"><img class="nav__img" src="../static/assets/images/user-ico.svg" width="27px"></a>
+                {% endif %}
+
             </nav>
 
             <button class="nav-toggle" id="nav_toggle" type="button">
