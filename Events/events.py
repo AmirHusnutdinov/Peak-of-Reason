@@ -96,7 +96,7 @@ class Events:
 
             with connection.cursor() as cursor:
                 cursor.execute('''SELECT id, photo_way, name,
-                                            signature, link, created_date, post_text FROM events;''')
+                                            signature, link, created_date FROM events;''')
                 posts = cursor.fetchall()
 
         except Exception as _ex:

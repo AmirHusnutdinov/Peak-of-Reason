@@ -200,7 +200,7 @@ def open_event_type():
             return Events.types_of_events(event_info, label)
 
         elif page and page != '':
-            return Blog.blog_pages(int(page))
+            return Events.event_pages(int(page))
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
