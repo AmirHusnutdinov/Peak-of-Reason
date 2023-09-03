@@ -19,7 +19,7 @@ class Blog:
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute('''SELECT id, photo_way, name,
-                                        signature, link, created_date, post_text FROM blog;''')
+                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog;''')
                 posts = cursor.fetchall()
 
         except Exception as _ex:
@@ -67,15 +67,9 @@ class Blog:
             connection.autocommit = True
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
-
-                print(f"Server version: {cursor.fetchone()}")
-
-            with connection.cursor() as cursor:
-                cursor.execute('''SELECT id, photo_way, name,
-                                        signature, link, created_date, post_text FROM blog;''')
+                cursor.execute(f'''SELECT id, photo_way, name,
+                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
+                                        where id = {number};''')
                 posts = cursor.fetchall()
 
         except Exception as _ex:
@@ -84,7 +78,7 @@ class Blog:
             if connection:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
-        item = posts[number]
+        item = posts[0]
         return render_template('blog_page_example.html', **params,
                                bl_is_active='active',
                                name=item[2],
