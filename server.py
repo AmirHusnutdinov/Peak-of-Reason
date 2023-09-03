@@ -115,7 +115,6 @@ def open_event1():
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
         if connection:
-            # cursor.close()
             connection.close()
             print("[INFO] PostgreSQL connection closed")
     return Events.event(event_info, mode)
@@ -201,7 +200,7 @@ def open_event_type():
             return Events.types_of_events(event_info, label)
 
         elif page and page != '':
-            pass
+            return Events.event_pages(int(page))
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:

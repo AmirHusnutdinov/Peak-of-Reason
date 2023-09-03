@@ -1,6 +1,8 @@
 from flask import render_template, session
 import math
 from Links import types, params, event
+from settings import host, user, password, db_name
+import psycopg2
 
 
 class Events:
@@ -80,3 +82,34 @@ class Events:
                                label=label, title='Events',
                                login=session.get('authorization')
                                )
+
+    @staticmethod
+    def event_pages(number):
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute('''SELECT id, photo_way, name,
+                                            signature, link, created_date FROM events;''')
+                posts = cursor.fetchall()
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        item = posts[number]
+        return render_template('blog_page_example.html', **params,
+                               ev_is_active='active',
+                               name=item[2],
+                               signature=item[3],
+                               date=item[5],
+                               photo_name=item[1],
+                               text=item[6], title='Event page', login=session.get('authorization'))

@@ -3,7 +3,7 @@ from flask import render_template
 from Admin.blog_adminform import BlogAdminForm
 from Admin.event_adminform import EventAdminForm
 from Links import params_admin
-
+import os
 from settings import host, user, password, db_name, UPLOAD_FOLDER
 
 
@@ -11,7 +11,6 @@ class Admin:
     @staticmethod
     def admin():
         form = BlogAdminForm()
-        print(form.photo_name)
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
@@ -48,7 +47,7 @@ class Admin:
                     print("[INFO] PostgreSQL connection closed")
 
             return '/blog_admin'
-        import os
+
         items = os.listdir('static/assets/images/blog')
         return render_template('admin_page.html',
                                **params_admin, bl_is='active', form=form, items=items
@@ -206,10 +205,10 @@ class Admin:
                     print("[INFO] PostgreSQL connection closed")
 
             return '/event_admin'
-
+        items = os.listdir('static/assets/images/event')
         return render_template('admin_event.html',
                                **params_admin, ev_is='active',
-                               form=form
+                               form=form, items=items
                                )
 
 

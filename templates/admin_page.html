@@ -14,17 +14,11 @@
                     <label class="form-label" style="color: blue">photo_name/ Имя фото</label>
                     <br>
 
+       {{form.photo_name(class="form-control", id="Selector", onchange="preview()")}}
 
-        <select id="Selector" class="form-control" onchange="preview()">
 
-        <option disabled selected>Выберите фото</option>
-            {% for item in items %}
-            <option value="{{item}}">{{item}}</option>
-            {% endfor %}
-
-        </select>
         <br>
-        <img  id="frame" src="" class="img-fluid" style="margin-left: 30%; border: 4px solid #6495ED; border-radius: 10px"/>
+        <img  id="frame" src="" alt="Выберите изображение и оно отобразится здесь" class="img-fluid" style="margin-left: 30%; border: 4px solid #6495ED; border-radius: 10px; width: 400px; height: 250px"/>
 
            <script>
             function preview() {
