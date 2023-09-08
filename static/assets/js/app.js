@@ -51,6 +51,14 @@ $(function() {
     });
 
 
+    /* Menu nav_mobile toggle */
+    $("#nav_toggle").on("click", function(event) {
+        event.preventDefault();
+
+        $(this).toggleClass("active");
+        $("#nav_mobile").toggleClass("active");
+    });
+
 
     /* Collapse */
     $("[data-collapse]").on("click", function(event) {
