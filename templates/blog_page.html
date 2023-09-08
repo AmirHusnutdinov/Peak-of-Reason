@@ -11,8 +11,8 @@
     <div class="container">
 
         <div class="section__header">
-            <h3 class="section__suptitle">Our stories</h3>
-            <h2 class="section__title">Latest blog</h2>
+            <h3 class="section__suptitle">Наш блог</h3>
+            <h2 class="section__title">Последние статьи:</h2>
         </div>
         {% for items in posts %}
         <div class="blog">
@@ -23,7 +23,7 @@
                         <img class="blog__photo" src="../static/assets/images/blog/{{item[1]}}" alt="">
                     </a>
                     <div class="blog__date">
-                        <div class="blog__date-day">{{item[5].strftime('%d %b %Y')}}</div>
+                        <div class="blog__date-day">{{item[5]}}</div>
                     </div>
                 </div>
                 <div class="blog__content">

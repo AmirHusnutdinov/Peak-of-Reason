@@ -508,5 +508,5 @@ app.register_blueprint(event_api.blueprint)
 app.register_blueprint(answer_api.blueprint)
 app.register_blueprint(blog_api.blueprint)
 
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("PORT", 8080))
 app.run(host='0.0.0.0', port=port)

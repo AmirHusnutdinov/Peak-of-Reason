@@ -17,6 +17,7 @@
 
 <br>
 
+{% set months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'] %}
     <div class="container">
         <div class="section__header">
             <h2 class="section__title">Предстоящие события</h2>
@@ -31,7 +32,7 @@
                     </a>
                     <div class="blog__date">
                         <div class="blog__date-day">{{item[5]}}</div>
-                        {{item[6]}}
+                        {{ item[6]}}
                     </div>
                 </div>
                 <div class="blog__content">

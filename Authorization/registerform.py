@@ -9,8 +9,8 @@ class RegisterForm(FlaskForm):
     surname = StringField('Фамилия', validators=[DataRequired()])
     password1 = PasswordField('Пароль', validators=[DataRequired()])
     password2 = PasswordField('Повторите пароль', validators=[DataRequired()])
-    gender = RadioField('Выберите пол', choices=['мужчина', 'женщина'],
-                        default='женщина', validators=[DataRequired()])
+    gender = RadioField('Выберите пол', choices=[('male', 'мужчина'), ('female', 'женщина')],
+                        default='male', validators=[DataRequired()])
     fileName = FileField('Выберите файл')
     checkbox = BooleanField('pp')
     submit = SubmitField('Зарегистрироваться')

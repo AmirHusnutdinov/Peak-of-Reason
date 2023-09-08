@@ -21,19 +21,19 @@
 
             <nav class="nav1__nav" id="nav">
                 {% if login != True %}
-                    <a class="nav__link {{au_is_active}}" href="{{authorization}}">LOG IN</a>
+                    <a class="nav__link {{au_is_active}}" href="{{authorization}}">Войти</a>
                 {% endif %}
-                <a class="nav__link {{ev_is_active}}" href="{{events}}">Events</a>
-                <a class="nav__link {{bl_is_active}}" href="{{blog}}">Blog</a>
-                <a class="nav__link {{an_is_active}}" href="{{answers}}">Answers</a>
-                <a class="nav__link {{re_is_active}}" href="{{reviews}}">Reviews</a>
+                <a class="nav__link {{ev_is_active}}" href="{{events}}">События</a>
+                <a class="nav__link {{bl_is_active}}" href="{{blog}}">Блог</a>
+                <a class="nav__link {{an_is_active}}" href="{{answers}}">Вопросы</a>
+                <a class="nav__link {{re_is_active}}" href="{{reviews}}">Отзывы</a>
                 {% if login == True %}
-                <a class="nav__link {{us_is_active}}" href="{{cabinet}}"><img class="nav__img" src="../static/assets/images/user-ico{{is_cabinet}}.svg" width="27px"></a>
+                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="../static/assets/images/user-ico{{is_cabinet}}.svg" width="27px" title="Личный кабинет"></a>
                 {% endif %}
             </nav>
 
             <button class="nav-toggle" id="nav_toggle" type="button">
-                <span class="nav-toggle__item">Menu</span>
+                <span class="nav-toggle__item">Меню</span>
             </button>
         </div>
     </div>

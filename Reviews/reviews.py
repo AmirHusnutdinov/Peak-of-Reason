@@ -42,7 +42,6 @@ class Reviews:
                     order by random() limit 4;"""
                 )
                 rand_list = cursor.fetchall()
-                print(rand_list)
             with connection.cursor() as cursor:
                 cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
                 date = cursor.fetchone()[0]

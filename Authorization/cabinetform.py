@@ -4,12 +4,12 @@ from wtforms.validators import DataRequired
 
 
 class CabinetForm(FlaskForm):
-    email = StringField('Email')
-    name = StringField('Name')
-    surname = StringField('Surname')
+    email = StringField('Электронная почта')
+    name = StringField('Имя')
+    surname = StringField('Фамилия')
     password_old = PasswordField('Пароль')
     password_new = PasswordField('Новый пароль')
-    gender = RadioField('Выберите пол', choices=[('male', 'male'), ('female', 'female')],
+    gender = RadioField('Выберите пол', choices=[('male', 'мужчина'), ('female', 'женщина')],
                         default='male', validators=[DataRequired()])
-    fileName = FileField('Select file')
-    submit = SubmitField('SAVE')
+    fileName = FileField('Выберите фото')
+    submit = SubmitField('Сохранить')
