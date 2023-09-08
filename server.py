@@ -25,7 +25,7 @@ from settings import app, host, user, password, db_name
 
 
 import os
-from flask import flash, request, redirect, url_for
+from flask import flash, request, redirect
 from werkzeug.utils import secure_filename
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
