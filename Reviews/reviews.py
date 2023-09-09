@@ -55,9 +55,6 @@ class Reviews:
 
         form = ReviewsForm()
         if form.validate_on_submit():
-            if form.prof.data not in ('5/5', '4/5', '3/5', '2/5', '1/5'):
-                flash('Напишите свою оценку согласно формату (например:5/5, 4/5 и т.д.)')
-                return '/reviews'
             try:
                 connection = psycopg2.connect(
                     host=host,
@@ -71,8 +68,8 @@ class Reviews:
                     cursor.execute(
                         f"""INSERT INTO feedback_to_moderate (user_id, estimation, comment, created_date) 
                             values
-                            ((SELECT user_id FROM users WHERE user_id = {session.get("id")}::int), '{form.prof.data}',
-                            '{form.text.data}', '{date}'::date);"""
+                            ((SELECT user_id FROM users WHERE user_id = {session.get("id")}::int), 
+                            {int(form.prof.data)}, '{form.text.data}', '{date}'::date);"""
                     )
 
             except Exception as _ex:

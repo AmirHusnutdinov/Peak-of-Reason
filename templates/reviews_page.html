@@ -3,32 +3,35 @@
 {% block content %}
 <br>
 <br>
-<section class="section  section--clients">
-    <div class="container">
 
+<div class="koguvcavis-varazdel">
+    <div class="sestim-donials">
         <div class="section__header">
             <h3 class="section__suptitle">Наши клиенты</h3>
             <h2 class="section__title">Что они говорят</h2>
         </div>
-
-        <div class="clients">
+        <div class="sagestim-lonials">
             {% for rev in reviews_ %}
-            <div class="clients__item">
-                <img class="clients__photo" src="../static/assets/images/{{rev[4]}}" alt="">
-                <div class="clients__content">
-                    <div class="clients__name">{{rev[0]}}</div>
-                    <div class="clients__prof">{{rev[1]}}</div>
-                    <div class="clients__text">{{rev[2]}}</div>
-                    <div class="clients__prof">Дата: {{rev[3]}}</div>
+            <div class="vemotau-vokusipol">
+                <div class="testimonial">
+                    <img src="../static/assets/images/{{rev[4]}}" alt="client_photo">
+                    <div class="gecedanam">{{rev[0]}}</div>
+                    <p>Дата: {{rev[3]}}</p>
+                    <div class="apogered-gselected">
+                    {% for k in range(rev[1]) %}
+                        <i class="fas fa-star"></i>
+                    {% endfor %}
+                    {% for k in range(5 - rev[1]) %}
+                        <i class="far fa-star"></i>
+                    {% endfor %}
+                    </div>
+                    <p>{{rev[2]}}</p>
                 </div>
             </div>
             {% endfor %}
-
-
-        </div><!-- /.clients -->
-
-    </div><!-- /.container -->
-</section>
+        </div>
+    </div>
+</div>
 <hr>
 <br>
 <div>
@@ -50,7 +53,8 @@
             {% endwith %}
                 <div class="mb-3">
                     <label class="form-label">Оценка</label>
-                    {{ form.prof(type="text", class="form-control", placeholder="5/5", id="exampleFormControlInput2") }}
+                    {{ form.prof(type="range", class="reviews-range", min="1", max="5", value="5", id="formControlRange", onInput="$('#rangeval').html($(this).val())") }}
+                    <span id="rangeval">5</span>
                 </div>
                 <div id="textarea_ask" class="mb-3">
                     <label class="form-label">Напишите свой отзыв</label>
