@@ -1042,11 +1042,11 @@ hr {
 .blog {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 .blog__item {
     width: 31%;
+    padding: 15px;
 }
 
 .blog__header {

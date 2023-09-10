@@ -97,7 +97,7 @@ def open_event1():
         if query1 and query1 != '':
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd MM YYYY')  
                     FROM events WHERE is_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
@@ -131,70 +131,59 @@ def open_event_type():
         )
         connection.autocommit = True
 
-        query1 = request.args.get('pb')
-        query2 = request.args.get('tt')
-        query3 = request.args.get('orator')
-        query4 = request.args.get('tp')
-        query5 = request.args.get('ic')
-        query6 = request.args.get('ac')
+        query1 = request.args.get('mt')
+        query2 = request.args.get('oa')
+        query3 = request.args.get('ac')
+        query4 = request.args.get('ay')
+        query5 = request.args.get('ot')
         page = request.args.get('page')
 
         if query1 and query1 != '':
-            label = 'Копилка возможностей'
+            label = 'Профилактика эмоционального выгорания через музтерапию'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_apbop = 'true'::bool;"""
+                    FROM events WHERE is_poebtmt = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
             return Events.types_of_events(event_info, label)
 
         elif query2 and query2 != '':
-            label = 'Подростковые тренинги'
+            label = '«Харизматичный оратор» 18+'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_tft = 'true'::bool;"""
+                    FROM events WHERE is_oratory_adult = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
             return Events.types_of_events(event_info, label)
 
         elif query3 and query3 != '':
-            label = 'Ораторское искусство'
+            label = '«Искусство общения» 12-14'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_oratory = 'true'::bool;"""
+                    FROM events WHERE is_taoc = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
             return Events.types_of_events(event_info, label)
 
         elif query4 and query4 != '':
-            label = 'Тренинги для родителей'
+            label = '«Искусство быть собой» 14-16 лет'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_tfp = 'true'::bool;"""
+                    FROM events WHERE is_taoby = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
             return Events.types_of_events(event_info, label)
 
         elif query5 and query5 != '':
-            label = 'Индивидуальные консультации'
+            label = '«Харизматичный оратор» 15-18'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_ic = 'true'::bool;"""
-                )
-                event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
-
-        elif query6 and query6 != '':
-            label = 'Искусство общения'
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                    FROM events WHERE is_taoc = 'true'::bool;"""
+                    FROM events WHERE is_oratory_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
             return Events.types_of_events(event_info, label)

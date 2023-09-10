@@ -8,9 +8,9 @@
 
 <div class="text-center">
     <nav class="nav2" id="nav2">
-                <a class="nav__link2" href="{{pb}}">Копилка возможностей</a>
-                <a class="nav__link2" href="{{tt}}">Тренинги для подростков</a>
-                <a class="nav__link2" href="{{orator}}">Ораторское искусство</a>
+                <a class="nav__link2" href="{{link1}}">Искусство общения</a>
+                <a class="nav__link2" href="{{link2}}">Искусство быть собой</a>
+                <a class="nav__link2" href="{{link3}}">Харизматичный оратор</a>
             </nav>
 </div>
 <hr>
@@ -23,16 +23,16 @@
         <div class="section__header">
             <h2 class="section__title">Для детей и подростков</h2>
         </div>
-        {% for items in posts %}
         <div class="blog">
-            {% for item in items %}
+        {% for item in posts %}
         <div class="blog__item">
                 <div class="blog__header">
                     <a href="{{item[4]}}">
-                        <img class="blog__photo" src="../static/assets/images/blog/{{item[1]}}" alt="">
+                        <img class="blog__photo" src="../static/assets/images/event/{{item[1]}}" alt="">
                     </a>
                     <div class="blog__date">
                         <div class="blog__date-day">{{item[5]}}</div>
+                        {{ item[6]}}
                     </div>
                 </div>
                 <div class="blog__content">
@@ -42,10 +42,7 @@
                     <div class="blog__text">{{item[3]}}</div>
                 </div>
             </div>
-    {% endfor %}
-            </div>
-
-    {% endfor %}
+        {% endfor %}
 
     </div><!-- /.container -->
 <br>

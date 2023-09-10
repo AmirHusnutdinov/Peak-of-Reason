@@ -22,9 +22,8 @@
         <div class="section__header">
             <h2 class="section__title">Предстоящие события</h2>
         </div>
-        {% for items in posts %}
         <div class="blog">
-            {% for item in items %}
+        {% for item in posts %}
         <div class="blog__item">
                 <div class="blog__header">
                     <a href="{{item[4]}}">
@@ -42,10 +41,9 @@
                     <div class="blog__text">{{item[3]}}</div>
                 </div>
             </div>
-    {% endfor %}
-            </div>
+        {% endfor %}
+        </div>
 
-    {% endfor %}
 
     </div><!-- /.container -->
 <br>
