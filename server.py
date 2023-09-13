@@ -117,7 +117,7 @@ def open_event1():
         if connection:
             connection.close()
             print("[INFO] PostgreSQL connection closed")
-    return Events.event(event_  info, mode)
+    return Events.event(event_info, mode)
 
 
 @app.route('/event/types/')
