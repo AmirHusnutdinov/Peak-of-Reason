@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block content %}
 <br>
 <br>
@@ -7,12 +8,6 @@
 <br>
 
 <div class="text-center">
-    <nav class="nav2" id="nav2">
-                <a class="nav__link2" href="{{link1}}">Искусство общения</a>
-                <a class="nav__link2" href="{{link2}}">Искусство быть собой</a>
-                <a class="nav__link2" href="{{link3}}">Харизматичный оратор</a>
-<!--        <a type="button" class="btn btn-primary" href="{{back_link}}">Назад</a>-->
-            </nav>
 </div>
 <hr>
 <br>
@@ -22,7 +17,8 @@
     <div class="container">
 
         <div class="section__header">
-            <h2 class="section__title">Для детей и подростков</h2>
+            <h2 class="section__title">{{label}}</h2>
+            <a type="button" class="btn btn-primary" href="{{back_link}}">Назад</a>
         </div>
         <div class="blog">
         {% for item in posts %}
@@ -44,13 +40,12 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
 
-    </div><!-- /.container -->
 <br>
 <footer><div class="copyright">
                 ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
 
             </div></footer>
 <br>
-        </div>
 {% endblock %}

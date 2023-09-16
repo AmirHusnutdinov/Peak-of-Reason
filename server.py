@@ -23,10 +23,10 @@ from Admin.admin import Admin
 
 from settings import app, host, user, password, db_name
 
-
 import os
 from flask import flash, request, redirect
 from werkzeug.utils import secure_filename
+
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -92,7 +92,13 @@ def open_event1():
 
         query1 = request.args.get('teen')
         query2 = request.args.get('adult')
+        query3 = request.args.get('mt')
+        query4 = request.args.get('oa')
+        query5 = request.args.get('ac')
+        query6 = request.args.get('ay')
+        query7 = request.args.get('ot')
         mode = ''
+        label = ''
 
         if query1 and query1 != '':
             with connection.cursor() as cursor:
@@ -111,44 +117,18 @@ def open_event1():
                                )
                 event_info = cursor.fetchall()
             mode = 'adult'
-    except Exception as _ex:
-        print("[INFO] Error while working with PostgreSQL", _ex)
-    finally:
-        if connection:
-            connection.close()
-            print("[INFO] PostgreSQL connection closed")
-    return Events.event(event_info, mode)
 
-
-@app.route('/event/types/')
-def open_event_type():
-    try:
-        connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db_name
-        )
-        connection.autocommit = True
-
-        query1 = request.args.get('mt')
-        query2 = request.args.get('oa')
-        query3 = request.args.get('ac')
-        query4 = request.args.get('ay')
-        query5 = request.args.get('ot')
-        page = request.args.get('page')
-
-        if query1 and query1 != '':
-            label = 'Профилактика эмоционального выгорания через музтерапию'
+        if query3 and query3 != '':
+            label = 'Профилактика эмоционального выгорания через муз. терапию'
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
                     FROM events WHERE is_poebtmt = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
+            mode = 'mt'
 
-        elif query2 and query2 != '':
+        elif query4 and query4 != '':
             label = '«Харизматичный оратор» 18+'
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -156,9 +136,9 @@ def open_event_type():
                     FROM events WHERE is_oratory_adult = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
+            mode = 'oa'
 
-        elif query3 and query3 != '':
+        elif query5 and query5 != '':
             label = '«Искусство общения» 12-14'
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -166,9 +146,9 @@ def open_event_type():
                     FROM events WHERE is_taoc = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
+            mode = 'ac'
 
-        elif query4 and query4 != '':
+        elif query6 and query6 != '':
             label = '«Искусство быть собой» 14-16 лет'
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -176,9 +156,9 @@ def open_event_type():
                     FROM events WHERE is_taoby = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
+            mode = 'ay'
 
-        elif query5 and query5 != '':
+        elif query7 and query7 != '':
             label = '«Харизматичный оратор» 15-18'
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -186,16 +166,22 @@ def open_event_type():
                     FROM events WHERE is_oratory_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-            return Events.types_of_events(event_info, label)
+            mode = 'ot'
 
-        elif page and page != '':
-            return Events.event_pages(int(page))
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
         if connection:
             connection.close()
             print("[INFO] PostgreSQL connection closed")
+    return Events.event(event_info, mode, label)
+
+
+@app.route('/event/types/')
+def open_event_type():
+    page = request.args.get('page')
+    if page and page != '':
+        return Events.event_pages(int(page))
     return redirect('/')
 
 
@@ -339,7 +325,6 @@ def open_add_photo():
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-
             filename = secure_filename(file.filename)
 
             file.save(os.path.join(f'static/assets/images/{request.form["teamDropdown"]}', filename))
@@ -390,8 +375,6 @@ def open_feedback_add():
                 for i in rev_info:
                     if int(i[0]) == int(id_to_add):
                         feedback_to_add = i
-
-                print(feedback_to_add)
 
                 cursor.execute(
                     f"""Insert into feedback(user_id, estimation, comment, created_date, photo_way)
@@ -487,7 +470,8 @@ def page_bad_request(e):
 
 @app.route('/pp/')
 def open_pp():
-    return render_template('privacy_policy.html', title='Политика конфиденциальности персональных данных', login=session.get('authorization'), **params)
+    return render_template('privacy_policy.html', title='Политика конфиденциальности персональных данных',
+                           login=session.get('authorization'), **params)
 
 
 db_session_blog.global_init("Blog/db/resources.db")

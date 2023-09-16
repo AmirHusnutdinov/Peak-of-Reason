@@ -85,4 +85,4 @@ class Blog:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='Blog page', login=session.get('authorization'))
+                               text=item[6], title='blog', login=session.get('authorization'))
