@@ -1,5 +1,5 @@
 from flask import render_template, session
-from Links import types, params, event
+from Links import types, params, event, events
 from settings import host, user, password, db_name
 import psycopg2
 
@@ -71,8 +71,9 @@ class Events:
             connection.autocommit = True
 
             with connection.cursor() as cursor:
-                cursor.execute('''SELECT id, photo_way, name,
-                                            signature, link, created_date, post_text FROM events;''')
+                cursor.execute(f'''SELECT id, photo_way, name,
+                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
+                                        where id = {number};''')
                 posts = cursor.fetchall()
 
         except Exception as _ex:
@@ -81,11 +82,11 @@ class Events:
             if connection:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
-        item = posts[number]
+        item = posts[0]
         return render_template('blog_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='event', login=session.get('authorization'))
+                               text=item[6], title='blog', login=session.get('authorization'))

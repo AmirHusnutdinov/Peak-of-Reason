@@ -99,7 +99,6 @@ def open_event1():
         query7 = request.args.get('ot')
         mode = ''
         label = ''
-
         if query1 and query1 != '':
             with connection.cursor() as cursor:
                 cursor.execute(
