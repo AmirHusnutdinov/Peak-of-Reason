@@ -139,9 +139,6 @@ class Admin:
                     ids = cursor.fetchone()
                     if not ids:
                         ids = [1]
-                with connection.cursor() as cursor:
-                    cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
-                    date = cursor.fetchone()[0]
 
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
@@ -150,35 +147,31 @@ class Admin:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
-            adult, teen, tfp, ic, taoc, apbop, tft, oratory = False, False, False, False, False, False, False, False
-
-            if form.category.data in ['Копилка возможностей', 'Тренинги для подростков', 'Ораторское искусство']:
+            adult, teen, music, ic, taoc, oratory_teen, yourself, communicate = False, False, False, False, False, False, False, False
+            if form.category.data in ["Харизматичный оратор", "Искусство быть собой", "Искусство общения"]:
                 teen = True
-                if form.category.data == 'Копилка возможностей':
-                    link = f'/event/types/?page={(ids[0] + 1)}pb=1'
-                    apbop = True
+                if form.category.data == "Харизматичный оратор":
+                    link = f'/event/types/?page={(ids[0] + 1)}&ot=1'
+                    oratory_teen = True
 
-                elif form.category.data == 'Тренинги для подростков':
-                    link = f'/event/types/?page={(ids[0] + 1)}tt=1'
-                    tft = True
+                elif form.category.data == "Искусство быть собой":
+                    link = f'/event/types/?page={(ids[0] + 1)}&ay=1'
+                    yourself = True
 
-                elif form.category.data == 'Ораторское искусство':
-                    link = f'/event/types/?page={(ids[0] + 1)}orator=1'
-                    oratory = True
+                elif form.category.data == "Искусство общения":
+                    link = f'/event/types/?page={(ids[0] + 1)}&ac=1'
+                    communicate = True
 
-            elif form.category.data in ['Тренинги для родителей', 'Индивидуальные консультации', 'Искусство общения']:
+            elif form.category.data in ['Музыкальная терапия', 'Харизматичный оратор 18+']:
                 adult = True
-                if form.category.data == 'Тренинги для родителей':
-                    link = f'/event/types/?page={(ids[0] + 1)}tp=1'
-                    tfp = True
+                if form.category.data == 'Музыкальная терапия':
+                    link = f'/event/types/?page={(ids[0] + 1)}&mt=1'
+                    music = True
 
-                elif form.category.data == 'Индивидуальные консультации':
-                    link = f'/event/types/?page={(ids[0] + 1)}ic=1'
+                elif form.category.data == 'Харизматичный оратор 18+':
+                    link = f'/event/types/?page={(ids[0] + 1)}&oa=1'
                     ic = True
 
-                elif form.category.data == 'Искусство общения':
-                    link = f'/event/types/?page={(ids[0] + 1)}ac=1'
-                    taoc = True
             try:
                 connection = psycopg2.connect(
                     host=host,
@@ -187,15 +180,19 @@ class Admin:
                     database=db_name
                 )
                 connection.autocommit = True
-
                 with connection.cursor() as cursor:
-                    cursor.execute(f'''insert into events 
-                    (name, signature, created_date, link, photo_way, is_teen, is_apbop, is_tft, is_oratory, is_adult,
-                    is_tfp, is_ic, is_taoc)
-                     values ('{form.name.data}', '{form.signature.data}', '{date}'::date, '{link}',
+                    cursor.execute(f"""
+                    insert into events 
+                    (name, signature, created_date, link, photo_way,
+                     is_teen, is_oratory_teen, is_taoby, is_taoc, 
+                     is_adult, is_poebtmt, is_oratory_adult,
+                    time, post_text)
+                     values ('{form.name.data}', '{form.signature.data}', '{form.date.data}', '{link}',
                       '{form.photo_name.data}', 
-                      '{teen}'::bool, '{apbop}'::bool, '{tft}'::bool, '{oratory}'::bool,
-                      '{adult}'::bool, '{tfp}'::bool, '{ic}'::bool, '{taoc}'::bool);''')
+                      '{teen}'::bool, '{oratory_teen}'::bool, '{yourself}'::bool, '{communicate}'::bool,
+                      '{adult}'::bool, '{music}'::bool, '{ic}'::bool,
+                       '{str(form.time.data)}', '{form.post_text.data}')
+                        """)
 
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)

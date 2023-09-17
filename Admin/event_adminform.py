@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, DateField, TimeField
 from wtforms.validators import DataRequired
 import os
 
@@ -10,15 +10,18 @@ for i in a:
 
 
 class EventAdminForm(FlaskForm):
-    category = SelectField("Test", choices=[(1, "Копилка возможностей"),
-                                            (2, "Тренинги для подростков"),
-                                            (3, "Ораторское искусство"),
-                                            (4, "Тренинги для родителей"),
-                                            (5, "Индивидуальные консультации"),
-                                            (6, "Искусство общения")],
+    category = SelectField("Test", choices=[("Искусство общения", "Искусство общения"),
+                                            ('Искусство быть собой', "Искусство быть собой"),
+                                            ('Харизматичный оратор', "Харизматичный оратор"),
+                                            ('Музыкальная терапия', "Музыкальная терапия"),
+                                            ('Харизматичный оратор 18+', "Харизматичный оратор 18+")
+                                            ],
                            validators=[DataRequired()])
     photo_name = SelectField("Test", choices=lst,
                              validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     signature = TextAreaField('Answer', render_kw={"rows": 6, "cols": 11}, validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    time = TimeField('Time', validators=[DataRequired()])
+    post_text = TextAreaField('text', render_kw={"rows": 6, "cols": 11}, validators=[DataRequired()])
     submit = SubmitField('Отправить')

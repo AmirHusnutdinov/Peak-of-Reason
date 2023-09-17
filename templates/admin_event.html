@@ -34,18 +34,27 @@
                     <label class="form-label" style="color: blue">name/Имя</label>
                     {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Example_name") }}
                 </div>
-<br>
+                <br>
                 <div id="textarea_ask" class="mb-3">
-                    <label class="form-label" style="color: blue">signature/Описание</label>
+                    <label class="form-label" style="color: blue">signature/Краткое описание</label>
                     {{ form.signature(type="text", class="form-control", id="exampleFormControlInput3") }}
                 </div>
-
-<br>
-                <br>
-
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">date/Дата события</label>
+            {{form.date(type="date", class="form-control")}}
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">time/Время события</label>
+            {{form.time(type="time", class="form-control")}}
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">post_text/Полное описание</label>
+             {{ form.post_text(type="text", class="form-control") }}
+            <br>
+            <br>
                 <div class="d-grid gap-2">
                     {{ form.submit(type="submit", class="btn btn-dark") }}
                 </div>
-
         </form>
 {% endblock %}

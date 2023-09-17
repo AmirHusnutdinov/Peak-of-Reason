@@ -67,10 +67,11 @@ class Events:
                 password=password,
                 database=db_name
             )
+            print(number)
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
-                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM events 
+                                        signature, link, created_date, post_text, time FROM events 
                                         where id = {number};''')
                 posts = cursor.fetchall()
         except Exception as _ex:
@@ -79,6 +80,7 @@ class Events:
             if connection:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
+        print(posts)
         item = posts[0]
         return render_template('blog_page_example.html', **params,
                                ev_is_active='active',
@@ -86,4 +88,5 @@ class Events:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='event', login=session.get('authorization'))
+                               text=item[6],
+                               time=item[7], title='event', login=session.get('authorization'))
