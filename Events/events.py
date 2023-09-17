@@ -52,7 +52,6 @@ class Events:
 
     @staticmethod
     def types_of_events(events_type, label):
-        print(events_type)
         return render_template('types.html',
                                **params, ev_is_active='active',
                                label=label, title='Events', posts=events_type,
@@ -69,13 +68,11 @@ class Events:
                 database=db_name
             )
             connection.autocommit = True
-
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
-                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
+                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM events 
                                         where id = {number};''')
                 posts = cursor.fetchall()
-
         except Exception as _ex:
             print("[INFO] Error while working with PostgreSQL", _ex)
         finally:
@@ -89,4 +86,4 @@ class Events:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='blog', login=session.get('authorization'))
+                               text=item[6], title='event', login=session.get('authorization'))
