@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, RadioField, FileField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, RadioField, FileField, BooleanField, DateField
 from wtforms.validators import DataRequired
 
 
@@ -12,5 +12,6 @@ class RegisterForm(FlaskForm):
     gender = RadioField('Выберите пол', choices=[('male', 'мужчина'), ('female', 'женщина')],
                         default='male', validators=[DataRequired()])
     fileName = FileField('Выберите файл')
+    date_birth = DateField('Дата рождения', validators=[DataRequired()], format='%d-%m-%Y')
     checkbox = BooleanField('pp')
     submit = SubmitField('Зарегистрироваться')

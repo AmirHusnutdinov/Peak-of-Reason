@@ -172,12 +172,11 @@ class Account:
 
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way)
+                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way, date_birth)
                             values
                             ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
                             '{generate_password_hash(form.password1.data)}', 'False'::bool,
-                            '{form.gender.data}', '{photo}');"""
-                    )
+                            '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);""")
 
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)

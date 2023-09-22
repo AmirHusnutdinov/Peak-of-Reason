@@ -29,7 +29,8 @@
       {{ form.password2(type="password", id="password2", class="form-control", placeholder="Повторите пароль*") }}
       <label class="form-check-label">Гендер*</label>
       {{ form.gender(type="radio", id="inlineRadio0") }}
-
+      <label class="form-check-label">Дата рождения*</label>
+      {{ form.date_birth(type="date", id="date_birth", class="form-control", placeholder="dd-mm-yyyy") }}
       <br>
 
       <label class="form-check-label">Выберите свое фото</label>
@@ -56,5 +57,14 @@ if(this.checked){
 }
 
 }
+</script>
+<script>
+$("input").on("change", function() {
+    this.setAttribute(
+        "data-date",
+        moment(this.value, "YYYY-MM-DD")
+        .format( this.getAttribute("data-date-format") )
+    )
+}).trigger("change")
 </script>
 {% endblock %}

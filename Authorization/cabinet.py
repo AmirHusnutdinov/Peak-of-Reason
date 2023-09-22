@@ -31,7 +31,7 @@ class CabinetPage:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"""SELECT email, name, surname, password, gender, photo_way 
+                    f"""SELECT email, name, surname, password, gender, photo_way, date_birth
                     FROM users
                     WHERE user_id = '{session.get("id")}'::int;"""
                 )
@@ -125,7 +125,7 @@ class CabinetPage:
                             WHERE user_id = '{session.get("id")}'::int;"""
                         )
                 if form.fileName.data.filename and allowed_file(form.fileName.data.filename)\
-                        and form.fileName.data.filename != '':
+                        and form.fileName.data.filename != '' and form.fileName.data.filename != user_list[5]:
                     last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
                     last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
                     last_file = last_file[-1]
@@ -139,6 +139,14 @@ class CabinetPage:
                             SET photo_way = '{'clients/' + filename}'
                             WHERE user_id = '{session.get("id")}'::int;"""
                         )
+                if form.date_birth.data != user_list[6]:
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""UPDATE users
+                            SET date_birth = '{form.date_birth.data}'::date
+                            WHERE user_id = '{session.get("id")}'::int;"""
+                        )
+
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
@@ -152,11 +160,12 @@ class CabinetPage:
         surname = user_list[2]
         photo_way = user_list[5]
         form.gender.data = user_list[4]
+        date_birth = user_list[6]
 
         return render_template('cabinet.html', **params,
                                delete=delete, logout=logout, email=email, name=name, surname=surname,
                                photo_way=photo_way, directory=UPLOAD_FOLDER,
-                               is_cabinet='-after', form=form,
+                               is_cabinet='-after', form=form, date_birth=date_birth,
                                title='Your cabinet', login=session.get('authorization'))
 
     @staticmethod
