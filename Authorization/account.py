@@ -47,6 +47,7 @@ def check_email(email):
 class Account:
     @staticmethod
     def account_login():
+        connection = []
         form = LoginForm()
         if form.validate_on_submit():
             try:
@@ -105,6 +106,7 @@ class Account:
 
     @staticmethod
     def account_register():
+        connection = []
         form = RegisterForm()
         if form.validate_on_submit():
             try:

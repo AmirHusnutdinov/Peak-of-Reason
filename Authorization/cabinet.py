@@ -19,6 +19,7 @@ class CabinetPage:
     def account_cabinet():
         global gender
         gender = ''
+        connection = []
         form = CabinetForm()
         try:
             connection = psycopg2.connect(
@@ -170,6 +171,7 @@ class CabinetPage:
 
     @staticmethod
     def account_cabinet_del():
+        connection = []
         try:
             connection = psycopg2.connect(
                 host=host,
