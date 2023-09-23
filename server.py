@@ -51,6 +51,7 @@ def open_reviews():
 
 @app.route('/events/')
 def open_events():
+    connection = []
     try:
         connection = psycopg2.connect(
             host=host,
@@ -81,6 +82,7 @@ def open_events():
 
 @app.route('/event/')
 def open_event1():
+    connection, mode, label = [], [], []
     try:
         connection = psycopg2.connect(
             host=host,
@@ -346,6 +348,7 @@ def open_event_admin():
 
 @app.route('/add_feedback/', methods=['GET'])
 def open_feedback_add():
+    connection = []
     if session.get('admin'):
         id_to_add = request.args.get('id')
         try:
@@ -396,6 +399,7 @@ def open_feedback_add():
 
 @app.route('/delete_feedback/', methods=['GET'])
 def open_feedback_delete():
+    connection = []
     if session.get('admin'):
         id_to_delete = request.args.get('id')
         try:
@@ -425,6 +429,7 @@ def open_feedback_delete():
 
 @app.route('/delete_answer/', methods=['GET'])
 def open_answer_delete():
+    connection = []
     if session.get('admin'):
         id_to_delete = request.args.get('id')
         try:
@@ -453,17 +458,17 @@ def open_answer_delete():
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(_):
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
-def page_internal_server_error(e):
+def page_internal_server_error(_):
     return render_template('500.html'), 500
 
 
 @app.errorhandler(400)
-def page_bad_request(e):
+def page_bad_request(_):
     return render_template('400.html'), 400
 
 

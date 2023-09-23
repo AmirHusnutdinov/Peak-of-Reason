@@ -20,4 +20,4 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 user = 'postgres'
 password = '12345'
-db_name = 'mindease'
+db_name = 'mint'
