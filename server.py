@@ -67,11 +67,7 @@ def open_events():
                 FROM events;"""
             )
             event_info = cursor.fetchall()
-        page = request.args.get('page')
-        file = None
-        if page and page != '':
-            file = 'event_example.html'
-        return Events.events(event_info, file)
+        return Events.events(event_info)
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
@@ -108,7 +104,6 @@ def open_event1():
                     FROM events WHERE is_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-
             mode = 'teen'
 
         elif query2 and query2 != '':

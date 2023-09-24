@@ -34,9 +34,9 @@ class Admin:
                     date = date[0]
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        f"""INSERT INTO blog (name, signature, post_text, link, created_date, photo_way) VALUES
-                                ('{form.name.data}', '{form.signature.data}', '{form.text.data}',
-                                '/blog/?page={int(ids[0][0]) + 1}', '{date}'::date, '{form.photo_name.data}');"""
+                        f"""INSERT INTO blog (id, name, signature, post_text, link, created_date, photo_way) VALUES
+                                ('{int(ids[-1][0]) + 1}', '{form.name.data}', '{form.signature.data}', '{form.text.data}',
+                                '/blog/?page={int(ids[-1][0]) + 1}', '{date}'::date, '{form.photo_name.data}');"""
                     )
 
             except Exception as _ex:
@@ -181,13 +181,21 @@ class Admin:
                 )
                 connection.autocommit = True
                 with connection.cursor() as cursor:
+                    cursor.execute(
+                        """SELECT id FROM events;"""
+                    )
+                    ids = cursor.fetchall()
+                    if not ids:
+                        ids = [[0]]
+
+                with connection.cursor() as cursor:
                     cursor.execute(f"""
                     insert into events 
-                    (name, signature, created_date, link, photo_way,
+                    (id, name, signature, created_date, link, photo_way,
                      is_teen, is_oratory_teen, is_taoby, is_taoc, 
                      is_adult, is_poebtmt, is_oratory_adult,
                     time, post_text)
-                     values ('{form.name.data}', '{form.signature.data}', '{form.date.data}', '{link}',
+                     values (''{int(ids[-1][0]) + 1}'', '{form.name.data}', '{form.signature.data}', '{form.date.data}', '{link}',
                       '{form.photo_name.data}', 
                       '{teen}'::bool, '{oratory_teen}'::bool, '{yourself}'::bool, '{communicate}'::bool,
                       '{adult}'::bool, '{music}'::bool, '{ic}'::bool,

@@ -6,17 +6,13 @@ import psycopg2
 
 class Events:
     @staticmethod
-    def events(events_lst, file):
+    def events(events_lst):
         event1 = event + '/?teen=1'
         event2 = event + '/?adult=1'
-        if not file:
-            return render_template('events.html', **params, ev_is_active='active',
-                                   event1=event1,
-                                   event2=event2,
-                                   posts=events_lst, title='Events', login=session.get('authorization'))
-        else:
-            return render_template(file, **params, ev_is_active='active', title='Events',
-                                   login=session.get('authorization'))
+        return render_template('events.html', **params, ev_is_active='active',
+                               event1=event1,
+                               event2=event2,
+                               posts=events_lst, title='Events', login=session.get('authorization'))
 
     @staticmethod
     def event(events1, mode, label):
@@ -67,7 +63,6 @@ class Events:
                 password=password,
                 database=db_name
             )
-            print(number)
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
@@ -80,9 +75,8 @@ class Events:
             if connection:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
-        print(posts)
         item = posts[0]
-        return render_template('blog_page_example.html', **params,
+        return render_template('event_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],
                                signature=item[3],

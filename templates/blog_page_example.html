@@ -16,15 +16,12 @@
         </div>
 
         <div class="blog">
+
         <div class="blog__item">
                 <div class="blog__header">
                         <img class="blog__photo" src="/static/assets/images/{{title}}/{{photo_name}}" alt="">
                     <div class="blog__date">
-                        {% if title == 'blog'%}
                             <div class="blog__date-day">Дата создания: {{date}}</div>
-                        {% else %}
-                             <div class="blog__date-day">Дата проведения: {{date}}, {{time}}</div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -44,10 +41,12 @@
   font-family: Arial;
    ">{{text}}</textarea>
                 </div>
-    </div><!-- /.container "/static/assets/images/{{title}}/{{photo_name}}" -->
+    </div>
+
     <script>
         $("textarea").height( $("textarea")[0].scrollHeight );
     </script>
+
 <br>
 <footer><div class="copyright">
                 ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
