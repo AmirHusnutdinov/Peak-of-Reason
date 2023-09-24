@@ -66,7 +66,7 @@ class Events:
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
-                                        signature, link, created_date, post_text, time FROM events 
+                                        signature, link, created_date, post_text, time, count_of_people FROM events 
                                         where id = {number};''')
                 posts = cursor.fetchall()
         except Exception as _ex:
@@ -76,11 +76,16 @@ class Events:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
+        date = '.'.join(str(item[5]).split('-')[::-1])
+        time = ':'.join((item[7].split(':'))[:2])
         return render_template('event_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],
                                signature=item[3],
+                               date_show=date,
                                date=item[5],
                                photo_name=item[1],
                                text=item[6],
-                               time=item[7], title='event', login=session.get('authorization'))
+                               time=time,
+                               count_of_people=item[8],
+                               title='event', login=session.get('authorization'))

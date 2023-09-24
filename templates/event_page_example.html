@@ -21,7 +21,7 @@
                 <div class="blog__header">
                         <img class="blog__photo" src="/static/assets/images/{{title}}/{{photo_name}}" alt="">
                     <div class="blog__date">
-                             <div class="blog__date-day">Дата проведения: {{date}}, {{time}}</div>
+                             <div class="blog__date-day">Дата проведения: {{date_show}}, {{time}}</div>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,6 @@
   line-height: 2rem;
   margin: 0 auto;
   padding: 4px 8px;
-  min-height: 500px;
   font-size: 20px;
   font-family: Arial;
    ">{{text}}</textarea>
@@ -67,7 +66,7 @@
         </div>
     </div>
         <br> <br> <br>
-        <p style="font-size: 20px; font-family: Geologica;"> Осталось 5 мест из 10</p>
+        <p style="font-size: 20px; font-family: Geologica;"> Осталось 5 мест из {{count_of_people}}</p>
         <br>
         <a type="button" class="btn btn-primary" href="http://127.0.0.1:8080/event/buy">Записаться</a>
 

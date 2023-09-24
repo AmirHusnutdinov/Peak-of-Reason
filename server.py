@@ -64,7 +64,8 @@ def open_events():
         with connection.cursor() as cursor:
             cursor.execute(
                 f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                FROM events;"""
+                FROM events
+                ORDER BY created_date DESC; """
             )
             event_info = cursor.fetchall()
         return Events.events(event_info)
