@@ -195,7 +195,6 @@ def confirm():
     event = int(request.args.get('page'))
     user_id = int(session.get('id'))
     if event and event != '':
-        # print(f'я id пользователя {user_id}')
         Events.event_confirm(event, user_id)
         return redirect(f'/event/buy/?page={int(event)}')
     return redirect('/')

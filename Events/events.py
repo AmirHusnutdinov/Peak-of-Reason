@@ -66,7 +66,8 @@ class Events:
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
-                                        signature, link, created_date, post_text, time, count_of_people FROM events 
+                                        signature, link, created_date, post_text,
+                                         time, count_of_people, id_of_people FROM events 
                                         where id = {number};''')
                 posts = cursor.fetchall()
         except Exception as _ex:
@@ -78,6 +79,11 @@ class Events:
         item = posts[0]
         date = '.'.join(str(item[5]).split('-')[::-1])
         time = ':'.join((item[7].split(':'))[:2])
+        last_places = item[8] - len(item[9])
+        flag = True
+        print(int(session.get('id')), item[9])
+        if int(session.get('id')) in item[9]:
+            flag = False
         return render_template('event_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],
@@ -87,8 +93,10 @@ class Events:
                                photo_name=item[1],
                                text=item[6],
                                time=time,
+                               flag=flag,
                                count_of_people=item[8],
                                number=number,
+                               last_places=last_places,
                                title='event', login=session.get('authorization'))
 
     @staticmethod
@@ -141,7 +149,8 @@ class Events:
                                         where id = {event_id};''')
 
                 info_about_people = cursor.fetchall()
-                if int(info_about_people[0][0]) != len(info_about_people[0][1]):
+                if int(info_about_people[0][0]) != len(info_about_people[0][1]) and\
+                        int(info_about_people[0][0]) not in info_about_people[0][1]:
                     with connection.cursor() as cursor:
                         cursor.execute(f"""Update events 
                                     Set id_of_people = array_append(id_of_people, {user_id})

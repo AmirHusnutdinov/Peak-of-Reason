@@ -66,10 +66,15 @@
         </div>
     </div>
         <br> <br> <br>
-        <p style="font-size: 20px; font-family: Geologica;"> Осталось 5 мест из {{count_of_people}}</p>
-        <br>
-        <a type="button" class="btn btn-primary btn-lg"  href="http://127.0.0.1:8080/event/buy/?page={{number}}">Записаться</a>
 
+        <br>
+        {% if flag %}
+             <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
+            <a type="button" class="btn btn-primary btn-lg"  href="http://127.0.0.1:8080/event/buy/?page={{number}}">Записаться</a>
+        {% else %}
+            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие !</p>
+
+        {% endif %}
              <script>const countdown = document.querySelector('.stat');
 const targetDate = new Date('{{date}}T{{time}}');
 
