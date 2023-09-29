@@ -69,7 +69,8 @@ class Blog:
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
                                         signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
-                                        where id = {number};''')
+                                        where id = {number}
+                                        ORDER BY created_date DESC;''')
                 posts = cursor.fetchall()
 
         except Exception as _ex:

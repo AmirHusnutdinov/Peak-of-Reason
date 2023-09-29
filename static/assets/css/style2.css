@@ -609,7 +609,7 @@ hr {
 
 .stat__item {
     flex: 1 1 0;
-    padding: 70px 25px;
+    padding: 20px 25px;
 
     border-left: 1px solid #b5eae0;
 
@@ -624,7 +624,7 @@ hr {
 .stat__count {
     margin-bottom: 10px;
 
-    font-size: 72px;
+    font-size: 70px;
     font-weight: 700;
     line-height: 1;
 }

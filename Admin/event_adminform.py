@@ -24,4 +24,5 @@ class EventAdminForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
     time = TimeField('Time', validators=[DataRequired()])
     post_text = TextAreaField('text', render_kw={"rows": 6, "cols": 11}, validators=[DataRequired()])
+    count_of_people = StringField('Count_of_people', validators=[DataRequired()])
     submit = SubmitField('Отправить')

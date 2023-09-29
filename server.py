@@ -64,14 +64,11 @@ def open_events():
         with connection.cursor() as cursor:
             cursor.execute(
                 f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
-                FROM events;"""
+                FROM events
+                ORDER BY created_date DESC; """
             )
             event_info = cursor.fetchall()
-        page = request.args.get('page')
-        file = None
-        if page and page != '':
-            file = 'event_example.html'
-        return Events.events(event_info, file)
+        return Events.events(event_info)
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
@@ -108,7 +105,6 @@ def open_event1():
                     FROM events WHERE is_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
-
             mode = 'teen'
 
         elif query2 and query2 != '':
@@ -183,6 +179,25 @@ def open_event_type():
     page = request.args.get('page')
     if page and page != '':
         return Events.event_pages(int(page))
+    return redirect('/')
+
+
+@app.route('/event/buy/')
+def open_buy_page():
+    page = request.args.get('page')
+    if page and page != '':
+        return Events.event_buy_pages(int(page))
+    return redirect('/')
+
+
+@app.route('/event/buy/confirm/')
+def confirm():
+    event = int(request.args.get('page'))
+    user_id = int(session.get('id'))
+    if event and event != '':
+        # print(f'я id пользователя {user_id}')
+        Events.event_confirm(event, user_id)
+        return redirect(f'/event/buy/?page={int(event)}')
     return redirect('/')
 
 

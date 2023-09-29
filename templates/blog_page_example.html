@@ -20,11 +20,9 @@
             <div class="blog__header">
                     <img class="blog__photo" src="/static/assets/images/{{title}}/{{photo_name}}" alt="">
                 <div class="blog__date">
-                    {% if title == 'blog'%}
+
                         <div class="blog__date-day">Дата создания: {{date}}</div>
-                    {% else %}
-                         <div class="blog__date-day">Дата проведения: {{date}}, {{time}}</div>
-                    {% endif %}
+
                 </div>
             </div>
         </div>
@@ -39,7 +37,7 @@ width: 100%;
 line-height: 2rem;
 margin: 0 auto;
 padding: 4px 8px;
-min-height: 500px;
+
 font-size: 20px;
 font-family: Arial;
 ">{{text}}</textarea>

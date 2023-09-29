@@ -31,28 +31,31 @@
         </script>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" style="color: blue">name/Имя</label>
-                    {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Example_name") }}
+                    <label class="form-label" style="color: blue">Name/Имя</label>
+                    {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Имя поста") }}
                 </div>
                 <br>
                 <div id="textarea_ask" class="mb-3">
-                    <label class="form-label" style="color: blue">signature/Краткое описание</label>
+                    <label class="form-label" style="color: blue">Signature/Краткое описание</label>
                     {{ form.signature(type="text", class="form-control", id="exampleFormControlInput3") }}
                 </div>
             <br>
             <br>
-            <label class="form-label" style="color: blue">date/Дата события</label>
+            <label class="form-label" style="color: blue">Date/Дата события</label>
             {{form.date(type="date", class="form-control")}}
             <br>
             <br>
-            <label class="form-label" style="color: blue">time/Время события</label>
+            <label class="form-label" style="color: blue">Time/Время события</label>
             {{form.time(type="time", class="form-control")}}
             <br>
             <br>
-            <label class="form-label" style="color: blue">post_text/Полное описание</label>
+            <label class="form-label" style="color: blue">Post_text/Текст статьи</label>
              {{ form.post_text(type="text", class="form-control") }}
             <br>
             <br>
+            <label class="form-label" style="color: blue">count_of_people/Количество человек</label>
+              {{ form.count_of_people(type="text", class="form-control", placeholder="15") }}
+            <br> <br>
                 <div class="d-grid gap-2">
                     {{ form.submit(type="submit", class="btn btn-dark") }}
                 </div>
