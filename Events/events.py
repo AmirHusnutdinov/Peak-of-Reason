@@ -1,5 +1,5 @@
 from flask import render_template, session
-from Links import types, params, event, events
+from Links import params, event
 from settings import host, user, password, db_name
 import psycopg2
 
@@ -88,4 +88,73 @@ class Events:
                                text=item[6],
                                time=time,
                                count_of_people=item[8],
+                               number=number,
                                title='event', login=session.get('authorization'))
+
+    @staticmethod
+    def event_buy_pages(number):
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+            with connection.cursor() as cursor:
+                cursor.execute(f'''SELECT id, photo_way, name,
+                                        signature, created_date, time FROM events 
+                                        where id = {number};''')
+                posts = cursor.fetchall()
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+        item = posts[0]
+        date = '.'.join(str(item[4]).split('-')[::-1])
+        time = ':'.join((item[5].split(':'))[:2])
+        return render_template('buy_page_example.html', **params,
+                               ev_is_active='active',
+                               id=number,
+                               name=item[2],
+                               signature=item[3],
+                               date_show=date,
+                               photo_name=item[1],
+                               time=time,
+                               title='event', login=session.get('authorization'))
+
+    @staticmethod
+    def event_confirm(event_id, user_id):
+        try:
+            connection = psycopg2.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+
+            with connection.cursor() as cursor:
+                cursor.execute(f'''SELECT count_of_people, id_of_people FROM events 
+                                        where id = {event_id};''')
+
+                info_about_people = cursor.fetchall()
+                if int(info_about_people[0][0]) != len(info_about_people[0][1]):
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""Update events 
+                                    Set id_of_people = array_append(id_of_people, {user_id})
+                                    WHERE id = '{event_id}' """)
+
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""Update users 
+                                    Set id_of_event = array_append(id_of_event, {event_id})
+                                    WHERE user_id = '{user_id}'""")
+
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")

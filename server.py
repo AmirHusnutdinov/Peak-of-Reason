@@ -182,6 +182,25 @@ def open_event_type():
     return redirect('/')
 
 
+@app.route('/event/buy/')
+def open_buy_page():
+    page = request.args.get('page')
+    if page and page != '':
+        return Events.event_buy_pages(int(page))
+    return redirect('/')
+
+
+@app.route('/event/buy/confirm/')
+def confirm():
+    event = int(request.args.get('page'))
+    user_id = int(session.get('id'))
+    if event and event != '':
+        # print(f'я id пользователя {user_id}')
+        Events.event_confirm(event, user_id)
+        return redirect(f'/event/buy/?page={int(event)}')
+    return redirect('/')
+
+
 @app.route('/blog/')
 def open_blog():
     query = request.args.get('page')
