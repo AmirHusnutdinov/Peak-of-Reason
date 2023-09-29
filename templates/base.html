@@ -29,7 +29,7 @@
                 <a class="nav__link {{an_is_active}}" href="{{answers}}">Вопросы</a>
                 <a class="nav__link {{re_is_active}}" href="{{reviews}}">Отзывы</a>
                 {% if login == True %}
-                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="{{ url_for('static', filename='assets/images/user-ico.svg') }}" width="27px" title="Личный кабинет"></a>
+                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="/static/assets/images/user-ico{{is_cabinet}}.svg" width="27px" title="Личный кабинет"></a>
                 {% endif %}
             </nav>
 
@@ -40,6 +40,31 @@
     </div>
 </header>
 {% block content %}{% endblock %}
+<div class="copyright">
+    ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
+</div>
+<div id="microdata-organization" class="hidden" itemscope="" itemtype="http://schema.org/Organization" style="visibility: hidden;">
+    <span itemprop="name">NAME</span>
+    <a itemprop="url" href="https://...ru">https://....ru</a>
+    <span itemprop="telephone">+7 (123) 456-78-90</span>
+    <span itemprop="email">mail@mail.ru</span>
+    <a itemprop="logo" href="https://....png"> https://....png </a>
+    <span itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+        <span itemprop="addressLocality"> Нефтекамск </span>
+        <span itemprop="streetAddress"> улица Ленина, 21А </span>
+    </span>
+    <span itemprop="location" itemscope="" itemtype="https://schema.org/Place"><span itemprop="name"> K5 </span>
+        <span itemprop="logo"> https://k5msk.ru/upload/logotype.svg </span>
+        <span itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
+            <span itemprop="latitude">56.088408</span>
+            <span itemprop="longitude">54.248236</span>
+        </span>
+        <span itemprop="telephone">+7 (123) 456-78-90</span>
+        <span itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+            <span itemprop="addressLocality"> Нефтекамск </span><span itemprop="streetAddress"> улица Ленина, 21А </span>
+        </span>
+    </span>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sli-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{ url_for('static',filename='assets/js/app.js') }}"></script>

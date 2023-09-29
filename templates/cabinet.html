@@ -1,103 +1,101 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <br>
-    <br>
-    <br>
+<br>
+<br>
+<br>
+<div>
+    <h3 class="subscribe" style="text-align:center;">Ваши данные</h3>
+    <form class="subscribe" method="post" enctype=multipart/form-data>
+    {{ form.hidden_tag() }}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <label class="form-check-label">Твое фото</label>
+<br>
+    <img src="/{{directory}}/{{photo_way}}" width="200" height="200">
+<br>
+<br>
+    <div class="mb-3">
+      <label class="form-label">Загрузите новое фото</label>
+      {{ form.fileName(type="file", id="formFileSm", class="form-control",
+        onchange="preview()") }}
+      <img id="frame" src="" class="img-fluid" width="400px">
+    <script>
+        function preview() {
+            frame.src = URL.createObjectURL(event.target.files[0]);
+        }
+        function clearImage() {
+            document.getElementById('formFile').value = null;
+            frame.src = "";
+        }
+    </script>
+    </div>
 
-    <div>
-        <h3 class="subscribe" style="text-align:center;">Ваши данные</h3>
-        <form class="subscribe" method="post" enctype=multipart/form-data>
-        {{ form.hidden_tag() }}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-                <label class="form-check-label">Твое фото</label>
+    <div class="mb-3">
+        <label class="form-label">Ваше имя</label>
+        {{ form.name(type="text", id="exampleFormControlInput1", class="form-control", placeholder=name, autofocus="") }}
+    </div>
 <br>
+    <div class="mb-3">
+        <label class="form-label">Ваша фамилия</label>
+        {{ form.surname(type="text", id="exampleFormControlInput2", class="form-control", placeholder=surname, autofocus="") }}
+    </div>
+<br>
+    <div class="mb-3">
+        <label class="form-label">Ваша почта</label>
+        {{ form.email(type="email", id="exampleFormControlInput3", class="form-control", placeholder=email, autofocus="") }}
+    </div>
+<br>
+    <div class="mb-3">
+        <label class="form-label">Старый пароль*</label>
+        {{ form.password_old(type="password", id="exampleFormControlInput4", class="form-control", placeholder="если хотите поменять пароль напишите актуальный пароль") }}
+    </div>
+<br>
+    <div class="mb-3">
+        <label class="form-label">Новый пароль</label>
+        {{ form.password_new(type="password", id="exampleFormControlInput5", class="form-control", placeholder="а здесь напишите новый пароль") }}
+    </div>
+<br>
+    <label class="form-check-label">Гендер</label>
+    {{ form.gender(type="radio", id="inlineRadio0") }}
+<br>
+    <label class="form-check-label">Дата рождения</label>
+    {{ form.date_birth(type="date", id="date_birth", class="form-control", value=date_birth, style="width: 180px;") }}
+<br>
+<br>
+    <div class="d-grid gap-2">
+        <!-- Кнопка-триггер модального окна -->
+    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+      СОХРАНИТЬ
+    </button>
+    </div>
 
-                <img src="/{{directory}}/{{photo_way}}" width="200" height="200">
-<br>
-            <br>
-                <div class="mb-3">
-                  <label class="form-label">Загрузите новое фото</label>
-                  {{ form.fileName(type="file", id="formFileSm", class="form-control",
-                    onchange="preview()") }}
-                  <img id="frame" src="" class="img-fluid" width="400px">
-                <script>
-                    function preview() {
-                        frame.src = URL.createObjectURL(event.target.files[0]);
-                    }
-                    function clearImage() {
-                        document.getElementById('formFile').value = null;
-                        frame.src = "";
-                    }
-                </script>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Ваше имя</label>
-                    {{ form.name(type="text", id="exampleFormControlInput1", class="form-control", placeholder=name, autofocus="") }}
-                </div>
-<br>
-                <div class="mb-3">
-                    <label class="form-label">Ваша фамилия</label>
-                    {{ form.surname(type="text", id="exampleFormControlInput2", class="form-control", placeholder=surname, autofocus="") }}
-                </div>
-<br>
-                <div class="mb-3">
-                    <label class="form-label">Ваша почта</label>
-                    {{ form.email(type="email", id="exampleFormControlInput3", class="form-control", placeholder=email, autofocus="") }}
-                </div>
-<br>
-                <div class="mb-3">
-                    <label class="form-label">Старый пароль*</label>
-                    {{ form.password_old(type="password", id="exampleFormControlInput4", class="form-control", placeholder="если хотите поменять пароль напишите актуальный пароль") }}
-                </div>
-<br>
-                <div class="mb-3">
-                    <label class="form-label">Новый пароль</label>
-                    {{ form.password_new(type="password", id="exampleFormControlInput5", class="form-control", placeholder="а здесь напишите новый пароль") }}
-                </div>
-<br>
-                <label class="form-check-label">Гендер</label>
-                {{ form.gender(type="radio", id="inlineRadio0") }}
-<br>
-                <label class="form-check-label">Дата рождения</label>
-                {{ form.date_birth(type="date", id="date_birth", class="form-control", value=date_birth, style="width: 180px;") }}
-            <br>
-<br>
-                <div class="d-grid gap-2">
-                    <!-- Кнопка-триггер модального окна -->
-                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-                  СОХРАНИТЬ
-                </button>
-                </div>
-
-                <!-- Модальное окно -->
-                <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel1">Вы уверены что хотите изменить данные?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                      </div>
-                      <div class="modal-body">
-                        Эти данные можно будет изменить еще раз в личном кабинете.
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
-                        {{ form.submit(type="submit", class="btn btn-dark") }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-    </form>
+    <!-- Модальное окно -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel1">Вы уверены что хотите изменить данные?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            Эти данные можно будет изменить еще раз в личном кабинете.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
+            {{ form.submit(type="submit", class="btn btn-dark") }}
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
 <br>
     <div class="subscribe">
         <!-- Кнопка-триггер модального окна -->
@@ -150,5 +148,5 @@
           </div>
         </div>
     </div>
-    </div>>
+    </div>
 {% endblock %}

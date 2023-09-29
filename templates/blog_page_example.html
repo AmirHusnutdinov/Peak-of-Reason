@@ -8,48 +8,44 @@
 <br>
 
 
-    <div class="container">
+<div class="container">
 
-        <div class="section__header">
-            <p style="font-size: 35px" class="section__suptitle">{{name}}</p>
-            <p style="font-size: 20px" class="section__title">{{signature}}</p>
-        </div>
-
-        <div class="blog">
-
-        <div class="blog__item">
-                <div class="blog__header">
-                        <img class="blog__photo" src="/static/assets/images/{{title}}/{{photo_name}}" alt="">
-                    <div class="blog__date">
-                            <div class="blog__date-day">Дата создания: {{date}}</div>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-        <div class="blog__content">
-                    <textarea disabled  id="text_area" style="
-  background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
-  background-size: 100% 4rem;
-  border: 1px solid #CCC;
-  width: 100%;
-  line-height: 2rem;
-  margin: 0 auto;
-  padding: 4px 8px;
-  font-size: 20px;
-  font-family: Arial;
-   ">{{text}}</textarea>
-                </div>
+    <div class="section__header">
+        <p style="font-size: 35px" class="section__suptitle">{{name}}</p>
+        <p style="font-size: 20px" class="section__title">{{signature}}</p>
     </div>
 
-    <script>
-        $("textarea").height( $("textarea")[0].scrollHeight );
-    </script>
+    <div class="blog">
+    <div class="blog__item">
+            <div class="blog__header">
+                    <img class="blog__photo" src="/static/assets/images/{{title}}/{{photo_name}}" alt="">
+                <div class="blog__date">
 
-<br>
-<footer><div class="copyright">
-                ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
+                        <div class="blog__date-day">Дата создания: {{date}}</div>
 
-            </div></footer>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <div class="blog__content">
+                <textarea disabled  id="text_area" style="
+background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
+background-size: 100% 4rem;
+border: 1px solid #CCC;
+width: 100%;
+line-height: 2rem;
+margin: 0 auto;
+padding: 4px 8px;
+
+font-size: 20px;
+font-family: Arial;
+">{{text}}</textarea>
+            </div>
+</div>
+<script>
+    $("textarea").height( $("textarea")[0].scrollHeight );
+</script>
 <br>
+<footer>
 {% endblock %}
