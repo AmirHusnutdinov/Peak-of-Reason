@@ -29,7 +29,7 @@
                 <a class="nav__link {{an_is_active}}" href="{{answers}}">Вопросы</a>
                 <a class="nav__link {{re_is_active}}" href="{{reviews}}">Отзывы</a>
                 {% if login == True %}
-                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="{{ url_for('static', filename='assets/images/user-ico.svg') }}" width="27px" title="Личный кабинет"></a>
+                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="/static/assets/images/user-ico{{is_cabinet}}.svg" width="27px" title="Личный кабинет"></a>
                 {% endif %}
             </nav>
 
@@ -43,7 +43,7 @@
 <div class="copyright">
     ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
 </div>
-<div id="microdata-organization" class="hidden" itemscope="" itemtype="http://schema.org/Organization">
+<div id="microdata-organization" class="hidden" itemscope="" itemtype="http://schema.org/Organization" style="visibility: hidden;">
     <span itemprop="name">NAME</span>
     <a itemprop="url" href="https://...ru">https://....ru</a>
     <span itemprop="telephone">+7 (123) 456-78-90</span>
