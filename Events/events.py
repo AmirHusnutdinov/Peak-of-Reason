@@ -150,7 +150,7 @@ class Events:
 
                 info_about_people = cursor.fetchall()
                 if int(info_about_people[0][0]) != len(info_about_people[0][1]) and\
-                        int(info_about_people[0][0]) not in info_about_people[0][1]:
+                        int(session.get('id')) not in info_about_people[0][1]:
                     with connection.cursor() as cursor:
                         cursor.execute(f"""Update events 
                                     Set id_of_people = array_append(id_of_people, {user_id})
