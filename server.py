@@ -8,16 +8,13 @@ from Authorization.account import Account
 from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
-from Reviews.data import feedback_api
 
 from Events.events import Events
 from Events.data import event_api
 
 from Blog.blog import Blog
-from Blog.data import db_session_blog, blog_api
 
 from Answers.answers import Answers
-from Answers.data import answer_api
 
 from Admin.admin import Admin
 
@@ -492,12 +489,8 @@ def open_pp():
                            login=session.get('authorization'), **params)
 
 
-db_session_blog.global_init("Blog/db/resources.db")
-
-app.register_blueprint(feedback_api.blueprint)
 app.register_blueprint(event_api.blueprint)
-app.register_blueprint(answer_api.blueprint)
-app.register_blueprint(blog_api.blueprint)
+
 
 port = int(os.environ.get("PORT", 8080))
 app.run(host='0.0.0.0', port=port)
