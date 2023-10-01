@@ -1,5 +1,5 @@
 import schedule
-from settings import app, host, user, password, db_name
+from settings import host, user, password, db_name
 import psycopg2
 import smtplib
 from email.mime.text import MIMEText
@@ -20,6 +20,7 @@ def send_email(id_human, mode):
             cursor.execute(f'''SELECT email FROM users WHERE user_id = {id_human} ''')
 
             human_info = cursor.fetchall()
+
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
@@ -33,26 +34,25 @@ def send_email(id_human, mode):
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
 
-    try:
-        with open("../templates/email_template.html") as file:
-            template = file.read()
-    except IOError:
-        return "The template file doesn't found!"
+    template = '''
+     Я верстка, которую не сделал Ильяс.
+     Когда он меня сделает все будет хорошо! 
+    '''
 
     try:
         server.login(sender, password_email)
         msg = MIMEText(template, "html")
         msg["From"] = sender
-        msg["To"] = human_info[0]
+        msg["To"] = human_info[0][0]
         if mode == 'day':
             msg["Subject"] = "Напоминаем меньше чем через сутки начинается занятие!"
         elif mode == 'hour':
             msg["Subject"] = "Напоминаем меньше чем через два часа начинается занятие!"
-        server.sendmail(sender, human_info[0], msg.as_string())
+        server.sendmail(sender, human_info[0][0], msg.as_string())
 
-        return "The message was sent successfully!"
+        print("The message was sent successfully!")
     except Exception as _ex:
-        return f"{_ex}\nCheck your login or password please!"
+        print(f"{_ex}\nCheck your login or password please!")
 
 
 def greeting():
@@ -77,17 +77,21 @@ def greeting():
             people = event[3]
             notified = event[4]
             workable_date = datetime_of_event - today
-            print((str(workable_date)))
 
-            if int(str(workable_date).split()[0]) < 1 and not notified:
-                print('ABOBA')
-                mode = 'day'
-                for id_human in people:
-                    send_email(id_human, mode)
-                with connection.cursor() as cursor:
-                    cursor.execute(f"""Update events 
-                                Set notified = True
-                                WHERE id = '{event[0]}' """)
+            if len((str(workable_date)).split(',')) == 1:
+                if int((str(workable_date)).split(':')[0]) > 1 and not notified:
+                    mode = 'day'
+                    for id_human in people:
+                        send_email(id_human, mode)
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""Update events 
+                                    Set notified = True
+                                    WHERE id = '{event[0]}' """)
+
+                elif notified and int((str(workable_date)).split(':')[0]) == 1:
+                    mode = 'hour'
+                    for id_human in people:
+                        send_email(id_human, mode)
 
             elif int(str(workable_date).split()[0]) < -1:
                 with connection.cursor() as cursor:
@@ -96,10 +100,7 @@ def greeting():
 
             else:
                 print('good')
-            # elif notified and int(str(workable_date).split()[1]):
-            #     mode = 'hour'
-            #     for id_human in people:
-            #         send_email(id_human, mode)
+
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
 
@@ -110,7 +111,7 @@ def greeting():
 
 
 def main():
-    schedule.every(5).seconds.do(greeting)
+    # schedule.every(5).seconds.do(greeting)
     schedule.every().hour.do(greeting)
 
     while True:

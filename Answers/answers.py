@@ -10,7 +10,7 @@ class Answers:
     @staticmethod
     def answers():
         form = AnswerForm()
-        if form.validate_on_submit():
+        if form.validate_on_submit() and session.get('authorization'):
             try:
                 connection = psycopg2.connect(
                     host=host,
@@ -34,7 +34,10 @@ class Answers:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             return '/answers'
-
+        user_authorization = False
+        if session.get('authorization'):
+            user_authorization = True
         return render_template('answers_page.html', **params,
                                an_is_active='active', form=form,
-                               title='Answers', login=session.get('authorization'))
+                               title='Answers', login=session.get('authorization'),
+                               user_authorization=user_authorization)

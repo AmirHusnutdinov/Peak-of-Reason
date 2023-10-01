@@ -81,9 +81,9 @@ class Events:
         time = ':'.join((item[7].split(':'))[:2])
         last_places = item[8] - len(item[9])
         flag = True
-        print(int(session.get('id')), item[9])
-        if int(session.get('id')) in item[9]:
-            flag = False
+        if session.get('authorization'):
+            if int(session.get('id')) in item[9]:
+                flag = False
         return render_template('event_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],

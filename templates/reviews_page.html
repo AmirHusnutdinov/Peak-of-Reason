@@ -34,7 +34,8 @@
 </div>
 <hr>
 <br>
-<div>
+{% if user_authorization %}
+    <div>
     <div class="section__header">
         <h3 class="section__suptitle">Нам важно твое мнение!</h3>
     </div>
@@ -66,6 +67,7 @@
                 </div>
                 <br>
         </form>
+        {% endif %}
         <script>
             let cords = ['scrollX','scrollY'];
             window.addEventListener('unload', e => cords.forEach(cord => localStorage[cord] = window[cord]));
