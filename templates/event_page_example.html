@@ -68,11 +68,14 @@
         <br> <br> <br>
 
         <br>
-        {% if flag %}
-             <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
+        {% if not login %}
+            <p style="font-size: 20px; font-family: Geologica;"> Войдите в аккаунт чтобы записаться!</p>
+            <a type="button" class="btn btn-primary btn-lg disabled">Записаться</a>
+        {% elif flag %}
+            <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
             <a type="button" class="btn btn-primary btn-lg"  href="http://127.0.0.1:8080/event/buy/?page={{number}}">Записаться</a>
         {% else %}
-            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие !</p>
+            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие!</p>
 
         {% endif %}
              <script>const countdown = document.querySelector('.stat');
@@ -100,9 +103,4 @@ setInterval(updateCountdown, 1000);</script>
     <script>
         $("textarea").height( $("textarea")[0].scrollHeight );
     </script>
-<footer><div class="copyright">
-                ©<script>document.write(new Date().getFullYear())</script> Исходный код этого  <a href="https://github.com/AmirHusnutdinov/Peak-of-Reason">сайта</a>
-
-            </div></footer>
-<br>
 {% endblock %}

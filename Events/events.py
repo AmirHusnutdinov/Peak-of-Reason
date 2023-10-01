@@ -56,6 +56,7 @@ class Events:
 
     @staticmethod
     def event_pages(number):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,
@@ -81,8 +82,7 @@ class Events:
         time = ':'.join((item[7].split(':'))[:2])
         last_places = item[8] - len(item[9])
         flag = True
-        print(int(session.get('id')), item[9])
-        if int(session.get('id')) in item[9]:
+        if session.get('id') in item[9]:
             flag = False
         return render_template('event_page_example.html', **params,
                                ev_is_active='active',
@@ -101,6 +101,7 @@ class Events:
 
     @staticmethod
     def event_buy_pages(number):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,
@@ -135,6 +136,7 @@ class Events:
 
     @staticmethod
     def event_confirm(event_id, user_id):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,
