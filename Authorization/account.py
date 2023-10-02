@@ -1,14 +1,15 @@
 import os
 import re
-from random import randrange
-
+from random import randint
+import smtplib
+from email.mime.text import MIMEText
 import psycopg2
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from Authorization.loginform import LoginForm
 from Authorization.registerform import RegisterForm
 from Links import params, register
-
+from random import randrange
 from settings import app, ALLOWED_EXTENSIONS, host, user, password, db_name
 
 
@@ -106,6 +107,7 @@ class Account:
 
     @staticmethod
     def account_register():
+        email_cod = randint(10000, 99999)
         connection = []
         form = RegisterForm()
         if form.validate_on_submit():
@@ -147,6 +149,9 @@ class Account:
                 return '/register'
             if len(form.name.data.strip()) <= 1 or len(form.surname.data.strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
+                return '/register'
+            if int(form.confirm_email.data) != int(email_cod):
+                flash("Не верный код подтверждения почты")
                 return '/register'
             flag = False
             filename = None
@@ -193,5 +198,5 @@ class Account:
                                title='Register')
 
     @staticmethod
-    def users_info(blog_info: list):
+    def check_email(name, surname, email, password_, is_admin, gender, photo_way, date_birth):
         pass

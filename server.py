@@ -1,5 +1,7 @@
 import psycopg2
-from flask import session, render_template
+import smtplib
+from email.mime.text import MIMEText
+from flask import session, render_template, url_for
 from Links import params_admin, params
 from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
@@ -465,6 +467,35 @@ def open_answer_delete():
                 print("[INFO] PostgreSQL connection closed")
         return redirect('/answers_admin')
     else:
+        return redirect('/')
+
+
+@app.route('/email_confirm/')
+def email_confirm():
+    email = request.args.get('email')
+    email_code = request.args.get('code')
+
+    sender = "amirhusnutdinov800900@gmail.com"
+    password_email = 'smta gzvy aonh dccg'
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+
+    template = f'''Введи меня на странице авторизации
+                            {email_code} '''
+
+    try:
+        server.login(sender, password_email)
+        msg = MIMEText(template, "html")
+        msg["From"] = sender
+        msg["To"] = email
+        msg["Subject"] = "Твой код подтверждения"
+        server.sendmail(sender, email, msg.as_string())
+
+        print("The message was sent successfully!")
+        return request.url
+    except Exception as _ex:
+        print(f"{_ex}\nCheck your login or password please!")
         return redirect('/')
 
 
