@@ -69,8 +69,12 @@
 
         <br>
         {% if flag %}
+            {% if not flag_confirm%}
              <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
              <a type="button" class="btn btn-primary btn-lg"  href="http://127.0.0.1:8080/event/buy/?page={{number}}">Записаться</a>
+            {% else %}
+            <p style="font-size: 20px; font-family: Geologica;">К сожалению, все места закончились.</p>
+            {% endif%}
         {% else %}
             <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие !</p>
         {% endif %}

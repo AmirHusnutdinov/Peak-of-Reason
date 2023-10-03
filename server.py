@@ -183,7 +183,29 @@ def open_buy_page():
     if session.get('authorization'):
         page = request.args.get('page')
         if page and page != '':
-            return Events.event_buy_pages(int(page))
+            try:
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+                with connection.cursor() as cursor:
+                    cursor.execute(f'''SELECT count_of_people, id_of_people FROM events 
+                                            where id = {page};''')
+                    posts = cursor.fetchall()
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            item = posts[0]
+            last_places = item[0] - len(item[1])
+            if last_places > 0:
+                return Events.event_buy_pages(int(page))
+            return redirect('/')
         return redirect('/')
     else:
         return redirect('http://127.0.0.1:8080/authorization')
@@ -195,8 +217,30 @@ def confirm():
         event = int(request.args.get('page'))
         user_id = int(session.get('id'))
         if event and event != '':
-            Events.event_confirm(event, user_id)
-            return redirect(f'/event/buy/?page={int(event)}')
+            try:
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+                with connection.cursor() as cursor:
+                    cursor.execute(f'''SELECT count_of_people, id_of_people FROM events 
+                                            where id = {event};''')
+                    posts = cursor.fetchall()
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            item = posts[0]
+            last_places = item[0] - len(item[1])
+            if last_places > 0:
+                Events.event_confirm(event, user_id)
+                return redirect(f'/event/buy/?page={int(event)}')
+            return redirect('/')
         return redirect('/')
     else:
         return redirect('http://127.0.0.1:8080/authorization')
