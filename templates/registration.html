@@ -19,11 +19,6 @@
       <h1 class="h3 mb-3 font-weight-normal">Пожалуйста зарегистрируйтесь</h1>
       <label class="sr-only">Электронная почта*</label>
       {{ form.email(type="email", id="inputEmail", class="form-control", placeholder="Электронная почта*", autofocus="") }}
-        <a class="btn btn-primary" href="http://127.0.0.1:8080/email_confirm/?email={{email}}&code={{code}}" role="button">Получить код</a>
-        <br>
-        <label class="sr-only" >Код подтверждения</label>
-      {{ form.confirm_email(type="text", class="form-control", placeholder="Код из email*")}}
-        <br>
       <label class="sr-only">Имя*</label>
       {{ form.name(type="text", id="inputName", class="form-control", placeholder="Имя*", autofocus="") }}
       <label class="sr-only">Фамилия*</label>

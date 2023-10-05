@@ -150,9 +150,6 @@ class Account:
             if len(form.name.data.strip()) <= 1 or len(form.surname.data.strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
                 return '/register'
-            if int(form.confirm_email.data) != int(email_cod):
-                flash("Не верный код подтверждения почты")
-                return '/register'
             flag = False
             filename = None
             if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and \
@@ -196,7 +193,3 @@ class Account:
         return render_template('registration.html', **params,
                                au_is_active='active', form=form,
                                title='Register')
-
-    @staticmethod
-    def check_email(name, surname, email, password_, is_admin, gender, photo_way, date_birth):
-        pass

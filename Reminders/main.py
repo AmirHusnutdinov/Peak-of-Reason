@@ -71,7 +71,6 @@ def greeting():
 
             event_info = cursor.fetchall()
         for event in event_info:
-            print(event)
             datetime_of_event = datetime.strptime(f'{event[1]} {event[2].strip()}', '%Y-%m-%d %H:%M:%S')
 
             people = event[3]
