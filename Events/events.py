@@ -56,6 +56,7 @@ class Events:
 
     @staticmethod
     def event_pages(number):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,
@@ -105,6 +106,7 @@ class Events:
 
     @staticmethod
     def event_buy_pages(number):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,
@@ -139,6 +141,7 @@ class Events:
 
     @staticmethod
     def event_confirm(event_id, user_id):
+        connection = ''
         try:
             connection = psycopg2.connect(
                 host=host,

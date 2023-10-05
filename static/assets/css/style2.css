@@ -2,6 +2,7 @@
     font-family: Sweet_Mavka_Script; /* Гарнитура шрифта */
     src: url(../fonts/Sweet_Mavka_Script.ttf);
 }
+
 @font-face {
     font-family: Geologica; /* Гарнитура шрифта */
     src: url(../fonts/Geologica.ttf);
@@ -2530,10 +2531,6 @@ a:hover,a:focus{
 
     h1.intro__title {
         font-size: 27px;
-    }
-
-    a.btn-lg {
-        font-size: 10px;
     }
 }
 

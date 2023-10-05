@@ -68,7 +68,10 @@
         <br> <br> <br>
 
         <br>
-        {% if flag %}
+        {% if not login %}
+            <p style="font-size: 20px; font-family: Geologica;"> Войдите в аккаунт чтобы записаться!</p>
+            <a type="button" class="btn btn-primary btn-lg disabled">Записаться</a>
+        {% elif flag %}
             {% if not flag_confirm%}
              <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
              <a type="button" class="btn btn-primary btn-lg"  href="http://127.0.0.1:8080/event/buy/?page={{number}}">Записаться</a>
@@ -76,7 +79,7 @@
             <p style="font-size: 20px; font-family: Geologica;">К сожалению, все места закончились.</p>
             {% endif%}
         {% else %}
-            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие !</p>
+            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие!</p>
         {% endif %}
              <script>const countdown = document.querySelector('.stat');
 const targetDate = new Date('{{date}}T{{time}}');
@@ -103,9 +106,4 @@ setInterval(updateCountdown, 1000);</script>
     <script>
         $("textarea").height( $("textarea")[0].scrollHeight );
     </script>
-
-<footer>
-
-</footer>
-<br>
 {% endblock %}
