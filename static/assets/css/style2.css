@@ -8,6 +8,11 @@
     src: url(../fonts/Geologica.ttf);
 }
 
+@font-face {
+    font-family: Cornerita_Black; /* Гарнитура шрифта */
+    src: url(../fonts/Cornerita.ttf);
+}
+
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
@@ -77,7 +82,7 @@ hr {
     min-height: 820px;
     position: relative;
 
-    background: url("../images/intro.jpg") center no-repeat;
+    background: url("../images/clouds3.png") center no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
 }
@@ -1472,7 +1477,7 @@ hr {
         display: block;
     }
 
-    #nav_mobile {background: linear-gradient(#5e9af57a, #000000)
+    #nav_mobile {background: linear-gradient(#08e8de4d, #000000)
     }
 
     .nav__link {

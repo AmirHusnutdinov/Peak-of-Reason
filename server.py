@@ -1,5 +1,7 @@
 import psycopg2
-from flask import session, render_template
+import smtplib
+from email.mime.text import MIMEText
+from flask import session, render_template, url_for
 from Links import params_admin, params
 from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
@@ -8,16 +10,13 @@ from Authorization.account import Account
 from Start_page.start_page import StartPage
 
 from Reviews.reviews import Reviews
-from Reviews.data import feedback_api
 
 from Events.events import Events
 from Events.data import event_api
 
 from Blog.blog import Blog
-from Blog.data import db_session_blog, blog_api
 
 from Answers.answers import Answers
-from Answers.data import answer_api
 
 from Admin.admin import Admin
 
@@ -39,14 +38,11 @@ def open_main():
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def open_reviews():
-    if session.get('authorization'):
-        info = Reviews.reviews()
-        if request.method == 'GET':
-            return info
-        elif request.method == 'POST':
-            return redirect(info)
-    else:
-        return redirect('/authorization')
+    info = Reviews.reviews()
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return redirect(info)
 
 
 @app.route('/events/')
@@ -184,20 +180,70 @@ def open_event_type():
 
 @app.route('/event/buy/')
 def open_buy_page():
-    page = request.args.get('page')
-    if page and page != '':
-        return Events.event_buy_pages(int(page))
-    return redirect('/')
+    if session.get('authorization'):
+        page = request.args.get('page')
+        if page and page != '':
+            try:
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+                with connection.cursor() as cursor:
+                    cursor.execute(f'''SELECT count_of_people, id_of_people FROM events 
+                                            where id = {page};''')
+                    posts = cursor.fetchall()
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            item = posts[0]
+            last_places = item[0] - len(item[1])
+            if last_places > 0:
+                return Events.event_buy_pages(int(page))
+            return redirect('/')
+        return redirect('/')
+    else:
+        return redirect('http://127.0.0.1:8080/authorization')
 
 
 @app.route('/event/buy/confirm/')
 def confirm():
-    event = int(request.args.get('page'))
-    user_id = int(session.get('id'))
-    if event and event != '':
-        Events.event_confirm(event, user_id)
-        return redirect(f'/event/buy/?page={int(event)}')
-    return redirect('/')
+    if session.get('authorization'):
+        event = int(request.args.get('page'))
+        user_id = int(session.get('id'))
+        if event and event != '':
+            try:
+                connection = psycopg2.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=db_name
+                )
+                connection.autocommit = True
+                with connection.cursor() as cursor:
+                    cursor.execute(f'''SELECT count_of_people, id_of_people FROM events 
+                                            where id = {event};''')
+                    posts = cursor.fetchall()
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
+            item = posts[0]
+            last_places = item[0] - len(item[1])
+            if last_places > 0:
+                Events.event_confirm(event, user_id)
+                return redirect(f'/event/buy/?page={int(event)}')
+            return redirect('/')
+        return redirect('/')
+    else:
+        return redirect('http://127.0.0.1:8080/authorization')
 
 
 @app.route('/blog/')
@@ -271,14 +317,11 @@ def open_cabinet_delete():
 
 @app.route('/answers', methods=['GET', 'POST'])
 def open_answers():
-    if session.get('authorization'):
-        info = Answers.answers()
-        if request.method == 'GET':
-            return info
-        elif request.method == 'POST':
-            return redirect(info)
-    else:
-        return redirect('/authorization')
+    info = Answers.answers()
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return redirect(info)
 
 
 @app.route('/blog_admin', methods=['POST', 'GET'])
@@ -471,6 +514,35 @@ def open_answer_delete():
         return redirect('/')
 
 
+@app.route('/email_confirm/')
+def email_confirm():
+    email = request.args.get('email')
+    email_code = request.args.get('code')
+
+    sender = "amirhusnutdinov800900@gmail.com"
+    password_email = 'smta gzvy aonh dccg'
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+
+    template = f'''Введи меня на странице авторизации
+                            {email_code} '''
+
+    try:
+        server.login(sender, password_email)
+        msg = MIMEText(template, "html")
+        msg["From"] = sender
+        msg["To"] = email
+        msg["Subject"] = "Твой код подтверждения"
+        server.sendmail(sender, email, msg.as_string())
+
+        print("The message was sent successfully!")
+        return request.url
+    except Exception as _ex:
+        print(f"{_ex}\nCheck your login or password please!")
+        return redirect('/')
+
+
 @app.errorhandler(404)
 def page_not_found(_):
     return render_template('404.html'), 404
@@ -492,12 +564,8 @@ def open_pp():
                            login=session.get('authorization'), **params)
 
 
-db_session_blog.global_init("Blog/db/resources.db")
-
-app.register_blueprint(feedback_api.blueprint)
 app.register_blueprint(event_api.blueprint)
-app.register_blueprint(answer_api.blueprint)
-app.register_blueprint(blog_api.blueprint)
+
 
 port = int(os.environ.get("PORT", 8080))
 app.run(host='0.0.0.0', port=port)

@@ -54,7 +54,7 @@ class Reviews:
                 print("[INFO] PostgreSQL connection closed")
 
         form = ReviewsForm()
-        if form.validate_on_submit():
+        if form.validate_on_submit() and session.get('authorization'):
             try:
                 connection = psycopg2.connect(
                     host=host,
@@ -79,10 +79,13 @@ class Reviews:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             return '/reviews'
-
+        user_authorization = False
+        if session.get('authorization'):
+            user_authorization = True
         return render_template('reviews_page.html',
                                **params,
                                reviews_=rand_list,
                                re_is_active='active', form=form,
-                               title='Reviews', login=session.get('authorization')
+                               title='Reviews', login=session.get('authorization'),
+                               user_authorization=user_authorization
                                )

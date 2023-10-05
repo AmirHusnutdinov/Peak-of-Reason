@@ -72,6 +72,7 @@
         </div>
     </div>
 <br>
+    {% if user_authorization%}
     <div>
         <h3 class="subscribe" style="text-align:center;">Нет ответа на твой вопрос? Задай его!</h3>
         <form class="subscribe" method="post">
@@ -87,6 +88,7 @@
 
         </form>
     </div>
+    {% endif %}
 <br>
 
 {% endblock %}

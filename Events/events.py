@@ -81,9 +81,13 @@ class Events:
         date = '.'.join(str(item[5]).split('-')[::-1])
         time = ':'.join((item[7].split(':'))[:2])
         last_places = item[8] - len(item[9])
+        flag_confirm = False
+        if last_places <= 0:
+            flag_confirm = True
         flag = True
-        if session.get('id') in item[9]:
-            flag = False
+        if session.get('authorization'):
+            if int(session.get('id')) in item[9]:
+                flag = False
         return render_template('event_page_example.html', **params,
                                ev_is_active='active',
                                name=item[2],
@@ -96,6 +100,7 @@ class Events:
                                flag=flag,
                                count_of_people=item[8],
                                number=number,
+                               flag_confirm=flag_confirm,
                                last_places=last_places,
                                title='event', login=session.get('authorization'))
 

@@ -3,13 +3,17 @@ from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 import os
 
-a = (os.listdir('static/assets/images/blog'))
-lst = []
-for i in a:
-    lst.append((i, i))
+
+def photo():
+    a = (os.listdir('static/assets/images/blog'))
+    lst = []
+    for i in a:
+        lst.append((i, i))
+    return lst
 
 
 class BlogAdminForm(FlaskForm):
+    lst = photo()
     photo_name = SelectField("Test", choices=lst,
                              validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])

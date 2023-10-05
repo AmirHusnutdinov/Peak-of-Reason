@@ -3,10 +3,13 @@ from wtforms import StringField, SubmitField, TextAreaField, SelectField, DateFi
 from wtforms.validators import DataRequired
 import os
 
-a = (os.listdir('static/assets/images/event'))
-lst = []
-for i in a:
-    lst.append((i, i))
+
+def photo():
+    a = (os.listdir('static/assets/images/blog'))
+    lst = []
+    for i in a:
+        lst.append((i, i))
+    return lst
 
 
 class EventAdminForm(FlaskForm):
@@ -17,6 +20,7 @@ class EventAdminForm(FlaskForm):
                                             ('Харизматичный оратор 18+', "Харизматичный оратор 18+")
                                             ],
                            validators=[DataRequired()])
+    lst = photo()
     photo_name = SelectField("Test", choices=lst,
                              validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
