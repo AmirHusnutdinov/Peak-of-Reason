@@ -1,11 +1,10 @@
 import psycopg2
 import smtplib
 from email.mime.text import MIMEText
-from flask import session, render_template, url_for
+from flask import session, render_template
 from Links import params_admin, params
 from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
-from Authorization.account import Account
 
 from Start_page.start_page import StartPage
 
