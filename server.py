@@ -19,7 +19,7 @@ from Blog.blog import Blog
 from Answers.answers import Answers
 
 from Admin.admin import Admin
-
+from Authorization.account import Account
 from settings import app, host, user, password, db_name
 
 import os
@@ -514,10 +514,10 @@ def open_answer_delete():
         return redirect('/')
 
 
-@app.route('/email_confirm/')
+@app.route('/email_confirm')
 def email_confirm():
-    email = request.args.get('email')
-    email_code = request.args.get('code')
+    email = app.config['Email_confirm'][1]
+    email_code = app.config['Email_confirm'][0]
 
     sender = "amirhusnutdinov800900@gmail.com"
     password_email = 'smta gzvy aonh dccg'
@@ -537,9 +537,20 @@ def email_confirm():
         server.sendmail(sender, email, msg.as_string())
 
         print("The message was sent successfully!")
-        return request.url
+        return redirect('/email_confirm_page')
     except Exception as _ex:
         print(f"{_ex}\nCheck your login or password please!")
+        return redirect('/')
+
+
+@app.route('/email_confirm_page', methods=['GET', 'POST'])
+def email_confirm_page():
+    info = Account.email_confirm_page()
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return redirect(info)
+    else:
         return redirect('/')
 
 

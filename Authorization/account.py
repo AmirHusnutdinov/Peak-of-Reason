@@ -1,8 +1,7 @@
 import os
 import re
 from random import randint
-import smtplib
-from email.mime.text import MIMEText
+from Authorization.email_confirmform import EmailConfirmForm
 import psycopg2
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -173,7 +172,7 @@ class Account:
                     database=db_name
                 )
                 connection.autocommit = True
-
+                app.config['Email_confirm'] = (email_cod, form.email.data)
                 with connection.cursor() as cursor:
                     cursor.execute(
                         f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way, date_birth)
@@ -181,15 +180,51 @@ class Account:
                             ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
                             '{generate_password_hash(form.password1.data)}', 'False'::bool,
                             '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);""")
-
+                return '/email_confirm'
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
-
-            return '/authorization'
         return render_template('registration.html', **params,
                                au_is_active='active', form=form,
                                title='Register')
+
+    @staticmethod
+    def email_confirm_page():
+        connection = []
+        form = EmailConfirmForm()
+
+        if form.validate_on_submit():
+            user_code = form.email.data
+            valid_code = app.config['Email_confirm'][0]
+            email_of_user = app.config['Email_confirm'][1]
+
+            if int(user_code) == int(valid_code):
+                try:
+                    connection = psycopg2.connect(
+                        host=host,
+                        user=user,
+                        password=password,
+                        database=db_name
+                    )
+                    connection.autocommit = True
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            f"""UPDATE users
+                                SET activated = 'true'
+                                WHERE email = '{email_of_user}';""")
+                    return '/authorization'
+                except Exception as _ex:
+                    print("[INFO] Error while working with PostgreSQL", _ex)
+                finally:
+                    if connection:
+                        connection.close()
+                        print("[INFO] PostgreSQL connection closed")
+
+            else:
+                flash('Пароли не совпадают')
+                return '/email_confirm_page'
+        else:
+            return render_template('email_confirm_page.html', **params, form=form,)

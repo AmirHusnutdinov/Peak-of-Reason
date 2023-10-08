@@ -68,7 +68,7 @@ class Events:
             with connection.cursor() as cursor:
                 cursor.execute(f'''SELECT id, photo_way, name,
                                         signature, link, created_date, post_text,
-                                         time, count_of_people, id_of_people FROM events 
+                                         time, count_of_people, id_of_people, price FROM events 
                                         where id = {number};''')
                 posts = cursor.fetchall()
         except Exception as _ex:
@@ -102,6 +102,7 @@ class Events:
                                number=number,
                                flag_confirm=flag_confirm,
                                last_places=last_places,
+                               price=item[10],
                                title='event', login=session.get('authorization'))
 
     @staticmethod
