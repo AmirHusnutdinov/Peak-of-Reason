@@ -39,5 +39,5 @@ class Answers:
             user_authorization = True
         return render_template('answers_page.html', **params,
                                an_is_active='active', form=form,
-                               title='Answers', login=session.get('authorization'),
+                               title='Вопросы', login=session.get('authorization'),
                                user_authorization=user_authorization)

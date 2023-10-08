@@ -167,7 +167,7 @@ class CabinetPage:
                                delete=delete, logout=logout, email=email, name=name, surname=surname,
                                photo_way=photo_way, directory=UPLOAD_FOLDER,
                                is_cabinet='-after', form=form, date_birth=date_birth,
-                               title='Your cabinet', login=session.get('authorization'))
+                               title='Личный кабинет', login=session.get('authorization'))
 
     @staticmethod
     def account_cabinet_del():

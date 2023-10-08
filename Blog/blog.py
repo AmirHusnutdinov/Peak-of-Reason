@@ -52,7 +52,7 @@ class Blog:
                 end += 1
 
         return render_template('blog_page.html', **params, bl_is_active='active',
-                               title='Blog page', posts=three_posts, login=session.get('authorization')
+                               title='Блог', posts=three_posts, login=session.get('authorization')
                                )
 
     @staticmethod
@@ -86,4 +86,4 @@ class Blog:
                                signature=item[3],
                                date=item[5],
                                photo_name=item[1],
-                               text=item[6], title='blog', login=session.get('authorization'))
+                               text=item[6], title='Блог', login=session.get('authorization'))

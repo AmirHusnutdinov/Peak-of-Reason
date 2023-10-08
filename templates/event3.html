@@ -18,7 +18,7 @@
 
         <div class="section__header">
             <h2 class="section__title">{{label}}</h2>
-            <a type="button" class="btn btn-primary" href="{{back_link}}">Назад</a>
+            <a type="button" class="btn btn-dark" href="{{back_link}}">Назад</a>
         </div>
         <div class="blog">
         {% for item in posts %}
@@ -28,7 +28,7 @@
                         <img class="blog__photo" src="/static/assets/images/event/{{item[1]}}" alt="">
                     </a>
                     <div class="blog__date">
-                        <div class="blog__date-day">{{item[5]}}</div>
+                        <div class="blog__date-day">{{date}}</div>
                         {{ item[6]}}
                     </div>
                 </div>

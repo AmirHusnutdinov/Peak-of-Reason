@@ -1,11 +1,10 @@
 import psycopg2
 import smtplib
 from email.mime.text import MIMEText
-from flask import session, render_template, url_for
+from flask import session, render_template
 from Links import params_admin, params
 from Admin.file_adminform import FileForm
 from Authorization.cabinet import CabinetPage
-from Authorization.account import Account
 
 from Start_page.start_page import StartPage
 
@@ -97,7 +96,7 @@ def open_event1():
         if query1 and query1 != '':
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd MM YYYY')  
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')  
                     FROM events WHERE is_teen = 'true'::bool;"""
                 )
                 event_info = cursor.fetchall()
@@ -105,7 +104,8 @@ def open_event1():
 
         elif query2 and query2 != '':
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')   
+                cursor.execute(
+                    f"""SELECT id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY')   
                     FROM events WHERE is_adult = 'true'::bool;"""
                                )
                 event_info = cursor.fetchall()
@@ -371,7 +371,7 @@ def open_add_photo():
     form = FileForm()
     if request.method == 'GET':
         return render_template('add_new_image.html',
-                               **params_admin, ph_is='active', form=form)
+                               **params_admin, ph_is='active', form=form, title='Добавление нового изображения')
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('Не могу прочитать файл')
@@ -388,7 +388,7 @@ def open_add_photo():
             file.save(os.path.join(f'static/assets/images/{request.form["teamDropdown"]}', filename))
 
             return render_template('add_new_image.html',
-                                   **params_admin, ph_is='active', form=form)
+                                   **params_admin, ph_is='active', form=form, title='Добавление нового изображения')
 
 
 @app.route('/event_admin', methods=['GET', 'POST'])

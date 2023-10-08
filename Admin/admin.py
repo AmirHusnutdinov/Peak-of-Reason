@@ -50,7 +50,8 @@ class Admin:
 
         items = os.listdir('static/assets/images/blog')
         return render_template('admin_page.html',
-                               **params_admin, bl_is='active', form=form, items=items
+                               **params_admin, bl_is='active', form=form, items=items,
+                               title='Блог Админ панель'
                                )
 
     @staticmethod
@@ -81,7 +82,8 @@ class Admin:
         if method == 'GET':
             return render_template('admin_answers_page.html',
                                    **params_admin, remained=len_ans,
-                                   answers=answers_info, an_is='active'
+                                   answers=answers_info, an_is='active',
+                                   title='Вопросы Админ панель'
                                    )
 
     @staticmethod
@@ -117,7 +119,8 @@ class Admin:
             return render_template('rev_admin_page.html',
                                    **params_admin,
                                    review=rev_info,
-                                   remained=len_rev, re_is='active', directory=UPLOAD_FOLDER)
+                                   remained=len_rev, re_is='active', directory=UPLOAD_FOLDER,
+                                   title='Отзывы Админ панель')
 
     @staticmethod
     def event_admin():
@@ -214,7 +217,7 @@ class Admin:
         items = os.listdir('static/assets/images/event')
         return render_template('admin_event.html',
                                **params_admin, ev_is='active',
-                               form=form, items=items
+                               form=form, items=items, title='События Админ панель'
                                )
 
 

@@ -102,7 +102,7 @@ class Account:
             return '/authorization'
         return render_template('login.htm', **params, register=register,
                                au_is_active='active', form=form,
-                               title='Authorization')
+                               title='Авторизация')
 
     @staticmethod
     def account_register():
@@ -189,7 +189,7 @@ class Account:
                     print("[INFO] PostgreSQL connection closed")
         return render_template('registration.html', **params,
                                au_is_active='active', form=form,
-                               title='Register')
+                               title='Регистрация')
 
     @staticmethod
     def email_confirm_page():
@@ -227,4 +227,5 @@ class Account:
                 flash('Пароли не совпадают')
                 return '/email_confirm_page'
         else:
-            return render_template('email_confirm_page.html', **params, form=form,)
+            return render_template('email_confirm_page.html', **params, form=form,
+                                   title='Подтверждение')

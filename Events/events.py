@@ -4,34 +4,48 @@ from settings import host, user, password, db_name
 import psycopg2
 
 
+def make_date(date):
+    months = {"Sep": 'Сентября', "Oct": 'Октября', "Nov": 'Ноября',
+              "Dec": 'Декабря', "Jan": 'Января', "Feb": 'Февраля',
+              "Mar": 'Марта', "Apr": 'Апреля', "May": 'Мая',
+              "Jun": 'Июня', "Jul": 'Июля', "Aug": 'Августа'}
+    for i, month in enumerate(months):
+        if date[1] == month:
+            date[1] = list(months.values())[i]
+            date = ' '.join(date)
+    return date
+
+
 class Events:
     @staticmethod
     def events(events_lst):
+        date = (events_lst[0][5]).split()
+        date = make_date(date)
         event1 = event + '/?teen=1'
         event2 = event + '/?adult=1'
         return render_template('events.html', **params, ev_is_active='active',
                                event1=event1,
-                               event2=event2,
-                               posts=events_lst, title='Events', login=session.get('authorization'))
+                               event2=event2, date=date,
+                               posts=events_lst, title='События', login=session.get('authorization'))
 
     @staticmethod
     def event(events1, mode, label):
+        date = (events1[0][5]).split()
+        date = make_date(date)
         if mode == 'teen':
             return render_template('event1.html', **params, ev_is_active='active',
                                    link1=(event + '/?ac=1'),
                                    link2=(event + '/?ay=1'),
                                    link3=(event + '/?ot=1'),
-                                   # back_link=f'{event + "/"}',
-                                   posts=events1, title='Events',
-                                   login=session.get('authorization'))
+                                   date=date,
+                                   posts=events1, title='События для подростков')
 
         elif mode == 'adult':
             return render_template('event2.html', **params, ev_is_active='active',
                                    link1=(event + '/?mt=1'),
                                    link2=(event + '/?oa=1'),
-                                   # back_link=f'{event}',
-                                   posts=events1, title='Events',
-                                   login=session.get('authorization'))
+                                   date=date,
+                                   posts=events1, title='События для взрослых')
 
         else:
             if mode in ['ac', 'ay', 'ot']:
@@ -43,14 +57,15 @@ class Events:
 
             return render_template('event3.html', **params, ev_is_active='active',
                                    label=label, back_link=back_link,
-                                   posts=events1, title='Events',
+                                   posts=events1, title='События',
+                                   date=date,
                                    login=session.get('authorization'))
 
     @staticmethod
     def types_of_events(events_type, label):
         return render_template('types.html',
                                **params, ev_is_active='active',
-                               label=label, title='Events', posts=events_type,
+                               label=label, title='События', posts=events_type,
                                login=session.get('authorization')
                                )
 
@@ -103,7 +118,7 @@ class Events:
                                flag_confirm=flag_confirm,
                                last_places=last_places,
                                price=item[10],
-                               title='event', login=session.get('authorization'))
+                               title='События', login=session.get('authorization'))
 
     @staticmethod
     def event_buy_pages(number):
@@ -138,7 +153,7 @@ class Events:
                                date_show=date,
                                photo_name=item[1],
                                time=time,
-                               title='event', login=session.get('authorization'))
+                               title='Подтверждение регистрации на событие', login=session.get('authorization'))
 
     @staticmethod
     def event_confirm(event_id, user_id):

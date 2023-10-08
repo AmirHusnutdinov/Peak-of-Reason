@@ -86,6 +86,6 @@ class Reviews:
                                **params,
                                reviews_=rand_list,
                                re_is_active='active', form=form,
-                               title='Reviews', login=session.get('authorization'),
+                               title='Отзывы', login=session.get('authorization'),
                                user_authorization=user_authorization
                                )
