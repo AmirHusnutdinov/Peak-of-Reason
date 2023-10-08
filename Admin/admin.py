@@ -194,12 +194,13 @@ class Admin:
                     (id, name, signature, created_date, link, photo_way,
                      is_teen, is_oratory_teen, is_taoby, is_taoc, 
                      is_adult, is_poebtmt, is_oratory_adult,
-                    time, post_text, count_of_people)
+                    time, post_text, count_of_people, price)
                      values ('{int(ids[-1][0]) + 1}', '{form.name.data}', '{form.signature.data}', '{form.date.data}', '{link}',
                       '{form.photo_name.data}', 
                       '{teen}'::bool, '{oratory_teen}'::bool, '{yourself}'::bool, '{communicate}'::bool,
                       '{adult}'::bool, '{music}'::bool, '{ic}'::bool,
-                       '{str(form.time.data)}', '{form.post_text.data}', '{form.count_of_people.data}')
+                       '{str(form.time.data)}', '{form.post_text.data}', '{form.count_of_people.data}',
+                        '{form.price.data}'::int) 
                         """)
 
             except Exception as _ex:

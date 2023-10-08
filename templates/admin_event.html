@@ -56,7 +56,10 @@
             <label class="form-label" style="color: blue">count_of_people/Количество человек</label>
               {{ form.count_of_people(type="text", class="form-control", placeholder="15") }}
             <br> <br>
+            <label class="form-label" style="color: blue">price/Цена</label>
+              {{ form.price(type="text", class="form-control", placeholder="1000") }}
                 <div class="d-grid gap-2">
+                    <br><br>
                     {{ form.submit(type="submit", class="btn btn-dark") }}
                 </div>
         </form>

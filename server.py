@@ -554,6 +554,17 @@ def email_confirm_page():
         return redirect('/')
 
 
+@app.route('/reset_password')
+def reset_password():
+    info = Account.email_confirm_page()
+    if request.method == 'GET':
+        return info
+    elif request.method == 'POST':
+        return redirect(info)
+    else:
+        return redirect('/')
+
+
 @app.errorhandler(404)
 def page_not_found(_):
     return render_template('404.html'), 404

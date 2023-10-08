@@ -16,10 +16,11 @@
           <img class="mb-4" src="/static/assets/images/login/vector_icon.png" alt="" width="120">
       </p>
 
-      <h1 class="h3 mb-3 font-weight-normal">На вашу почту был отправлен пятизначный код подтверждения</h1>
+      <h1 class="h3 mb-3 font-weight-normal">На указанную почту был отправлен пятизначный код подтверждения</h1>
       <label class="sr-only">Введите код подтверждения</label>
       {{ form.email(type="text", class="form-control", placeholder="Код подтверждения", autofocus="") }}
       <br>
+        <a class="btn btn-primary" href="http://127.0.0.1:8080/email_confirm" role="button">Получить код снова</a>
       <br>
       {{form.submit(class="btn btn-lg btn-dark btn", id="button", type="submit") }}
     </form>
