@@ -207,7 +207,7 @@ def open_buy_page():
             return redirect('/')
         return redirect('/')
     else:
-        return redirect('http://127.0.0.1:8080/authorization')
+        return redirect('/authorization')
 
 
 @app.route('/event/buy/confirm/')
@@ -242,7 +242,7 @@ def confirm():
             return redirect('/')
         return redirect('/')
     else:
-        return redirect('http://127.0.0.1:8080/authorization')
+        return redirect('/authorization')
 
 
 @app.route('/blog/')

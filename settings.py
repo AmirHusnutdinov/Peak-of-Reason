@@ -2,7 +2,6 @@ import datetime
 
 from flask import Flask
 host = '127.0.0.1'
-GENERAL_NAME_LINK = f'http://{host}:5000'
 
 
 app = Flask(__name__)
