@@ -11,15 +11,14 @@ class Blog:
     def blog():
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
             with connection.cursor() as cursor:
-                cursor.execute('''SELECT id, photo_way, name,
-                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog;''')
+                cursor.execute(
+                    """SELECT id, photo_way, name,
+                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog;"""
+                )
                 posts = cursor.fetchall()
 
         except Exception as _ex:
@@ -51,26 +50,36 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
+
         return render_template('blog_page.html', **params, bl_is_active='active',
                                title='Блог', posts=three_posts, login=session.get('authorization')
                                )
+
+        return render_template(
+            "blog_page.html",
+            **params,
+            bl_is_active="active",
+            title="Blog page",
+            posts=three_posts,
+            login=session.get("authorization"),
+        )
+
 
     @staticmethod
     def blog_pages(number):
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
 
             with connection.cursor() as cursor:
-                cursor.execute(f'''SELECT id, photo_way, name,
+                cursor.execute(
+                    f"""SELECT id, photo_way, name,
                                         signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
                                         where id = {number}
-                                        ORDER BY created_date DESC;''')
+                                        ORDER BY created_date DESC;"""
+                )
                 posts = cursor.fetchall()
 
         except Exception as _ex:
@@ -80,6 +89,7 @@ class Blog:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
+
         return render_template('blog_page_example.html', **params,
                                bl_is_active='active',
                                name=item[2],
@@ -87,3 +97,17 @@ class Blog:
                                date=item[5],
                                photo_name=item[1],
                                text=item[6], title='Блог', login=session.get('authorization'))
+
+        return render_template(
+            "blog_page_example.html",
+            **params,
+            bl_is_active="active",
+            name=item[2],
+            signature=item[3],
+            date=item[5],
+            photo_name=item[1],
+            text=item[6],
+            title="blog",
+            login=session.get("authorization"),
+        )
+

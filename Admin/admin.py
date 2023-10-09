@@ -14,22 +14,17 @@ class Admin:
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
 
                 with connection.cursor() as cursor:
-                    cursor.execute(
-                        """SELECT id FROM blog;"""
-                    )
+                    cursor.execute("""SELECT id FROM blog;""")
                     ids = cursor.fetchall()
                     if not ids:
                         ids = [[0]]
                 with connection.cursor() as cursor:
-                    cursor.execute('''SELECT to_char(current_date, 'dd-mm-yyyy');''')
+                    cursor.execute("""SELECT to_char(current_date, 'dd-mm-yyyy');""")
                     date = cursor.fetchone()
                     date = date[0]
                 with connection.cursor() as cursor:
@@ -46,22 +41,23 @@ class Admin:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
-            return '/blog_admin'
+            return "/blog_admin"
 
-        items = os.listdir('static/assets/images/blog')
-        return render_template('admin_page.html',
-                               **params_admin, bl_is='active', form=form, items=items,
-                               title='Блог Админ панель'
-                               )
+        items = os.listdir("static/assets/images/blog")
+        return render_template(
+            "admin_page.html",
+            **params_admin,
+            bl_is="active",
+            form=form,
+            items=items,
+            title="Блог Админ панель",
+        )
 
     @staticmethod
     def admin_answers(method):
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
 
@@ -79,21 +75,21 @@ class Admin:
                 connection.close()
                 print("[INFO] PostgreSQL connection closed")
         len_ans = len(answers_info)
-        if method == 'GET':
-            return render_template('admin_answers_page.html',
-                                   **params_admin, remained=len_ans,
-                                   answers=answers_info, an_is='active',
-                                   title='Вопросы Админ панель'
-                                   )
+        if method == "GET":
+            return render_template(
+                "admin_answers_page.html",
+                **params_admin,
+                remained=len_ans,
+                answers=answers_info,
+                an_is="active",
+                title="Вопросы Админ панель",
+            )
 
     @staticmethod
     def admin_rev(method):
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
 
@@ -115,12 +111,16 @@ class Admin:
                 print("[INFO] PostgreSQL connection closed")
 
         len_rev = len(rev_info)
-        if method == 'GET':
-            return render_template('rev_admin_page.html',
-                                   **params_admin,
-                                   review=rev_info,
-                                   remained=len_rev, re_is='active', directory=UPLOAD_FOLDER,
-                                   title='Отзывы Админ панель')
+        if method == "GET":
+            return render_template(
+                "rev_admin_page.html",
+                **params_admin,
+                review=rev_info,
+                remained=len_rev,
+                re_is="active",
+                directory=UPLOAD_FOLDER,
+                title="Отзывы Админ панель",
+            )
 
     @staticmethod
     def event_admin():
@@ -128,17 +128,12 @@ class Admin:
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
 
                 with connection.cursor() as cursor:
-                    cursor.execute(
-                        """SELECT id FROM events ORDER BY id DESC;"""
-                    )
+                    cursor.execute("""SELECT id FROM events ORDER BY id DESC;""")
                     ids = cursor.fetchone()
                     if not ids:
                         ids = [1]
@@ -150,49 +145,61 @@ class Admin:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
-            adult, teen, music, ic, taoc, oratory_teen, yourself, communicate = False, False, False, False, False, False, False, False
-            if form.category.data in ["Харизматичный оратор", "Искусство быть собой", "Искусство общения"]:
+            adult, teen, music, ic, taoc, oratory_teen, yourself, communicate = (
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+            )
+            if form.category.data in [
+                "Харизматичный оратор",
+                "Искусство быть собой",
+                "Искусство общения",
+            ]:
                 teen = True
                 if form.category.data == "Харизматичный оратор":
-                    link = f'/event/types/?page={(ids[0] + 1)}&ot=1'
+                    link = f"/event/types/?page={(ids[0] + 1)}&ot=1"
                     oratory_teen = True
 
                 elif form.category.data == "Искусство быть собой":
-                    link = f'/event/types/?page={(ids[0] + 1)}&ay=1'
+                    link = f"/event/types/?page={(ids[0] + 1)}&ay=1"
                     yourself = True
 
                 elif form.category.data == "Искусство общения":
-                    link = f'/event/types/?page={(ids[0] + 1)}&ac=1'
+                    link = f"/event/types/?page={(ids[0] + 1)}&ac=1"
                     communicate = True
 
-            elif form.category.data in ['Музыкальная терапия', 'Харизматичный оратор 18+']:
+            elif form.category.data in [
+                "Музыкальная терапия",
+                "Харизматичный оратор 18+",
+            ]:
                 adult = True
-                if form.category.data == 'Музыкальная терапия':
-                    link = f'/event/types/?page={(ids[0] + 1)}&mt=1'
+                if form.category.data == "Музыкальная терапия":
+                    link = f"/event/types/?page={(ids[0] + 1)}&mt=1"
                     music = True
 
-                elif form.category.data == 'Харизматичный оратор 18+':
-                    link = f'/event/types/?page={(ids[0] + 1)}&oa=1'
+                elif form.category.data == "Харизматичный оратор 18+":
+                    link = f"/event/types/?page={(ids[0] + 1)}&oa=1"
                     ic = True
 
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
                 with connection.cursor() as cursor:
-                    cursor.execute(
-                        """SELECT id FROM events;"""
-                    )
+                    cursor.execute("""SELECT id FROM events;""")
                     ids = cursor.fetchall()
                     if not ids:
                         ids = [[0]]
 
                 with connection.cursor() as cursor:
-                    cursor.execute(f"""
+                    cursor.execute(
+                        f"""
                     insert into events 
                     (id, name, signature, created_date, link, photo_way,
                      is_teen, is_oratory_teen, is_taoby, is_taoc, 
@@ -204,7 +211,8 @@ class Admin:
                       '{adult}'::bool, '{music}'::bool, '{ic}'::bool,
                        '{str(form.time.data)}', '{form.post_text.data}', '{form.count_of_people.data}',
                         '{form.price.data}'::int) 
-                        """)
+                        """
+                    )
 
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
@@ -213,17 +221,20 @@ class Admin:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
 
-            return '/event_admin'
-        items = os.listdir('static/assets/images/event')
-        return render_template('admin_event.html',
-                               **params_admin, ev_is='active',
-                               form=form, items=items, title='События Админ панель'
-                               )
+            return "/event_admin"
+        items = os.listdir("static/assets/images/event")
+        return render_template(
+            "admin_event.html",
+            **params_admin,
+            ev_is="active",
+            form=form,
+            items=items,
+            title="События Админ панель",
+        )
 
 
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif"]
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS

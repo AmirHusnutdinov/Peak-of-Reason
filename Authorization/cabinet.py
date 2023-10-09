@@ -6,27 +6,31 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from Authorization.account import password_check, check_email
 from Authorization.cabinetform import CabinetForm
 from Links import delete, params, logout
-from settings import host, user, password, db_name, UPLOAD_FOLDER, ALLOWED_EXTENSIONS, app
+from settings import (
+    host,
+    user,
+    password,
+    db_name,
+    UPLOAD_FOLDER,
+    ALLOWED_EXTENSIONS,
+    app,
+)
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 class CabinetPage:
     @staticmethod
     def account_cabinet():
         global gender
-        gender = ''
+        gender = ""
         connection = []
         form = CabinetForm()
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
 
@@ -47,19 +51,19 @@ class CabinetPage:
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
-                if form.password_old.data.strip() == '':
-                    flash('Чтобы изменить данные введите пароль')
-                    return '/cabinet'
-                if not check_password_hash(user_list[3], form.password_old.data) and form.password_old.data.strip() != '':
-                    flash('Это не ваш старый пароль')
-                    return '/cabinet'
-                if user_list[0] != form.email.data and form.email.data.strip() != '':
+                if form.password_old.data.strip() == "":
+                    flash("Чтобы изменить данные введите пароль")
+                    return "/cabinet"
+                if (
+                    not check_password_hash(user_list[3], form.password_old.data)
+                    and form.password_old.data.strip() != ""
+                ):
+                    flash("Это не ваш старый пароль")
+                    return "/cabinet"
+                if user_list[0] != form.email.data and form.email.data.strip() != "":
                     with connection.cursor() as cursor:
                         cursor.execute(
                             f"""SELECT COUNT(*) FROM users
@@ -68,7 +72,7 @@ class CabinetPage:
                         email_is_one = bool(cursor.fetchone()[0])
                     if email_is_one:
                         flash("Такой пользователь с такой почтой уже зарегистрирован")
-                        return '/cabinet'
+                        return "/cabinet"
                     else:
                         with connection.cursor() as cursor:
                             cursor.execute(
@@ -76,16 +80,19 @@ class CabinetPage:
                                 SET email = '{form.email.data}'
                                 WHERE user_id = '{session.get("id")}'::int;"""
                             )
-                if not check_email(form.email.data.strip()) and form.email.data.strip() != '':
+                if (
+                    not check_email(form.email.data.strip())
+                    and form.email.data.strip() != ""
+                ):
                     flash("Email не прошел проверку!")
-                    return '/cabinet'
-                if user_list[1] != form.name.data and form.name.data.strip() != '':
-                    if form.name.data.strip() == '':
+                    return "/cabinet"
+                if user_list[1] != form.name.data and form.name.data.strip() != "":
+                    if form.name.data.strip() == "":
                         flash("Укажите имя")
-                        return '/cabinet'
+                        return "/cabinet"
                     elif len(form.name.data.strip()) <= 1:
                         flash("Имя не может состоять из одного символа")
-                        return '/cabinet'
+                        return "/cabinet"
                     else:
                         with connection.cursor() as cursor:
                             cursor.execute(
@@ -93,13 +100,16 @@ class CabinetPage:
                                 SET name = '{form.name.data}'
                                 WHERE user_id = '{session.get("id")}'::int;"""
                             )
-                if user_list[2] != form.surname.data and form.surname.data.strip() != '':
-                    if form.surname.data.strip() == '':
+                if (
+                    user_list[2] != form.surname.data
+                    and form.surname.data.strip() != ""
+                ):
+                    if form.surname.data.strip() == "":
                         flash("Укажите фамилию")
-                        return '/cabinet'
+                        return "/cabinet"
                     elif len(form.surname.data.strip()) <= 1:
                         flash("Фамилия не может состоять из одного символа")
-                        return '/cabinet'
+                        return "/cabinet"
                     else:
                         with connection.cursor() as cursor:
                             cursor.execute(
@@ -107,10 +117,13 @@ class CabinetPage:
                                 SET surname = '{form.surname.data}'
                                 WHERE user_id = '{session.get("id")}'::int;"""
                             )
-                if form.password_new.data.strip() != '' and form.password_old.data.strip() != '':
+                if (
+                    form.password_new.data.strip() != ""
+                    and form.password_old.data.strip() != ""
+                ):
                     if password_check(form.password_new.data) != form.password_new.data:
                         flash(password_check(form.password_new.data))
-                        return '/cabinet'
+                        return "/cabinet"
                     else:
                         with connection.cursor() as cursor:
                             cursor.execute(
@@ -125,14 +138,24 @@ class CabinetPage:
                             SET gender = '{form.gender.data}'
                             WHERE user_id = '{session.get("id")}'::int;"""
                         )
-                if form.fileName.data.filename and allowed_file(form.fileName.data.filename)\
-                        and form.fileName.data.filename != '' and form.fileName.data.filename != user_list[5]:
-                    last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
+                if (
+                    form.fileName.data.filename
+                    and allowed_file(form.fileName.data.filename)
+                    and form.fileName.data.filename != ""
+                    and form.fileName.data.filename != user_list[5]
+                ):
+                    last_file = os.listdir(app.config["UPLOAD_FOLDER1"])
                     last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
                     last_file = last_file[-1]
                     image_data = request.files[form.fileName.name].read()
-                    filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
-                    open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
+                    filename = (
+                        str(int(last_file.split(".")[0]) + 1)
+                        + "."
+                        + form.fileName.data.filename.split(".")[1]
+                    )
+                    open(
+                        os.path.join(app.config["UPLOAD_FOLDER1"], filename), "wb"
+                    ).write(image_data)
 
                     with connection.cursor() as cursor:
                         cursor.execute(
@@ -154,7 +177,7 @@ class CabinetPage:
                 if connection:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
-            return '/cabinet'
+            return "/cabinet"
 
         email = user_list[0]
         name = user_list[1]
@@ -169,22 +192,33 @@ class CabinetPage:
                                is_cabinet='-after', form=form, date_birth=date_birth,
                                title='Личный кабинет', login=session.get('authorization'))
 
+        return render_template( "cabinet.html",
+            **params,
+            delete=delete,
+            logout=logout,
+            email=email,
+            name=name,
+            surname=surname,
+            photo_way=photo_way,
+            directory=UPLOAD_FOLDER,
+            is_cabinet="-after",
+            form=form,
+            date_birth=date_birth,
+            title="Your cabinet",
+            login=session.get("authorization"),
+        )
+
     @staticmethod
     def account_cabinet_del():
         connection = []
         try:
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=db_name
+                host=host, user=user, password=password, database=db_name
             )
             connection.autocommit = True
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT version();"
-                )
+                cursor.execute("SELECT version();")
 
                 print(f"Server version: {cursor.fetchone()}")
 

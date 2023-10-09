@@ -9,15 +9,14 @@ from datetime import datetime
 def send_email(id_human, mode, event_name, event_date, event_time):
     try:
         connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db_name
+            host=host, user=user, password=password, database=db_name
         )
         connection.autocommit = True
 
         with connection.cursor() as cursor:
-            cursor.execute(f'''SELECT email, name,  FROM users WHERE user_id = {id_human} INNER JOIN events.''')
+            cursor.execute(
+                f"""SELECT email, name,  FROM users WHERE user_id = {id_human} INNER JOIN events."""
+            )
 
             human_info = cursor.fetchall()
 
@@ -29,12 +28,13 @@ def send_email(id_human, mode, event_name, event_date, event_time):
             print("[INFO] PostgreSQL connection closed")
 
     sender = "amirhusnutdinov800900@gmail.com"
-    password_email = 'smta gzvy aonh dccg'
+    password_email = "smta gzvy aonh dccg"
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
 
-    template = '''
+    template = (
+        """
                 <!DOCTYPE html>
                 <html amp4email>
                 <head>
@@ -148,7 +148,14 @@ def send_email(id_human, mode, event_name, event_date, event_time):
                                                                                                                     <div style="font-family:Helvetica;font-size:16px;font-weight:400;letter-spacing:0;line-height:1.5;text-align:left;color:#475569">
                                                                                                                         <p style="text-align:justify">&#xA0;</p>
                                                                                                                         <p style="text-align:justify">
-                                                                                                                            <span style="font-size:16px">Здравствуйте''', human_info[1], '''! Вы записались на ''', event_name, ''' в ''', event_date, event_time + '''.</span>
+                                                                                                                            <span style="font-size:16px">Здравствуйте""",
+        human_info[1],
+        """! Вы записались на """,
+        event_name,
+        """ в """,
+        event_date,
+        event_time
+        + """.</span>
                                                                                                                         </p>
                                                                                                                         <p style="text-align:justify">
                                                                                                                             <span style="font-size:16px">Помните: Если вы записались и при этом не пришли на занятие, не предупредив организаторов, вам будет выдана блокировка.</span>
@@ -246,16 +253,17 @@ def send_email(id_human, mode, event_name, event_date, event_time):
                 </table>
                 </body>
                 </html> 
-    '''
+    """,
+    )
 
     try:
         server.login(sender, password_email)
         msg = MIMEText(template, "html")
         msg["From"] = sender
         msg["To"] = human_info[0][0]
-        if mode == 'day':
+        if mode == "day":
             msg["Subject"] = "Напоминаем меньше чем через сутки начинается занятие!"
-        elif mode == 'hour':
+        elif mode == "hour":
             msg["Subject"] = "Напоминаем меньше чем через два часа начинается занятие!"
         server.sendmail(sender, human_info[0][0], msg.as_string())
 
@@ -268,46 +276,51 @@ def greeting():
     today = datetime.now()
     try:
         connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db_name
+            host=host, user=user, password=password, database=db_name
         )
         connection.autocommit = True
 
         with connection.cursor() as cursor:
-            cursor.execute(f'''SELECT id, created_date, time, id_of_people, notified, name FROM events''')
+            cursor.execute(
+                f"""SELECT id, created_date, time, id_of_people, notified, name FROM events"""
+            )
 
             event_info = cursor.fetchall()
         for event in event_info:
-            datetime_of_event = datetime.strptime(f'{event[1]} {event[2].strip()}', '%Y-%m-%d %H:%M:%S')
+            datetime_of_event = datetime.strptime(
+                f"{event[1]} {event[2].strip()}", "%Y-%m-%d %H:%M:%S"
+            )
 
             people = event[3]
             notified = event[4]
             workable_date = datetime_of_event - today
 
-            if len((str(workable_date)).split(',')) == 1:
-                if int((str(workable_date)).split(':')[0]) > 1 and not notified:
-                    mode = 'day'
+            if len((str(workable_date)).split(",")) == 1:
+                if int((str(workable_date)).split(":")[0]) > 1 and not notified:
+                    mode = "day"
                     for id_human in people:
                         send_email(id_human, mode)
                     with connection.cursor() as cursor:
-                        cursor.execute(f"""Update events 
+                        cursor.execute(
+                            f"""Update events 
                                     Set notified = True
-                                    WHERE id = '{event[0]}' """)
+                                    WHERE id = '{event[0]}' """
+                        )
 
-                elif notified and int((str(workable_date)).split(':')[0]) == 1:
-                    mode = 'hour'
+                elif notified and int((str(workable_date)).split(":")[0]) == 1:
+                    mode = "hour"
                     for id_human in people:
                         send_email(id_human, mode, event[5], event[1], event[2])
 
             elif int(str(workable_date).split()[0]) < -1:
                 with connection.cursor() as cursor:
-                    cursor.execute(f"""Delete from events 
-                                WHERE id = '{event[0]}' """)
+                    cursor.execute(
+                        f"""Delete from events 
+                                WHERE id = '{event[0]}' """
+                    )
 
             else:
-                print('good')
+                print("good")
 
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
@@ -326,5 +339,5 @@ def main():
         schedule.run_pending()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

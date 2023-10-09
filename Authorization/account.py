@@ -13,33 +13,32 @@ from settings import app, ALLOWED_EXTENSIONS, host, user, password, db_name
 
 
 def password_check(passwd):
-    special_sym = ['$', '@', '#', '%', '!', '_']
+    special_sym = ["$", "@", "#", "%", "!", "_"]
 
     if len(passwd) < 8:
-        return 'length should be at least 8!'
+        return "length should be at least 8!"
 
     elif not any(char.isdigit() for char in passwd):
-        return 'Password should have at least one numeral!'
+        return "Password should have at least one numeral!"
 
     elif not any(char.isupper() for char in passwd):
-        return 'Password should have at least one uppercase letter!'
+        return "Password should have at least one uppercase letter!"
 
     elif not any(char.islower() for char in passwd):
-        return 'Password should have at least one lowercase letter!'
+        return "Password should have at least one lowercase letter!"
 
     elif not any(char in special_sym for char in passwd):
-        return 'Password should have at least one of the symbols $,@,#,!,_,%'
+        return "Password should have at least one of the symbols $,@,#,!,_,%"
     else:
         return passwd
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def check_email(email):
-    if re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
+    if re.fullmatch(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", email):
         return True
     return False
 
@@ -52,10 +51,7 @@ class Account:
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
 
@@ -89,20 +85,25 @@ class Account:
                     print("[INFO] PostgreSQL connection closed")
             if not is_user:
                 flash("Такого пользователя не существует")
-                return '/authorization'
+                return "/authorization"
             if check_password_hash(password_account, form.password.data):
-                session['authorization'] = True
-                session['id'] = id_account
+                session["authorization"] = True
+                session["id"] = id_account
                 if form.remember_me.data:
                     session.permanent = True
                 if is_admin_account:
-                    session['admin'] = True
-                return '/'
+                    session["admin"] = True
+                return "/"
             flash("Неправильный логин или пароль")
-            return '/authorization'
-        return render_template('login.htm', **params, register=register,
-                               au_is_active='active', form=form,
-                               title='Авторизация')
+            return "/authorization"
+        return render_template(
+            "login.htm",
+            **params,
+            register=register,
+            au_is_active="active",
+            form=form,
+            title="Авторизация",
+        )
 
     @staticmethod
     def account_register():
@@ -112,10 +113,7 @@ class Account:
         if form.validate_on_submit():
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
 
@@ -132,64 +130,75 @@ class Account:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
             if form.password1.data != form.password2.data:
-                flash('Пароли не совпадают')
-                return '/register'
+                flash("Пароли не совпадают")
+                return "/register"
             if password_check(form.password1.data) != form.password1.data:
                 flash(password_check(form.password1.data))
-                return '/register'
+                return "/register"
             if is_user:
                 flash("Такой пользователь уже есть")
-                return '/register'
+                return "/register"
             if not check_email(form.email.data):
                 flash("Email не прошел проверку!")
-                return '/register'
-            if form.name.data.strip() == '' or form.surname.data.strip() == '':
+                return "/register"
+            if form.name.data.strip() == "" or form.surname.data.strip() == "":
                 flash("Укажите имя и фамилию")
-                return '/register'
+                return "/register"
             if len(form.name.data.strip()) <= 1 or len(form.surname.data.strip()) <= 1:
                 flash("Имя и фамилия не может состоять из одного символа")
-                return '/register'
+                return "/register"
             flag = False
             filename = None
-            if form.fileName.data.filename and allowed_file(form.fileName.data.filename) and \
-                    form.fileName.data.filename != '':
-                last_file = os.listdir(app.config['UPLOAD_FOLDER1'])
+            if (
+                form.fileName.data.filename
+                and allowed_file(form.fileName.data.filename)
+                and form.fileName.data.filename != ""
+            ):
+                last_file = os.listdir(app.config["UPLOAD_FOLDER1"])
                 last_file.sort(key=lambda x: int(os.path.splitext(x)[0]))
                 last_file = last_file[-1]
                 image_data = request.files[form.fileName.name].read()
-                filename = str(int(last_file.split('.')[0]) + 1) + '.' + form.fileName.data.filename.split('.')[1]
-                open(os.path.join(app.config['UPLOAD_FOLDER1'], filename), 'wb').write(image_data)
+                filename = (
+                    str(int(last_file.split(".")[0]) + 1)
+                    + "."
+                    + form.fileName.data.filename.split(".")[1]
+                )
+                open(os.path.join(app.config["UPLOAD_FOLDER1"], filename), "wb").write(
+                    image_data
+                )
                 flag = True
             if flag:
-                photo = f'clients/{filename}'
+                photo = f"clients/{filename}"
             else:
                 photo = f'clients_example/{str(randrange(1, 9)) + ".jpg"}'
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
-                app.config['Email_confirm'] = (email_cod, form.email.data)
+                app.config["Email_confirm"] = (email_cod, form.email.data)
                 with connection.cursor() as cursor:
                     cursor.execute(
                         f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way, date_birth)
                             values
                             ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
                             '{generate_password_hash(form.password1.data)}', 'False'::bool,
-                            '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);""")
-                return '/email_confirm'
+                            '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);"""
+                    )
+                return "/email_confirm"
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
                 if connection:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
-        return render_template('registration.html', **params,
-                               au_is_active='active', form=form,
-                               title='Регистрация')
+        return render_template(
+            "registration.html",
+            **params,
+            au_is_active="active",
+            form=form,
+            title="Регистрация",
+        )
 
     @staticmethod
     def email_confirm_page():
@@ -198,24 +207,22 @@ class Account:
 
         if form.validate_on_submit():
             user_code = form.email.data
-            valid_code = app.config['Email_confirm'][0]
-            email_of_user = app.config['Email_confirm'][1]
+            valid_code = app.config["Email_confirm"][0]
+            email_of_user = app.config["Email_confirm"][1]
 
             if int(user_code) == int(valid_code):
                 try:
                     connection = psycopg2.connect(
-                        host=host,
-                        user=user,
-                        password=password,
-                        database=db_name
+                        host=host, user=user, password=password, database=db_name
                     )
                     connection.autocommit = True
                     with connection.cursor() as cursor:
                         cursor.execute(
                             f"""UPDATE users
                                 SET activated = 'true'
-                                WHERE email = '{email_of_user}';""")
-                    return '/authorization'
+                                WHERE email = '{email_of_user}';"""
+                        )
+                    return "/authorization"
                 except Exception as _ex:
                     print("[INFO] Error while working with PostgreSQL", _ex)
                 finally:
@@ -224,8 +231,9 @@ class Account:
                         print("[INFO] PostgreSQL connection closed")
 
             else:
-                flash('Пароли не совпадают')
-                return '/email_confirm_page'
+                flash("Пароли не совпадают")
+                return "/email_confirm_page"
         else:
-            return render_template('email_confirm_page.html', **params, form=form,
-                                   title='Подтверждение')
+            return render_template(
+                "email_confirm_page.html", **params, form=form, title="Подтверждение"
+            )

@@ -20,7 +20,7 @@
       <label class="sr-only">Введите код подтверждения</label>
       {{ form.email(type="text", class="form-control", placeholder="Код подтверждения", autofocus="") }}
       <br>
-        <a class="btn btn-primary" href="http://127.0.0.1:8080/email_confirm" role="button">Получить код снова</a>
+        <a class="btn btn-primary" href="/email_confirm" role="button">Получить код снова</a>
       <br>
       {{form.submit(class="btn btn-lg btn-dark btn", id="button", type="submit") }}
     </form>

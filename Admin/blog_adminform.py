@@ -5,7 +5,7 @@ import os
 
 
 def photo():
-    a = (os.listdir('static/assets/images/blog'))
+    a = os.listdir("static/assets/images/blog")
     lst = []
     for i in a:
         lst.append((i, i))
@@ -14,9 +14,12 @@ def photo():
 
 class BlogAdminForm(FlaskForm):
     lst = photo()
-    photo_name = SelectField("Test", choices=lst,
-                             validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
-    signature = TextAreaField('Answer', render_kw={"rows": 5, "cols": 11}, validators=[DataRequired()])
-    text = TextAreaField('Answer', render_kw={"rows": 5, "cols": 11}, validators=[DataRequired()])
-    submit = SubmitField('Отправить')
+    photo_name = SelectField("Test", choices=lst, validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired()])
+    signature = TextAreaField(
+        "Answer", render_kw={"rows": 5, "cols": 11}, validators=[DataRequired()]
+    )
+    text = TextAreaField(
+        "Answer", render_kw={"rows": 5, "cols": 11}, validators=[DataRequired()]
+    )
+    submit = SubmitField("Отправить")

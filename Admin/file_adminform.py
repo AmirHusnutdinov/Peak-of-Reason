@@ -4,7 +4,6 @@ from wtforms import SubmitField, FileField
 
 
 class FileForm(FlaskForm):
+    fileName = FileField("Выберите фото:")
 
-    fileName = FileField('Выберите фото:')
-
-    submit = SubmitField('SEND')
+    submit = SubmitField("SEND")

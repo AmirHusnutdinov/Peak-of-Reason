@@ -13,10 +13,7 @@ class Answers:
         if form.validate_on_submit() and session.get('authorization'):
             try:
                 connection = psycopg2.connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=db_name
+                    host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
 
