@@ -5,6 +5,7 @@ import psycopg2
 
 
 def make_date(date):
+    date = date.split()
     months = {
         "Sep": "Сентября",
         "Oct": "Октября",
@@ -20,8 +21,11 @@ def make_date(date):
         "Aug": "Августа",
     }
     for i, month in enumerate(months):
+        print(date[1], month)
         if date[1] == month:
             date[1] = list(months.values())[i]
+            if date[0][0] == '0':
+                date[0] = date[0][1]
             date = " ".join(date)
     return date
 
@@ -29,7 +33,7 @@ def make_date(date):
 class Events:
     @staticmethod
     def events(events_lst):
-        date = (events_lst[0][5]).split()
+        date = events_lst[0][5]
         date = make_date(date)
         event1 = event + "/?teen=1"
         event2 = event + "/?adult=1"
@@ -47,7 +51,7 @@ class Events:
 
     @staticmethod
     def event(events1, mode, label):
-        date = (events1[0][5]).split()
+        date = events1[0][5]
         date = make_date(date)
         if mode == "teen":
             return render_template(

@@ -1062,8 +1062,8 @@ hr {
 
 .blog__photo {
     display: block;
-    max-width: 100%;
-    height: auto;
+    width: 350px;
+    height: 220px;
 }
 
 .blog__date {
