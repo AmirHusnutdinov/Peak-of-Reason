@@ -14,6 +14,7 @@ logout = "/cabinet/logout"
 delete = "/cabinet/delete"
 reviews_Admin = "/reviews_admin"
 photo_add_Admin = "/add_photo_admin"
+generate_post = "/generate_post"
 types = "/event/types"
 params = {
     "general": general,
@@ -30,5 +31,6 @@ params_admin = {
     "answers_Admin": answers_Admin,
     "event_Admin": event_Admin,
     "blog_Admin": blog_Admin,
+    "generate_post": generate_post,
     "general": general,
 }

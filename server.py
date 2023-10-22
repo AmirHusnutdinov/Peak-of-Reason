@@ -24,6 +24,7 @@ from settings import app, host, user, password, db_name
 import os
 from flask import flash, request, redirect
 from werkzeug.utils import secure_filename
+from Admin.generate_textform import GeneratePageForm
 
 UPLOAD_FOLDER = "/path/to/the/uploads"
 ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif"}
@@ -563,6 +564,46 @@ def reset_password():
         return redirect("/")
 
 
+@app.route("/generate_post", methods=['GET', 'POST'])
+def open_generate_post():
+    if session.get("admin"):
+        form = GeneratePageForm()
+        connection = []
+        try:
+            connection = psycopg2.connect(
+                host=host, user=user, password=password, database=db_name
+            )
+            connection.autocommit = True
+            if request.method == 'GET':
+                with connection.cursor() as cursor:
+                    cursor.execute("""SELECT text FROM gpt_info; """)
+                    gpt_info = cursor.fetchall()[0][0]
+                    return render_template("generate_post.html",
+                                           **params_admin,
+                                           gp_is="active",
+                                           form=form,
+                                           text=gpt_info,
+                                           title="Генерация постов",
+                                           )
+
+            if request.method == 'POST':
+                import g4f
+                answer_for_gpt = form.request.data
+                gpt_response = g4f.ChatCompletion.create(model=g4f.models.gpt_4,
+                                                         messages=[{'role': 'user', 'content': f'{answer_for_gpt}'}])
+                with connection.cursor() as cursor:
+                    cursor.execute(f"""UPDATE gpt_info SET text='{gpt_response}';""")
+                return redirect('/generate_post')
+        except Exception as _ex:
+            print("[INFO] Error while working with PostgreSQL", _ex)
+        finally:
+            if connection:
+                connection.close()
+                print("[INFO] PostgreSQL connection closed")
+    else:
+        return redirect("/")
+
+
 @app.errorhandler(404)
 def page_not_found(_):
     return render_template("404.html"), 404
@@ -589,7 +630,6 @@ def open_pp():
 
 
 app.register_blueprint(event_api.blueprint)
-
 
 port = int(os.environ.get("PORT", 8080))
 app.run(host="0.0.0.0", port=port)
