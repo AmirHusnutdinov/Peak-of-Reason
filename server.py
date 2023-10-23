@@ -26,6 +26,7 @@ from flask import flash, request, redirect
 from werkzeug.utils import secure_filename
 from Admin.generate_textform import GeneratePageForm
 
+app = app
 UPLOAD_FOLDER = "/path/to/the/uploads"
 ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif"}
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER

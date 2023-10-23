@@ -15,7 +15,7 @@ class StartPage:
             is_nav="__nav",
             is_mobile="_mobile",
             is_genreal_page="body_general_page",
-            title="На крыльях😇",
+            title="На крыльях",
             login=session.get("authorization")
         )
 
