@@ -25,7 +25,7 @@ def make_date(date):
     for i, month in enumerate(months):
         if date[1] == month:
             date[1] = list(months.values())[i]
-            if date[0][0] == '0':
+            if date[0][0] == "0":
                 date[0] = date[0][1]
             date = " ".join(date)
     return date
@@ -53,7 +53,7 @@ def fucking_date(lst):
         for i, month in enumerate(months):
             if date[1] == month:
                 date[1] = list(months.values())[i]
-                if date[0][0] == '0':
+                if date[0][0] == "0":
                     date[0] = date[0][1]
                 date = " ".join(date)
                 item[5] = date
@@ -105,9 +105,14 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
-        return render_template('blog_page.html', **params, bl_is_active='active',
-                               title='Блог', posts=three_posts, login=session.get('authorization')
-                               )
+        return render_template(
+            "blog_page.html",
+            **params,
+            bl_is_active="active",
+            title="Блог",
+            posts=three_posts,
+            login=session.get("authorization"),
+        )
 
     @staticmethod
     def blog_pages(number):
@@ -133,11 +138,15 @@ class Blog:
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
         date = make_date(item[5])
-        return render_template('blog_page_example.html', **params,
-                               bl_is_active='active',
-                               name=item[2],
-                               signature=item[3],
-                               date=date,
-                               photo_name=item[1],
-                               text=item[6], title='Блог', login=session.get('authorization'))
-
+        return render_template(
+            "blog_page_example.html",
+            **params,
+            bl_is_active="active",
+            name=item[2],
+            signature=item[3],
+            date=date,
+            photo_name=item[1],
+            text=item[6],
+            title="Блог",
+            login=session.get("authorization"),
+        )

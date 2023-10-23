@@ -88,6 +88,12 @@
 
         </form>
     </div>
+    {%else%}
+<div>
+        <h3 class="subscribe" style="text-align:center;">Хочешь задать свой вопрос? Авторизируйся!</h3>
+    <br>
+        <a class="btn btn-dark" style="margin-left: 30%; width: 40%" href="{{authorization_link}}" role="button">Авторизация</a>
+    </div>
     {% endif %}
 <br>
 

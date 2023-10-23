@@ -186,13 +186,25 @@ class CabinetPage:
         form.gender.data = user_list[4]
         date_birth = user_list[6]
 
-        return render_template('cabinet.html', **params,
-                               delete=delete, logout=logout, email=email, name=name, surname=surname,
-                               photo_way=photo_way, directory=UPLOAD_FOLDER,
-                               is_cabinet='-after', form=form, date_birth=date_birth,
-                               title='Личный кабинет', login=session.get('authorization'))
+        return render_template(
+            "cabinet.html",
+            **params,
+            delete=delete,
+            logout=logout,
+            email=email,
+            name=name,
+            surname=surname,
+            photo_way=photo_way,
+            directory=UPLOAD_FOLDER,
+            is_cabinet="-after",
+            form=form,
+            date_birth=date_birth,
+            title="Личный кабинет",
+            login=session.get("authorization"),
+        )
 
-        return render_template( "cabinet.html",
+        return render_template(
+            "cabinet.html",
             **params,
             delete=delete,
             logout=logout,

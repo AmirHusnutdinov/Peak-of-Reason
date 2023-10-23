@@ -24,7 +24,7 @@ def make_date(date):
         print(date[1], month)
         if date[1] == month:
             date[1] = list(months.values())[i]
-            if date[0][0] == '0':
+            if date[0][0] == "0":
                 date[0] = date[0][1]
             date = " ".join(date)
     return date

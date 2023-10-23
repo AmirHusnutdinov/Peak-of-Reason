@@ -2,7 +2,7 @@ import psycopg2
 from flask import render_template, session
 
 from Answers.answerform import AnswerForm
-from Links import params
+from Links import params, authorization
 from settings import host, user, password, db_name
 
 
@@ -10,7 +10,7 @@ class Answers:
     @staticmethod
     def answers():
         form = AnswerForm()
-        if form.validate_on_submit() and session.get('authorization'):
+        if form.validate_on_submit() and session.get("authorization"):
             try:
                 connection = psycopg2.connect(
                     host=host, user=user, password=password, database=db_name
@@ -30,11 +30,18 @@ class Answers:
                 if connection:
                     connection.close()
                     print("[INFO] PostgreSQL connection closed")
-            return '/answers'
+            return "/answers"
         user_authorization = False
-        if session.get('authorization'):
+        if session.get("authorization"):
             user_authorization = True
-        return render_template('answers_page.html', **params,
-                               an_is_active='active', form=form,
-                               title='Вопросы', login=session.get('authorization'),
-                               user_authorization=user_authorization)
+        print(authorization)
+        return render_template(
+            "answers_page.html",
+            **params,
+            an_is_active="active",
+            form=form,
+            authorization_link=authorization,
+            title="Вопросы",
+            login=session.get("authorization"),
+            user_authorization=user_authorization,
+        )

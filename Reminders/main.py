@@ -93,7 +93,7 @@ def send_email(id_human, mode, event_name, event_date, event_time):
                                                                                                                                     <tbody>
                                                                                                                                     <tr>
                                                                                                                                         <td style="width:289px" class="mj-full-width-mobile">
-                                                                                                                                            <amp-img alt="Alternate image text" src="./static/assets/images/logo1.jpeg" style="border:0 solid #1e293b;border-radius:0;display:block;outline:0;text-decoration:none;width:100%;font-size:13px" width="1000" height="800" layout="responsive"></amp-img>
+                                                                                                                                            <amp-img alt="Alternate image text" src="./static/assets/images/logo.jpeg" style="border:0 solid #1e293b;border-radius:0;display:block;outline:0;text-decoration:none;width:100%;font-size:13px" width="1000" height="800" layout="responsive"></amp-img>
                                                                                                                                         </td>
                                                                                                                                     </tr>
                                                                                                                                     </tbody>

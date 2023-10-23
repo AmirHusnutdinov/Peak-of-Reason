@@ -118,13 +118,16 @@ class Reviews:
         if session.get("authorization"):
             user_authorization = True
 
-        return render_template('reviews_page.html',
-                               **params,
-                               reviews_=rand_list,
-                               re_is_active='active', form=form,
-                               title='Отзывы', login=session.get('authorization'),
-                               user_authorization=user_authorization
-                               )
+        return render_template(
+            "reviews_page.html",
+            **params,
+            reviews_=rand_list,
+            re_is_active="active",
+            form=form,
+            title="Отзывы",
+            login=session.get("authorization"),
+            user_authorization=user_authorization,
+        )
 
         return render_template(
             "reviews_page.html",
@@ -136,4 +139,3 @@ class Reviews:
             login=session.get("authorization"),
             user_authorization=user_authorization,
         )
-

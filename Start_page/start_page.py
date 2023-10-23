@@ -8,10 +8,16 @@ class StartPage:
     def main():
         start_params = params.copy()
 
-        del start_params['general']
-        return render_template('start_page.html',
-                               **start_params, is_nav='__nav', is_mobile='_mobile', is_genreal_page='body_general_page',
-                               title='На крыльях😇', login=session.get('authorization'))
+        del start_params["general"]
+        return render_template(
+            "start_page.html",
+            **start_params,
+            is_nav="__nav",
+            is_mobile="_mobile",
+            is_genreal_page="body_general_page",
+            title="На крыльях😇",
+            login=session.get("authorization")
+        )
 
         del start_params["general"]
         return render_template(
