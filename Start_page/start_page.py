@@ -16,7 +16,8 @@ class StartPage:
             is_mobile="_mobile",
             is_genreal_page="body_general_page",
             title="На крыльях",
-            login=session.get("authorization")
+            login=session.get("authorization"),
+            hidden='True',
         )
 
         del start_params["general"]
@@ -27,5 +28,6 @@ class StartPage:
             is_mobile="_mobile",
             is_genreal_page="body_general_page",
             title="Mindease",
-            login=session.get("authorization")
+            login=session.get("authorization"),
+            hidden='True',
         )
