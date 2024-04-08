@@ -12,7 +12,6 @@
 
     <div class="section__header">
         <p style="font-size: 35px" class="section__suptitle">{{name}}</p>
-        <p style="font-size: 20px" class="section__title">{{signature}}</p>
     </div>
 
     <div class="blog">
@@ -21,12 +20,15 @@
                     <img class="blog__photo" src="/static/assets/images/blog/{{photo_name}}" alt="">
                 <div class="blog__date">
 
-                        <div class="blog__date-day">Дата создания: {{date}}</div>
+                        <div class="blog__date-day">Пост от: {{date}}</div>
 
                 </div>
             </div>
         </div>
         </div>
+    <div class="section__header">
+        <p style="font-size: 20px" class="section__title">{{signature}}</p>
+    </div>
 
     <div class="blog__content">
                 <textarea disabled  id="text_area" style="
