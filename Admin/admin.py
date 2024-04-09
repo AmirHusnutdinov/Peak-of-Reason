@@ -28,10 +28,11 @@ class Admin:
                     date = cursor.fetchone()
                     date = date[0]
                 with connection.cursor() as cursor:
+                    print(form.list_of_photos.data)
                     cursor.execute(
                         f"""INSERT INTO blog (id, name, signature, post_text, link, created_date, photo_way) VALUES
                                 ('{int(ids[-1][0]) + 1}', '{form.name.data}', '{form.signature.data}', '{form.text.data}',
-                                '/blog/?page={int(ids[-1][0]) + 1}', '{date}'::date, '{form.photo_name.data}');"""
+                                '/blog/?page={int(ids[-1][0]) + 1}', '{date}'::date, '{form.list_of_photos.data}');"""
                     )
 
             except Exception as _ex:
