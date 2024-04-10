@@ -91,6 +91,9 @@ class Blog:
         blog_inform = posts[::-1]
         count_of_columns = math.ceil(len(blog_inform) / 3)
         count_of_posts = len(blog_inform)
+        for i in range(len(blog_inform)):
+            if len(blog_inform[i][3]) > 143:
+                blog_inform[i][3] = blog_inform[i][3][:143] + '...'
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
@@ -147,6 +150,7 @@ class Blog:
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
         date = make_date(item[5])
+        print(item[1])
         return render_template(
             "blog_page_example.html",
             **params,
@@ -169,9 +173,13 @@ class Blog:
                     host=host, user=user, password=password, database=db_name
                 )
                 connection.autocommit = True
-
-                with connection.cursor() as cursor:
-                    cursor.execute(f"""Delete from blog where id = '{form.ids_to_delete}' """)
+                string = str(form.ids_to_delete).split()[-1]
+                start = string.find('"')
+                stop = string.rfind('"')
+                lst = string[start+1:stop].split(',')
+                for i in lst:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""Delete from blog where id = {i} """)
             except Exception as _ex:
                 print("[INFO] Error while working with PostgreSQL", _ex)
             finally:
