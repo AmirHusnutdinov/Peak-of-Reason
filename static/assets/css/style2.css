@@ -69,8 +69,15 @@ hr {
     margin: 0 auto;
 
 }
-
-
+/* BLog13z (don't touch!) */
+.blog13z {
+        display: flex;
+        margin: 0% 15% 0% 20%;
+}
+.blog13z-signature {
+        margin: 0% 0% 0% 5%;
+        width:40%;
+}
 
 /* Intro */
 .intro {
@@ -1628,6 +1635,16 @@ hr {
 }
 
 @media (max-width: 575px) {
+
+    .blog13z {
+        display: inline;
+        margin: 0% 0% 0% 0%;
+    }
+
+    .blog13z-signature {
+        margin: 0% 0% 0% 0%;
+        width:100%;
+    }
 
     /* Intro */
     .intro__suptitle {
