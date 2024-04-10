@@ -9,13 +9,31 @@
 
 
     <div class="container">
-
+        <script>
+    function chpok(id){
+    elem = document.getElementById(id); //находим блок div по его id, который передали в функцию
+    state = elem.style.display; //смотрим, включен ли сейчас элемент
+    if (state =='') elem.style.display='none'; //если включен, то выключаем
+    else elem.style.display=''; //иначе - включаем
+}
+</script>
         <div class="section__header">
             <h3 class="section__suptitle">Наш блог</h3>
             <h2 class="section__title">Последние статьи:</h2>
         </div>
 
-        <a class="btn btn-dark" href="#" role="button" style="margin-left: 73%; margin-bottom: 3%">Изменить или удалить</a>
+        <div class="section__header" style="margin-top:-2%; weight: 20%;">
+            {% if is_admin %}
+            <button class="btn btn-dark" style="margin-left: 73%" onclick="chpok('div1')" id="btn1">Удалить пост ▲</button>
+
+            <div style="display: none;" id="div1">
+                {{form.ids_to_delete(type="text", style="width: 25%; margin-left:40%", class="form-control", id="del1", placeholder="Введите номера постов которые хотите удалить") }}
+                <br>
+                {{ form.submit(type="submit", style="margin-left:40%", class="btn btn-dark") }}</div>
+            {% endif %}
+        </div>
+
+
         {% for items in posts %}
         <div class="blog">
             {% for item in items %}

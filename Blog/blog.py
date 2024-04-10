@@ -2,6 +2,7 @@ import psycopg2
 from flask import render_template, session
 from Links import params
 import math
+from Blog.blog_form import BlogForm
 
 from settings import host, user, password, db_name
 
@@ -105,6 +106,12 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
+        if session.get("admin"):  # Это нужно чтобы кнопка изменения поста была только у админов
+            is_admin = True
+        else:
+            is_admin = False
+        from Blog.blog_form import BlogForm
+        form = BlogForm()
         return render_template(
             "blog_page.html",
             **params,
@@ -112,6 +119,8 @@ class Blog:
             title="Блог",
             posts=three_posts,
             login=session.get("authorization"),
+            is_admin=is_admin,
+            form=form
         )
 
     @staticmethod
@@ -150,3 +159,22 @@ class Blog:
             title="Блог",
             login=session.get("authorization"),
         )
+
+    @staticmethod
+    def delete_blog():
+        form = BlogForm()
+        if form.validate_on_submit():
+            try:
+                connection = psycopg2.connect(
+                    host=host, user=user, password=password, database=db_name
+                )
+                connection.autocommit = True
+
+                with connection.cursor() as cursor:
+                    cursor.execute(f"""Delete from blog where id = '{form.ids_to_delete}' """)
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")
