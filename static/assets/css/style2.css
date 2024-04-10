@@ -89,7 +89,7 @@ hr {
     min-height: 820px;
     position: relative;
 
-    background: url("../images/clouds3.png") center no-repeat;
+    background: url("../images/clouds.jpg") center no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
 }

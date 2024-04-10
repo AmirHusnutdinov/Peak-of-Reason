@@ -2,6 +2,7 @@ import psycopg2
 from flask import render_template, session
 from Links import params
 import math
+from Blog.blog_form import BlogForm
 
 from settings import host, user, password, db_name
 
@@ -90,6 +91,9 @@ class Blog:
         blog_inform = posts[::-1]
         count_of_columns = math.ceil(len(blog_inform) / 3)
         count_of_posts = len(blog_inform)
+        for i in range(len(blog_inform)):
+            if len(blog_inform[i][3]) > 143:
+                blog_inform[i][3] = blog_inform[i][3][:143] + '...'
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
@@ -105,6 +109,12 @@ class Blog:
             elif end + 1 <= count_of_posts:
                 end += 1
 
+        if session.get("admin"):  # Это нужно чтобы кнопка изменения поста была только у админов
+            is_admin = True
+        else:
+            is_admin = False
+        from Blog.blog_form import BlogForm
+        form = BlogForm()
         return render_template(
             "blog_page.html",
             **params,
@@ -112,6 +122,8 @@ class Blog:
             title="Блог",
             posts=three_posts,
             login=session.get("authorization"),
+            is_admin=is_admin,
+            form=form
         )
 
     @staticmethod
@@ -138,6 +150,7 @@ class Blog:
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
         date = make_date(item[5])
+        print(item[1])
         return render_template(
             "blog_page_example.html",
             **params,
@@ -150,3 +163,26 @@ class Blog:
             title="Блог",
             login=session.get("authorization"),
         )
+
+    @staticmethod
+    def delete_blog():
+        form = BlogForm()
+        if form.validate_on_submit():
+            try:
+                connection = psycopg2.connect(
+                    host=host, user=user, password=password, database=db_name
+                )
+                connection.autocommit = True
+                string = str(form.ids_to_delete).split()[-1]
+                start = string.find('"')
+                stop = string.rfind('"')
+                lst = string[start+1:stop].split(',')
+                for i in lst:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""Delete from blog where id = {i} """)
+            except Exception as _ex:
+                print("[INFO] Error while working with PostgreSQL", _ex)
+            finally:
+                if connection:
+                    connection.close()
+                    print("[INFO] PostgreSQL connection closed")

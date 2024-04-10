@@ -240,11 +240,17 @@ def confirm():
         return redirect("/authorization")
 
 
-@app.route("/blog/")
+@app.route("/blog/", methods=["GET", "POST"])
 def open_blog():
+    if session.get('admin'):
+        if request.method == "POST":
+            Blog.delete_blog()
+            return redirect('/blog')
+
     query = request.args.get("page")
     if query and query != "":
         return Blog.blog_pages(int(query))
+
     return Blog.blog()
 
 

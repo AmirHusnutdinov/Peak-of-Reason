@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, EqualTo
 import os
 
 
@@ -16,6 +16,7 @@ class BlogAdminForm(FlaskForm):
     lst = photo()
     photo_name = SelectField("Test", choices=lst, validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
+    list_of_photos = StringField("Photos",  validators=[DataRequired()])
     signature = TextAreaField(
         "Answer", render_kw={"rows": 5, "cols": 11}, validators=[DataRequired()]
     )
