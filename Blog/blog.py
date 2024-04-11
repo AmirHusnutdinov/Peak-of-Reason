@@ -94,6 +94,7 @@ class Blog:
         for i in range(len(blog_inform)):
             if len(blog_inform[i][3]) > 143:
                 blog_inform[i][3] = blog_inform[i][3][:143] + '...'
+            blog_inform[i][1] = blog_inform[i][1].split()[0]
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
