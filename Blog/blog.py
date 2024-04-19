@@ -3,11 +3,12 @@ from flask import render_template, session
 from Links import params
 import math
 from Blog.blog_form import BlogForm
-
 from settings import host, user, password, db_name
 
 
 def make_date(date):
+    # Функция переделывает дату вида:
+    # 02 Sep 2023 в дату вида 2 Сентября 2023
     date = date.split()
     months = {
         "Sep": "Сентября",
@@ -32,75 +33,48 @@ def make_date(date):
     return date
 
 
-def fucking_date(lst):
-    months = {
-        "Sep": "Сентября",
-        "Oct": "Октября",
-        "Nov": "Ноября",
-        "Dec": "Декабря",
-        "Jan": "Января",
-        "Feb": "Февраля",
-        "Mar": "Марта",
-        "Apr": "Апреля",
-        "May": "Мая",
-        "Jun": "Июня",
-        "Jul": "Июля",
-        "Aug": "Августа",
-    }
-    lst2 = []
-    for item in lst:
-        item = list(item)
-        date = item[5].split()
-        for i, month in enumerate(months):
-            if date[1] == month:
-                date[1] = list(months.values())[i]
-                if date[0][0] == "0":
-                    date[0] = date[0][1]
-                date = " ".join(date)
-                item[5] = date
-        lst2.append(item)
-    return lst2
+def database(select: list, from_: str, where=None, order_by=None):
+    # id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY'), post_text
+    try:
+        connection = psycopg2.connect(
+            host=host, user=user, password=password, database=db_name
+        )
+        connection.autocommit = True
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT {', '.join(select)} FROM {from_};"""
+            )
+            return cursor.fetchall()
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
 
 
 class Blog:
     @staticmethod
     def blog():
-        try:
-            connection = psycopg2.connect(
-                host=host, user=user, password=password, database=db_name
-            )
-            connection.autocommit = True
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    """SELECT id, photo_way, name,
-                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog;"""
-                )
-                posts = cursor.fetchall()
-                # for i in posts:
-                #     s = str(list(i)[1]).replace(' ', '_')
-                #     s = s.replace('.jpg_', '.jpg ')
-                #     s = s[1:]
-                #     cursor.execute(f"""
-                #         UPDATE blog SET photo_way = '{s}' WHERE id = {i[0]}""")
-
-        except Exception as _ex:
-            print("[INFO] Error while working with PostgreSQL", _ex)
-        finally:
-            if connection:
-                connection.close()
-                print("[INFO] PostgreSQL connection closed")
-
-        posts = fucking_date(posts)
+        posts = database(select=['id', 'photo_way', 'name', 'signature',
+                'link', "to_char(created_date, 'dd Mon YYYY')", 'post_text'], from_='blog')
+        form = BlogForm()
         three_posts = []
         start = 0
         end = 3
-        blog_inform = posts[::-1]
+        blog_inform = list(map(list, posts))[::-1]
         count_of_columns = math.ceil(len(blog_inform) / 3)
         count_of_posts = len(blog_inform)
+
         for i in range(len(blog_inform)):
             if len(blog_inform[i][3]) > 143:
+                # ограничение длины текста описания на превью
                 blog_inform[i][3] = blog_inform[i][3][:143] + '...'
+            # Из всех фото берется первое
             blog_inform[i][1] = blog_inform[i][1].split()[0]
+            # Дата переводится в нужный формат
+            blog_inform[i][5] = make_date(blog_inform[i][5])
+
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
@@ -120,8 +94,6 @@ class Blog:
             is_admin = True
         else:
             is_admin = False
-        from Blog.blog_form import BlogForm
-        form = BlogForm()
         return render_template(
             "blog_page.html",
             **params,
@@ -143,10 +115,10 @@ class Blog:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"""SELECT id, photo_way, name,
-                                        signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
-                                        where id = {number}
-                                        ORDER BY created_date DESC;"""
+                    f"""SELECT id, photo_way, name, signature, link,
+                     to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
+                    where id = {number}
+                    ORDER BY created_date DESC;"""
                 )
                 posts = cursor.fetchall()
         except Exception as _ex:
@@ -157,7 +129,6 @@ class Blog:
                 print("[INFO] PostgreSQL connection closed")
         item = posts[0]
         date = make_date(item[5])
-        print(item[1])
         return render_template(
             "blog_page_example.html",
             **params,
@@ -183,7 +154,7 @@ class Blog:
                 string = str(form.ids_to_delete).split()[-1]
                 start = string.find('"')
                 stop = string.rfind('"')
-                lst = string[start+1:stop].split(',')
+                lst = string[start + 1:stop].split(',')
                 for i in lst:
                     with connection.cursor() as cursor:
                         cursor.execute(f"""Delete from blog where id = {i} """)

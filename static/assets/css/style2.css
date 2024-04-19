@@ -1069,6 +1069,16 @@ hr {
     margin-bottom: 14px;
 }
 
+.blog-change{
+    width: 48px;
+    height: 48px;
+    margin-left: 100%;
+    margin-bottom: -16%;
+    position: absolute;
+    z-index: 1;
+    background-image: url(../images/service_photos/pencil.png);
+}
+
 .blog__photo {
     display: block;
     width: 350px;
@@ -1145,7 +1155,17 @@ hr {
     color: #95e1d3;
 }
 
+.btn-open-delete-form{
+   margin-left: 99%;
+   margin-bottom: -5%
+}
 
+.delete-form{
+    border: solid;
+    width:45%;
+    margin-left:73%;
+    border-radius:15px
+}
 /* Map */
 
 .map {
