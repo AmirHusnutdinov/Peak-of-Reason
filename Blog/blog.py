@@ -76,6 +76,12 @@ class Blog:
                                         signature, link, to_char(created_date, 'dd Mon YYYY'), post_text FROM blog;"""
                 )
                 posts = cursor.fetchall()
+                # for i in posts:
+                #     s = str(list(i)[1]).replace(' ', '_')
+                #     s = s.replace('.jpg_', '.jpg ')
+                #     s = s[1:]
+                #     cursor.execute(f"""
+                #         UPDATE blog SET photo_way = '{s}' WHERE id = {i[0]}""")
 
         except Exception as _ex:
             print("[INFO] Error while working with PostgreSQL", _ex)
@@ -94,8 +100,7 @@ class Blog:
         for i in range(len(blog_inform)):
             if len(blog_inform[i][3]) > 143:
                 blog_inform[i][3] = blog_inform[i][3][:143] + '...'
-            blog_inform[i][1] = blog_inform[i][1].split(',')[1]
-            print(blog_inform[i][1])
+            blog_inform[i][1] = blog_inform[i][1].split()[0]
         for i in range(count_of_columns):
             three_posts.append(blog_inform[start:end])
 
