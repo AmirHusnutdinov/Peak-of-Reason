@@ -27,16 +27,14 @@
         <div class="section__header">
             <h3 class="section__suptitle">Наш блог</h3>
             <h2 class="section__title">Последние статьи:</h2>
-        </div>
-
-        <div class="section__header" style="margin-top:-2%; weight: 20%;">
+            <div class="section__header" style="margin-top:-2%; weight: 20%;">
             {% if is_admin %}
-            <input class="btn btn-dark" type="button" style="margin-left: 73%" onclick="chpok('div1')" id="btn1" value="Удалить пост ▲"></input>
+            <input class="btn btn-dark" type="button" style="margin-left: 99%; margin-bottom: -5%" onclick="chpok('div1')" id="btn1" value="Удалить пост ▲"></input>
             <br>
             <br>
             <form method="post" novalidate>
             {{ form.hidden_tag() }}
-            <div style="display: none; border: solid; width:45%; margin-left:63%; border-radius:15px" id="div1">
+            <div style="display: none; border: solid; width:45%; margin-left:73%; border-radius:15px" id="div1">
                 <br>
                 <label class="form-label">Введите номера постов которые хотите удалить</label>
                 {{form.ids_to_delete(type="text", class="form-control", id="del1", placeholder="Например: 6,7,8") }}
@@ -46,6 +44,7 @@
             {% endif %}
             </div></form>
 
+        </div>
         </div>
 
 
