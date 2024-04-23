@@ -1,0 +1,47 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+
+    <div>
+        <br>
+        <h3 class="subscribe" style="text-align:center;">Здравствуйте уважаемый Admin</h3>
+        <h2 class="subscribe" style="text-align:center;">Давайте сгенерируем текст</h2>
+        <br>
+        <br>
+        <form class="subscribe" method="post" novalidate>
+        {{ form.hidden_tag() }}
+<br>
+
+                <div class="mb-3">
+                    <label class="form-label" style="color: blue">Введите свой запрос</label>
+                    {{ form.request(type="text", class="form-control") }}
+                </div>
+<br>
+            <div class="d-grid gap-2">
+                    {{ form.submit(type="submit", class="btn btn-dark") }}
+                </div>
+                    <br>
+             </form>
+
+        <div class="subscribe">
+                <textarea class="textarea" id="textarea" style="
+  background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
+  background-size: 100% 4rem;
+  border: 1px solid #CCC;
+  width: 100%;
+  line-height: 2rem;
+  margin: 0 auto;
+  padding: 4px 8px;
+  font-size: 20px;
+  font-family: Arial;">{{text}}</textarea>
+            </div>
+
+
+<script>
+        $("textarea").height( $("textarea")[0].scrollHeight );
+</script>
+
+</div>
+
+
+{% endblock %}

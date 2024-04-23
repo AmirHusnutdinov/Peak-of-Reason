@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+    <br>
+
+    <div>
+        <h3 class="subscribe" style="text-align:center;">Здравствуйте уважаемый админ!</h3>
+        <h2 class="subscribe" style="text-align:center;">Давайте добавим новое событие в один из блоков</h2>
+        </div>
+
+
+        <form class="subscribe" method="post">
+        {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    <label style="color: blue">Выберите категорию</label>
+                    {{ form.category(class="form-control", id="classSelect") }}
+                </div>
+            <br>
+            <label class="form-label" style="color: blue">photo_name/ Имя фото</label>
+            {{form.photo_name(class="form-control", id="Selector", onchange="preview()")}}
+        <br>
+        <img onerror="this.style.visibility = 'hidden'" id="frame" src="" class="img-fluid" style="margin-left: 30%; border: 4px solid #6495ED; border-radius: 10px; width: 400px; height: 250px;"/>
+                <div class="mb-3" id = "name_form">
+                    <label class="form-label" style="color: blue">Name/Имя</label>
+                    {{ form.name(type="text", class="form-control", id="exampleFormControlInput2", placeholder="Имя поста") }}
+                </div>
+                <br>
+                <div id="textarea_ask" class="mb-3">
+                    <label class="form-label" style="color: blue">Signature/Краткое описание</label>
+                    {{ form.signature(type="text", class="form-control", id="exampleFormControlInput3") }}
+                </div>
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">Date/Дата события</label>
+            {{form.date(type="date", class="form-control")}}
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">Time/Время события</label>
+            {{form.time(type="time", class="form-control")}}
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">Post_text/Текст статьи</label>
+             {{ form.post_text(type="text", class="form-control") }}
+            <br>
+            <br>
+            <label class="form-label" style="color: blue">count_of_people/Количество человек</label>
+              {{ form.count_of_people(type="text", class="form-control", placeholder="15") }}
+            <br> <br>
+            <label class="form-label" style="color: blue">price/Цена</label>
+              {{ form.price(type="text", class="form-control", placeholder="1000") }}
+                <div class="d-grid gap-2">
+                    <br><br>
+                    {{ form.submit(type="submit", class="btn btn-dark") }}
+                </div>
+        </form>
+<script>
+            function preview() {
+                var src = document.getElementById("Selector");
+
+                var value = src.value;
+                frame.style.visibility = 'visible'
+                frame.src = "/static/assets/images/event/" + value;
+            }
+        </script>
+{% endblock %}

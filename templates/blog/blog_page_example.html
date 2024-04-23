@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/assets/images/service_photos/logo2.png">
+    <link rel="stylesheet" href="/static/assets/css/style2.css">
+    <link rel="stylesheet" type="text/css" href="https://atuin.ru/demo/mosaic/jquery.mosaic.css">
+    <link rel="stylesheet" type="text/css" href="https://atuin.ru/demo/mosaic/jquery.mosaic.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script|Montserrat:300i,400,700&amp;subset=cyrillic-ext" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <title>{{title}}</title>
+</head>
+<script>document.getElementById("year").innerHTML = new Date().getFullYear();</script>
+<body class="{{is_genreal_page}}">
+<header class="header{{is_nav}}"  id="header{{is_nav}}">
+    <div class="container" >
+        <div class="header__inner">
+            <div>
+            <a class="header__logo" href="{{general}}" style="text-decoration: none;  font-family: Cornerita_Black; font-size: 30px">На крыльях</a></div>
+
+            <nav class="nav1__nav" id="nav{{is_mobile}}">
+                {% if login != True %}
+                    <a class="nav__link {{au_is_active}}" href="{{authorization}}">Войти</a>
+                {% endif %}
+                <a class="nav__link {{ev_is_active}}" href="{{events}}">События</a>
+                <a class="nav__link {{bl_is_active}}" href="{{blog}}">Блог</a>
+                <a class="nav__link {{an_is_active}}" href="{{answers}}">Вопросы</a>
+                <a class="nav__link {{re_is_active}}" href="{{reviews}}">Отзывы</a>
+                {% if login == True %}
+                <a class="nav__link {{us_is_active}}" href="{{cabinet}}" title="Личный кабинет"><img class="nav__img" src="/static/assets/images/user-ico{{is_cabinet}}.svg" width="27px" title="Личный кабинет"></a>
+                {% endif %}
+            </nav>
+
+            <button class="nav-toggle" id="nav_toggle" type="button">
+                <span class="nav-toggle__item">Меню</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<br>
+<br>
+<br>
+<br>
+<div align="justify" style="margin: 0% 25% 0% 25%">
+    <p align="center" class="h2">{{name}}</p>
+    <p align="center" class="h6" style="color: gray;">{{date}}</p>
+</div>
+<div class="blog13z" align="center">
+    <div class="images-grid images-grid-demo" style="width: 50%;">
+          <div class="image-wrapper" data-width="2560" data-height="1920">
+            <img class="image-thumb" src="/static/assets/images/vk/1.jpg" />
+          </div>
+          <div class="image-wrapper" data-width="2560" data-height="1920">
+            <img class="image-thumb" src="/static/assets/images/vk/2.jpg" />
+          </div>
+          <div class="image-wrapper" data-width="1620" data-height="2160">
+            <img class="image-thumb" src="/static/assets/images/vk/3.jpg" />
+          </div>
+          <div class="image-wrapper" data-width="1620" data-height="2160">
+            <img class="image-thumb" src="/static/assets/images/vk/4.jpg" />
+          </div>
+          <div class="image-wrapper" data-width="1620" data-height="2160">
+            <img class="image-thumb" src="/static/assets/images/vk/5.jpg" />
+          </div>
+          <div class="image-wrapper" data-width="1620" data-height="2160">
+            <img class="image-thumb" src="/static/assets/images/vk/6.jpg" />
+          </div>
+    </div>
+    <div class="blog13z-signature" style="font-size: 20px;">
+        <p class="text-right">{{signature}}</p>
+    </div>
+</div>
+{% if text != '.' %}
+<div style="font-size: 20px;display: flex; margin: 2% 20% 0% 20%;border-radius: 15px;
+  background-color: Snow;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <p style="padding:20px;">{{text}}</p>
+</div>
+{% endif %}
+<br>
+<br>
+<script src="//code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="/static/assets/js/jquery.imagesGrid.js"></script>
+<script type="text/javascript" src="https://atuin.ru/demo/mosaic/jquery.mosaic.js"></script>
+<script type="text/javascript" src="https://atuin.ru/demo/mosaic/jquery.mosaic.min.js"></script>
+<script>
+    $(".images-grid-demo").imagesGrid();
+    $(".images-grid-demo").imagesGrid({
+	  rowHeight: 150
+	});
+    $(".images-grid-demo").imagesGrid({
+	  margin: 1
+	});
+</script>
+
+
+<div class="copyright">
+    ©2023-<script>document.write(new Date().getFullYear())</script>
+</div>
+</body>
+</html>

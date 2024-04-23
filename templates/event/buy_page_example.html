@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+    <div class="container">
+
+        <div class="section__header">
+            <p style="font-size: 35px" class="section__suptitle">{{name}}</p>
+            <p style="font-size: 20px" class="section__title">{{signature}}</p>
+        </div>
+
+        <div class="blog">
+
+        <div class="blog__item">
+                <div class="blog__header">
+                        <img class="blog__photo" src="/static/assets/images/event/{{photo_name}}" alt="">
+                </div>
+            </div>
+            </div>
+
+<br> <br>
+      <div class="blog__date-day" style="margin-top: -20%; margin-left: 35%">
+          <p>Дата проведения: {{date_show}}, {{time}}</p>
+          <p>Напоминаем:</p>
+          <p>Если вы записались и при этом не пришли на занятие, не предупредив организаторов, вам будет выдана блокировка.</p>
+      </div>
+    <br>
+    <a href="/event/buy/confirm/?page={{id}}" class="btn btn-primary btn-lg" style="margin-left: 1%">Подтверждаю запись</a>
+
+</div>
+<br>
+{% endblock %}

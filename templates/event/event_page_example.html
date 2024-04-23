@@ -1,0 +1,111 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div class="container">
+
+        <div class="section__header">
+            <p style="font-size: 35px" class="section__suptitle">{{name}}</p>
+            <p style="font-size: 20px" class="section__title">{{signature}}</p>
+        </div>
+
+        <div class="blog">
+
+        <div class="blog__item">
+                <div class="blog__header">
+                        <img class="blog__photo" src="/static/assets/images/event/{{photo_name}}" alt="">
+                    <div class="blog__date">
+                             <div class="blog__date-day">Дата проведения: {{date_show}}, {{time}}</div>
+                    </div>
+                </div>
+            <div style="font-family: Geologica; font-size: 20px">
+            <p> Цена: {{price}} рублей</p>
+            <p> Оплата после занятия</p>
+            </div>
+            </div>
+            </div>
+
+        <div class="blog__content">
+                    <textarea disabled  id="text_area" style="
+  background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
+  background-size: 100% 4rem;
+  border: 1px solid #CCC;
+  width: 100%;
+  line-height: 2rem;
+  margin: 0 auto;
+  padding: 4px 8px;
+  font-size: 20px;
+  font-family: Arial;
+   ">{{text}}</textarea>
+                </div>
+<br> <br>
+ <p style="font-size: 20px" class="section__title"> Поспешите событие начнется через</p>
+        <div class="statistics">
+        <div class="container">
+            <div class="stat">
+                <div class="stat__item">
+                    <div class="stat__count" id="days">00</div>
+                    <div class="stat__text">Дней</div>
+                </div>
+                <div class="stat__item">
+                    <div class="stat__count" id="hours">00</div>
+                    <div class="stat__text">Часов</div>
+                </div>
+                <div class="stat__item">
+                    <div class="stat__count" id="minutes">00</div>
+                    <div class="stat__text">Минут</div>
+                </div>
+                <div class="stat__item">
+                    <div class="stat__count" id="seconds">00</div>
+                    <div class="stat__text">Секунд</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+        <br> <br> <br>
+
+        <br>
+        {% if not login %}
+            <p style="font-size: 20px; font-family: Geologica;"> Войдите в аккаунт чтобы записаться!</p>
+            <a type="button" class="btn btn-primary btn-lg disabled">Записаться</a>
+        {% elif flag %}
+            {% if not flag_confirm%}
+             <p style="font-size: 20px; font-family: Geologica;"> Осталось {{last_places}} мест из {{count_of_people}}</p>
+             <a type="button" class="btn btn-primary btn-lg"  href="/event/buy/?page={{number}}">Записаться</a>
+            {% else %}
+            <p style="font-size: 20px; font-family: Geologica;">К сожалению, все места закончились.</p>
+            {% endif%}
+        {% else %}
+            <p style="font-size: 20px; font-family: Geologica;"> Вы уже записались на это событие!</p>
+        {% endif %}
+             <script>const countdown = document.querySelector('.stat');
+const targetDate = new Date('{{date}}T{{time}}');
+
+function updateCountdown() {
+  const now = new Date();
+  const remainingTime = targetDate - now;
+
+  const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+  document.getElementById('days').innerText = days.toString().padStart(2, '0');
+  document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+  document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+  document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+}
+
+// Обновляем счетчик каждую секунду
+setInterval(updateCountdown, 1000);</script>
+</div>
+<br>
+    <script>
+        $("textarea").height( $("textarea")[0].scrollHeight );
+    </script>
+{% endblock %}

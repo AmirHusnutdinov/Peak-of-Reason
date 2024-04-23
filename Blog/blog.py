@@ -1,9 +1,8 @@
-import psycopg2
 from flask import render_template, session
 from Links import params
 import math
 from Blog.blog_form import BlogForm
-from settings import host, user, password, db_name
+from database_query import database_query
 
 
 def make_date(date):
@@ -33,31 +32,12 @@ def make_date(date):
     return date
 
 
-def database(select: list, from_: str, where=None, order_by=None):
-    # id, photo_way, name, signature, link, to_char(created_date, 'dd Mon YYYY'), post_text
-    try:
-        connection = psycopg2.connect(
-            host=host, user=user, password=password, database=db_name
-        )
-        connection.autocommit = True
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"""SELECT {', '.join(select)} FROM {from_};"""
-            )
-            return cursor.fetchall()
-    except Exception as _ex:
-        print("[INFO] Error while working with PostgreSQL", _ex)
-    finally:
-        if connection:
-            connection.close()
-            print("[INFO] PostgreSQL connection closed")
-
-
 class Blog:
     @staticmethod
     def blog():
-        posts = database(select=['id', 'photo_way', 'name', 'signature',
-                'link', "to_char(created_date, 'dd Mon YYYY')", 'post_text'], from_='blog')
+        posts = database_query("""SELECT id, photo_way, name,
+                        signature, link, to_char(created_date, 'dd Mon YYYY'),
+                         post_text FROM blog;""")
         form = BlogForm()
         three_posts = []
         start = 0
@@ -95,7 +75,7 @@ class Blog:
         else:
             is_admin = False
         return render_template(
-            "blog_page.html",
+            "blog/blog_page.html",
             **params,
             bl_is_active="active",
             title="Блог",
@@ -107,30 +87,14 @@ class Blog:
 
     @staticmethod
     def blog_pages(number):
-        try:
-            connection = psycopg2.connect(
-                host=host, user=user, password=password, database=db_name
-            )
-            connection.autocommit = True
-
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    f"""SELECT id, photo_way, name, signature, link,
+        posts = database_query(f"""SELECT id, photo_way, name, signature, link,
                      to_char(created_date, 'dd Mon YYYY'), post_text FROM blog 
                     where id = {number}
-                    ORDER BY created_date DESC;"""
-                )
-                posts = cursor.fetchall()
-        except Exception as _ex:
-            print("[INFO] Error while working with PostgreSQL", _ex)
-        finally:
-            if connection:
-                connection.close()
-                print("[INFO] PostgreSQL connection closed")
+                    ORDER BY created_date DESC;""")
         item = posts[0]
         date = make_date(item[5])
         return render_template(
-            "blog_page_example.html",
+            "blog/blog_page_example.html",
             **params,
             bl_is_active="active",
             name=item[2],
@@ -146,21 +110,9 @@ class Blog:
     def delete_blog():
         form = BlogForm()
         if form.validate_on_submit():
-            try:
-                connection = psycopg2.connect(
-                    host=host, user=user, password=password, database=db_name
-                )
-                connection.autocommit = True
-                string = str(form.ids_to_delete).split()[-1]
-                start = string.find('"')
-                stop = string.rfind('"')
-                lst = string[start + 1:stop].split(',')
-                for i in lst:
-                    with connection.cursor() as cursor:
-                        cursor.execute(f"""Delete from blog where id = {i} """)
-            except Exception as _ex:
-                print("[INFO] Error while working with PostgreSQL", _ex)
-            finally:
-                if connection:
-                    connection.close()
-                    print("[INFO] PostgreSQL connection closed")
+            string = str(form.ids_to_delete).split()[-1]
+            start = string.find('"')
+            stop = string.rfind('"')
+            lst = string[start + 1:stop].split(',')
+            for i in lst:
+                database_query(f"""Delete from blog where id = {i} """)

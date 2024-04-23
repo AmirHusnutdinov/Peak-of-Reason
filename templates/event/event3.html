@@ -1,0 +1,47 @@
+{% extends "base/base.html" %}
+
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+
+<div class="text-center">
+</div>
+<hr>
+<br>
+
+<br>
+
+    <div class="container">
+
+        <div class="section__header">
+            <h2 class="section__title">{{label}}</h2>
+            <a type="button" class="btn btn-dark" href="{{back_link}}">Назад</a>
+        </div>
+        <div class="blog">
+        {% for item in posts %}
+        <div class="blog__item">
+                <div class="blog__header">
+                    <a href="{{item[4]}}">
+                        <img class="blog__photo" src="/static/assets/images/event/{{item[1]}}" alt="">
+                    </a>
+                    <div class="blog__date">
+                        <div class="blog__date-day">{{date}}</div>
+                        {{ item[6]}}
+                    </div>
+                </div>
+                <div class="blog__content">
+                    <div class="blog__title">
+                        <a href="{{item[4]}}">{{item[2]}}</a>
+                    </div>
+                    <div class="blog__text">{{item[3]}}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+<br>
+<br>
+{% endblock %}

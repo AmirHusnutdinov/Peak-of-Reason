@@ -1,0 +1,81 @@
+{% extends "base/base.html" %}
+{% block content %}
+<br> <br> <br> <br> <br>
+<div class="container">
+    <script>
+    function open_delete_form(id){
+    elem = document.getElementById(id);
+    //Находим блок div по его id, который передали в функцию
+
+    state = elem.style.display;
+
+    if (state =='')
+     {elem.style.display='none';}
+    else
+     {elem.style.display='';}
+    // Если форма отображалась делаем ее невидимой и наоборот
+
+    var elem = document.getElementById("open-delete-form-btn");
+    if (elem.value=="Удалить пост ▼") elem.value = "Удалить пост ▲";
+    else elem.value = "Удалить пост ▼";}
+    </script>
+
+    <div class="section__header">
+        <h3 class="section__suptitle">Наш блог</h3>
+        <h2 class="section__title">Последние статьи:</h2>
+
+        <!--Если пользователь админ, то ему будет отображена часть кода до </form> -->
+        {% if is_admin %}
+        <input class="btn btn-dark btn-open-delete-form" type="button" onclick="open_delete_form('delete-form')" id="open-delete-form-btn" value="Удалить пост ▲"></input>
+        <br><br>
+        <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="delete-form" id="delete-form" style="display: none;">
+            <br>
+            <label class="form-label">Введите номера постов которые хотите удалить</label>
+            {{form.ids_to_delete(type="text", class="form-control", placeholder="Например: 6,7,8") }}
+            <br>
+            {{form.submit(type="submit", class="btn btn-dark")}}
+            <br>
+        {% endif %}
+        </div></form>
+    </div>
+
+
+        {% for items in posts %}
+        <div class="blog">
+            {% for item in items %}
+        <div class="blog__item">
+                <div class="blog__header">
+
+                    {% if is_admin %}
+                    <input class="btn btn-light blog-change" type="button" onclick="open_update_form('update-form')"></input>
+                    {% endif %}
+
+                    <!-- 0-id поста 1-имя фото 2-имя 3-описание 4-ссылка 5-дата 6-текст -->
+                    <a href="{{item[4]}}">
+                        <img class="blog__photo" src="/static/assets/images/blog/{{item[1]}}" alt="">
+                    </a>
+                    <div class="blog__date">
+                        <div class="blog__date-day">{{item[5]}}</div>
+
+                        {% if is_admin %}
+                        <p id="numbers_of_posts" style="">Пост номер: {{item[0]}}</p>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="blog__content">
+                    <div class="blog__title">
+                        <a href="{{item[4]}}">{{item[2]}}</a>
+                    </div>
+                    <div class="blog__text">{{item[3]}}</div>
+                </div>
+            </div>
+    {% endfor %}
+            </div>
+
+    {% endfor %}
+    </div>
+<br>
+{% endblock %}

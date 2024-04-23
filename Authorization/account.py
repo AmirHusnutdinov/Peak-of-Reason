@@ -1,15 +1,15 @@
 import os
 import re
+from database_query import database_query
 from random import randint
 from Authorization.email_confirmform import EmailConfirmForm
-import psycopg2
 from flask import render_template, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from Authorization.loginform import LoginForm
 from Authorization.registerform import RegisterForm
 from Links import params, register
 from random import randrange
-from settings import app, ALLOWED_EXTENSIONS, host, user, password, db_name
+from settings import app, ALLOWED_EXTENSIONS
 
 
 def password_check(passwd):
@@ -49,40 +49,11 @@ class Account:
         connection = []
         form = LoginForm()
         if form.validate_on_submit():
-            try:
-                connection = psycopg2.connect(
-                    host=host, user=user, password=password, database=db_name
-                )
-                connection.autocommit = True
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
-                    )
-                    is_user = bool(cursor.fetchone()[0])
-                if is_user:
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            f"""SELECT password FROM users WHERE email = '{form.email.data}';"""
-                        )
-                        password_account = cursor.fetchone()[0]
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            f"""SELECT user_id FROM users WHERE email = '{form.email.data}';"""
-                        )
-                        id_account = cursor.fetchone()[0]
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            f"""SELECT is_admin FROM users WHERE email = '{form.email.data}';"""
-                        )
-                        is_admin_account = cursor.fetchone()[0]
-
-            except Exception as _ex:
-                print("[INFO] Error while working with PostgreSQL", _ex)
-            finally:
-                if connection:
-                    connection.close()
-                    print("[INFO] PostgreSQL connection closed")
+            is_user = bool(database_query( f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';""")[0])
+            if is_user:
+                password_account = database_query(f"""SELECT password FROM users WHERE email = '{form.email.data}';""")[0]
+                id_account = database_query( f"""SELECT user_id FROM users WHERE email = '{form.email.data}';""")[0]
+                is_admin_account = database_query( f"""SELECT is_admin FROM users WHERE email = '{form.email.data}';""")[0]
             if not is_user:
                 flash("Такого пользователя не существует")
                 return "/authorization"
@@ -97,7 +68,7 @@ class Account:
             flash("Неправильный логин или пароль")
             return "/authorization"
         return render_template(
-            "login.htm",
+            "cabinet/login.htm",
             **params,
             register=register,
             au_is_active="active",
@@ -108,27 +79,9 @@ class Account:
     @staticmethod
     def account_register():
         email_cod = randint(10000, 99999)
-        connection = []
         form = RegisterForm()
         if form.validate_on_submit():
-            try:
-                connection = psycopg2.connect(
-                    host=host, user=user, password=password, database=db_name
-                )
-                connection.autocommit = True
-
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';"""
-                    )
-                    is_user = bool(cursor.fetchone()[0])
-
-            except Exception as _ex:
-                print("[INFO] Error while working with PostgreSQL", _ex)
-            finally:
-                if connection:
-                    connection.close()
-                    print("[INFO] PostgreSQL connection closed")
+            is_user = bool(database_query(f"""SELECT COUNT(*) FROM users WHERE email = '{form.email.data}';""")[0])
             if form.password1.data != form.password2.data:
                 flash("Пароли не совпадают")
                 return "/register"
@@ -171,29 +124,16 @@ class Account:
                 photo = f"clients/{filename}"
             else:
                 photo = f'clients_example/{str(randrange(1, 9)) + ".jpg"}'
-            try:
-                connection = psycopg2.connect(
-                    host=host, user=user, password=password, database=db_name
-                )
-                connection.autocommit = True
-                app.config["Email_confirm"] = (email_cod, form.email.data)
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way, date_birth)
+
+            app.config["Email_confirm"] = (email_cod, form.email.data)
+            database_query(f"""INSERT INTO users (name, surname, email, password, is_admin, gender, photo_way, date_birth)
                             values
                             ('{form.name.data}', '{form.surname.data}', '{form.email.data}',
                             '{generate_password_hash(form.password1.data)}', 'False'::bool,
-                            '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);"""
-                    )
-                return "/email_confirm"
-            except Exception as _ex:
-                print("[INFO] Error while working with PostgreSQL", _ex)
-            finally:
-                if connection:
-                    connection.close()
-                    print("[INFO] PostgreSQL connection closed")
+                            '{form.gender.data}', '{photo}', '{form.date_birth.data}'::date);""")
+            return "/email_confirm"
         return render_template(
-            "registration.html",
+            "cabinet/registration.html",
             **params,
             au_is_active="active",
             form=form,
@@ -211,29 +151,13 @@ class Account:
             email_of_user = app.config["Email_confirm"][1]
 
             if int(user_code) == int(valid_code):
-                try:
-                    connection = psycopg2.connect(
-                        host=host, user=user, password=password, database=db_name
-                    )
-                    connection.autocommit = True
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            f"""UPDATE users
+                database_query( f"""UPDATE users
                                 SET activated = 'true'
-                                WHERE email = '{email_of_user}';"""
-                        )
-                    return "/authorization"
-                except Exception as _ex:
-                    print("[INFO] Error while working with PostgreSQL", _ex)
-                finally:
-                    if connection:
-                        connection.close()
-                        print("[INFO] PostgreSQL connection closed")
-
+                                WHERE email = '{email_of_user}';""")
+                return "/authorization"
             else:
                 flash("Пароли не совпадают")
                 return "/email_confirm_page"
         else:
             return render_template(
-                "email_confirm_page.html", **params, form=form, title="Подтверждение"
-            )
+                "email/email_confirm_page.html", **params, form=form, title="Подтверждение")
