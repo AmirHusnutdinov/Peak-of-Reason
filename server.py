@@ -399,19 +399,19 @@ def open_generate_post():
         return redirect("/")
 
 
-@app.errorhandler(404)
-def page_not_found(_):
-    return render_template("error_codes/404.html"), 404
-
-
-@app.errorhandler(500)
-def page_internal_server_error(_):
-    return render_template("error_codes/500.html"), 500
-
-
-@app.errorhandler(400)
-def page_bad_request(_):
-    return render_template("error_codes/400.html"), 400
+# @app.errorhandler(404)
+# def page_not_found(_):
+#     return render_template("error_codes/404.html"), 404
+#
+#
+# @app.errorhandler(500)
+# def page_internal_server_error(_):
+#     return render_template("error_codes/500.html"), 500
+#
+#
+# @app.errorhandler(400)
+# def page_bad_request(_):
+#     return render_template("error_codes/400.html"), 400
 
 
 @app.route("/pp/")
@@ -423,8 +423,6 @@ def open_pp():
         **params,
     )
 
-
-app.register_blueprint(event_api.blueprint)
 
 port = int(os.environ.get("PORT", 8080))
 app.run(host="0.0.0.0", port=port)
